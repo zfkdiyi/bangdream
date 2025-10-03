@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>音符射手</title>
+  <style>
+    :root {
+      --primary-color: #ff69b4; /* Hot Pink */
+      --secondary-color: #9370db; /* Medium Purple */
+      --text-color: #ffffff;
+      --shadow-color: rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #333;
+      color: var(--text-color);
+      font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #game-container {
+      position: relative;
+      background-color: #6c757d;
+
+      /* 保持 9:16 比例，最大化铺满 */
+      width: 100vw;
+      height: 100vh;
+      aspect-ratio: 9 / 16;
+
+      /* 限制缩放，保证不会超出屏幕 */
+      max-width: 500px;
+      max-height: 100vh;
+
+      /* 居中显示，超出部分自动裁切 */
+      object-fit: contain;
+      overflow: hidden;
+
+      box-shadow: 0 0 20px var(--shadow-color);
+    }
+
+    #game-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #707070; /* Road color */
+    }
+
+    .indexlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.3);
+      text-align: center;
+      z-index: 10;
+      transition: opacity 0.5s ease;
+      padding-top: 0;
+    }
+
+    .game-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.3);
+      text-align: center;
+      z-index: 10;
+      transition: opacity 0.5s ease;
+      padding-top: 0;
+    }
+
+    .indexlay.hidden,
+    .game-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .overlay-title {
+      margin: 15px 0px;
+      font-size: 2.2rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+      animation: pulse 1.5s infinite;
+      @media (max-width: 375px) {
+        font-size: 1.8rem;
+      }
+    }
+
+    #win-title {
+      text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+    }
+
+    .overlay-text {
+      font-size: 1.4rem;            /* 略大一点 */
+      font-weight: 600;              /* 稍微加粗 */
+      color: #ffffff;                /* 白色 */
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5), 0 0 6px rgba(255,105,180,0.6); /* 阴影 + 粉色光晕 */
+      margin-top: 10px;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .start-button {
+      margin: 16px 0px;
+      padding: 10px 20px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--secondary-color);
+      background-color: var(--text-color);
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px var(--shadow-color);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .start-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px var(--shadow-color);
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .language-selector {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      transition: opacity 0.3s ease;
+    }
+
+    .language-selector.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .lang-btn {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      color: var(--text-color);
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 2px solid transparent;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn:hover {
+      background-color: rgba(255, 105, 180, 0.3);
+    }
+
+    .lang-btn.active {
+      border-color: var(--primary-color);
+      background-color: rgba(255, 105, 180, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+<div id="game-container">
+  <canvas id="game-canvas"></canvas>
+  <div id="fps-display" style="
+  position:absolute;
+  bottom:5px;
+  left:5px;
+  color:#0f0;
+  font-family:monospace;
+  font-size:16px;
+  font-weight:bold;
+  text-shadow:0 0 3px #000;
+  z-index:20;
+">FPS: 0</div>
+
+  <div id="start-screen" class="indexlay" >
+    <img src="https://anime.bang-dream.com/bandorichan/wordpress/wp-content/uploads/2025/09/25171503/2025_BGDC_header_01-1024x341.jpg" alt="Header" style="width: 100%; position: absolute; top: 0; left: 0; z-index: -1;">
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20vh;">
+      <h1 class="overlay-title" data-text="title">音符射手</h1>
+      <p class="overlay-text" data-text="instructions">移动鼠标或手指来控制角色<br>按住屏幕持续发射音符！</p>
+      <button id="start-button" class="start-button" data-text="startGame">开始游戏</button>
+      <div id="language-selector" class="language-selector">
+        <button class="lang-btn" data-lang="zh">中文</button>
+        <button class="lang-btn" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="ja">日本語</button>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 60px; left: 0; right: 0; font-size: 1rem; color: rgba(255,255,255,0.7); text-align: center; line-height: 1.8;">
+      <div><span data-text="version">版本</span>：0.1</div>
+      <div><span data-text="updateTime">更新时间</span>：2025-10-04</div>
+    </div>
+  </div>
+
+  <div id="defeat-screen" class="game-overlay hidden">
+    <div></div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <img id="defeat-image" src="bangdream/defeat.png" alt="DEFEAT" style="max-width: 80%; max-height: 60%; object-fit: contain;">
+      <p class="overlay-text" data-text="defeatMessage">不要灰心，再来一次！</p>
+      <button id="restart-button-defeat" class="start-button" data-text="retry">重试</button>
+      <button id="home-button-defeat" class="start-button" data-text="backToHome">回到首页</button>
+    </div>
+    <div></div>
+  </div>
+
+  <div id="win-screen" class="game-overlay hidden">
+    <div></div>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <img id="win-image" src="bangdream/win.png" alt="YOU WIN" style="max-width: 80%; max-height: 60%; object-fit: contain;">
+      <p class="overlay-text" data-text="winMessage">你真是个音乐天才！</p>
+      <button id="restart-button-win" class="start-button" data-text="playAgain">再玩一次</button>
+      <button id="home-button-win" class="start-button" data-text="backToHome">回到首页</button>
+    </div>
+    <div></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    // 多语言配置
+    const languages = {
+      zh: {
+        title: '元祖！BanG Dream酱<br>音符射手',
+        instructions: '移动鼠标或手指来控制角色<br>按住屏幕持续发射音符！',
+        startGame: '开始游戏',
+        defeatMessage: '不要灰心，再来一次！',
+        retry: '重试一次',
+        winMessage: '你真是个音乐天才！',
+        playAgain: '再玩一次',
+        backToHome: '回到首页',
+        lives: '生命数',
+        score: '积分',
+        version: '版本',
+        updateTime: '更新时间'
+      },
+      en: {
+        title: 'GANSO! BanG Dream Chan<br>Note Shooter',
+        instructions: 'Move mouse or finger to control character<br>Hold screen to shoot notes continuously!',
+        startGame: 'Start Game',
+        defeatMessage: 'Don\'t give up, try again!',
+        retry: 'Retry',
+        winMessage: 'You are a music genius!',
+        playAgain: 'Play Again',
+        backToHome: 'Back to Home',
+        lives: 'Lives',
+        score: 'Score',
+        version: 'Version',
+        updateTime: 'Updated'
+      },
+      ja: {
+        title: '「元祖！バンドリちゃん」<br>ノートシューター',
+        instructions: 'マウスや指で キャラクターを操作<br>画面を押し続けて ノートを連射！',
+        startGame: 'ゲーム開始',
+        defeatMessage: '諦めないで、もう一度！',
+        retry: 'リトライ',
+        winMessage: 'あなたは音楽の天才です！',
+        playAgain: 'もう一度',
+        backToHome: 'ホームに戻る',
+        lives: 'ライフ',
+        score: 'ポイント',
+        version: 'バージョン',
+        updateTime: '更新日時'
+      }
+    };
+
+    let currentLang = 'zh';
+
+    // 根据浏览器语言自动选择默认语言
+    function detectLanguage() {
+      const browserLang = navigator.language || navigator.userLanguage;
+      if (browserLang.startsWith('zh')) {
+        return 'zh';
+      } else if (browserLang.startsWith('ja')) {
+        return 'ja';
+      } else {
+        return 'en';
+      }
+    }
+
+    // 更新界面文字
+    function updateLanguage(lang) {
+      currentLang = lang;
+      const texts = languages[lang];
+
+      // 更新所有带有 data-text 属性的元素
+      document.querySelectorAll('[data-text]').forEach(element => {
+        const key = element.getAttribute('data-text');
+        if (texts[key]) {
+          element.innerHTML = texts[key];
+        }
+      });
+
+      // 更新页面标题
+      document.title = texts.title;
+
+      // 更新语言按钮状态
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+    }
+
+    // 初始化语言
+    currentLang = detectLanguage();
+
+    // 语言按钮事件监听
+    document.addEventListener('DOMContentLoaded', () => {
+      updateLanguage(currentLang);
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          updateLanguage(btn.getAttribute('data-lang'));
+        });
+      });
+    });
+    // 获取画布和容器元素
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.getElementById('game-container');
+
+    // 获取游戏界面元素
+    const startScreen = document.getElementById('start-screen');
+    const defeatScreen = document.getElementById('defeat-screen');
+    const winScreen = document.getElementById('win-screen');
+    const startButton = document.getElementById('start-button');
+    const restartButtonDefeat = document.getElementById('restart-button-defeat');
+    const restartButtonWin = document.getElementById('restart-button-win');
+    const homeButtonDefeat = document.getElementById('home-button-defeat');
+    const homeButtonWin = document.getElementById('home-button-win');
+    const languageSelector = document.getElementById('language-selector');
+
+    // 游戏基础变量
+    let canvasWidth, canvasHeight;  // 画布尺寸
+    let player, bullets, bears, boss, explosions;  // 游戏对象
+    let bearSpawnTimer = 0;  // 小熊生成计时器
+    let bearSpawnInterval = 700;  // 小熊生成间隔（毫秒）
+    let killCount = 0;  // 总击杀数
+    let killsSinceLastLife = 0;  // 自上次获得生命以来的击杀数
+    let bossSpawned = false;  // BOSS是否已生成
+    let gameLoopId;  // 游戏循环ID
+    let roadLineY = -100;  // 道路线条Y坐标
+    let gameState;  // 游戏状态
+    let bossDeathPosition;  // BOSS死亡位置
+    let screenFlashAlpha = 0;  // 屏幕闪光透明度
+    let bossFlashTimer = 0;  // BOSS受击闪光计时器
+    let playerInvulnerable = false;  // 玩家无敌状态
+    let invulnerabilityTimer = 0;  // 无敌时间计时器
+    let flashEffects = [];  // 闪光效果数组
+    let isShooting = false;  // 是否正在射击
+    let shootTimer = 0;  // 射击计时器
+    let shootInterval = 150;  // 射击间隔（毫秒）
+
+    // 游戏资源定义
+    const assets = {
+      player1: 'bangdream/player1.png',
+      player2: 'bangdream/player2.png',
+      bear1: 'bangdream/kuma1.png',
+      bear2: 'bangdream/kuma2.png',
+      boss1: 'bangdream/kkr1.png',
+      boss2: 'bangdream/kkr2.png',
+      bullet: 'bangdream/bullet1.png',
+      flash1: 'bangdream/flash1.png',
+      flash2: 'bangdream/flash2.png',
+      defeat: 'bangdream/defeat1.png'
+    };
+
+    const assetImages = {};  // 存储加载后的图像对象
+
+    // 加载游戏资源
+    function loadAssets(callback) {
+      let loadedCount = 0;
+      const assetKeys = Object.keys(assets);
+      assetKeys.forEach(key => {
+        assetImages[key] = new Image();
+        assetImages[key].src = assets[key];
+        assetImages[key].onload = () => {
+          if (++loadedCount === assetKeys.length) callback();
+        };
+      });
+    }
+
+    // 玩家类
+    class Player {
+      constructor() {
+        this.width = canvasWidth / 7;  // 单个角色宽度
+        this.height = this.width * 1.2;  // 角色高度
+        this.x = canvasWidth / 2;  // X坐标（中心点）
+        this.y = canvasHeight - this.height;  // Y坐标（底部）
+        this.characterCount = 1;  // 角色数量（生命数）
+        this.animFrame = 0;  // 动画帧计数器
+        this.isDead = false;  // 死亡状态
+      }
+
+      // 绘制玩家角色
+      draw() {
+        this.animFrame++;
+        let currentImage;
+        if (this.isDead) {
+          currentImage = assetImages.defeat;
+        } else {
+          currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.player1 : assetImages.player2;
+        }
+        if (this.isDead) {
+          // 如果是死亡状态，按defeat图片的真实宽高比进行绘制
+          const aspectRatio = currentImage.naturalWidth / currentImage.naturalHeight;
+          // 让新宽度与原先的高度近似，使视觉上大小更协调
+          const defeatWidth = this.height * 1.2;
+          const defeatHeight = defeatWidth / aspectRatio;
+          // 重新计算绘制坐标，使其水平居中，且脚底位置大致不变
+          const drawX = this.x - defeatWidth / 2;
+          const drawY = this.y + this.height - defeatHeight;
+
+          ctx.drawImage(currentImage, drawX, drawY, defeatWidth, defeatHeight);
+        } else {
+          // 如果是存活状态，则沿用原先的绘制逻辑
+          const totalWidth = this.width * this.characterCount;
+          const startX = this.x - totalWidth / 2;
+          for (let i = 0; i < this.characterCount; i++) {
+            ctx.drawImage(currentImage, startX + i * this.width, this.y, this.width, this.height);
+          }
+        }
+      }
+
+      // 发射子弹
+      shoot() {
+        const totalWidth = this.width * this.characterCount;
+        const startX = this.x - totalWidth / 2;
+        for (let i = 0; i < this.characterCount; i++) {
+          const bulletX = startX + i * this.width + this.width / 2;
+          bullets.push(new Bullet(bulletX, this.y));
+        }
+      }
+
+      // 根据击杀数更新角色数量
+      updateCharacterCount() {
+        // 每击杀5个小熊增加1血
+        if (killsSinceLastLife >= 5 && this.characterCount < 5) {
+          player.characterCount++;
+          killsSinceLastLife = 0;
+        }
+      }
+    }
+
+    // 子弹类
+    class Bullet {
+      constructor(x, y) {
+        this.width = canvasWidth / 28;  // 子弹宽度
+        this.height = this.width * 1.6;  // 子弹高度
+        this.x = x - this.width / 2;  // X坐标（中心对齐）
+        this.y = y;  // Y坐标
+        this.speed = 10;  // 移动速度
+        this.image = assetImages.bullet;  // 子弹图像
+      }
+
+      // 更新子弹位置（向上移动）
+      update() {
+        this.y -= this.speed;
+      }
+
+      // 绘制子弹
+      draw() {
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+      }
+    }
+
+    // 粉色小熊类
+    class Bear {
+      constructor(x, y) {
+        this.width = canvasWidth / 6;  // 小熊宽度
+        this.height = this.width;  // 小熊高度
+        this.x = x;  // X坐标
+        this.y = y;  // Y坐标
+        this.speed = 2.5;  // 下落速度
+        this.health = 3;  // 小熊血量
+        this.animFrame = 0;  // 动画帧计数器
+        this.flashTimer = 0;  // 受击闪光计时器
+      }
+
+      // 更新小熊位置（向下移动）
+      update() {
+        this.y += this.speed;
+        this.animFrame++;
+        if (this.flashTimer > 0) this.flashTimer--;
+      }
+
+      // 绘制小熊
+      draw() {
+        if (this.flashTimer > 0) {
+          ctx.filter = 'brightness(300%) saturate(0%)';
+        }
+        const currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.bear1 : assetImages.bear2;
+        ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
+        ctx.filter = 'none';
+      }
+    }
+
+    // BOSS类
+    class Boss {
+      constructor() {
+        this.width = canvasWidth / 3;  // BOSS宽度
+        this.height = this.width * 1.1;  // BOSS高度
+        this.x = canvasWidth / 2 - this.width / 2;  // X坐标（居中）
+        this.y = -this.height;  // Y坐标（从屏幕上方开始）
+        this.speed = 1;  // 基础移动速度
+        this.health = 500;  // 当前血量
+        this.maxHealth = 500;  // BOSS初始血量
+        this.targetY = canvasHeight * 0.1;  // 第一阶段目标Y坐标
+        this.dx = 1;  // X轴移动方向
+        this.phase = 1;  // BOSS阶段（1或2）
+        this.attackSpeed = 0.8;  // 攻击速度
+        this.vy = 0;  // Y轴方向的速度
+        this.bounceTargetY = canvasHeight * 0.3;  // 弹跳目标Y坐标
+        this.animFrame = 0;  // 动画帧计数器
+      }
+
+      // 更新BOSS状态和位置
+      update() {
+        this.animFrame++;
+        // 血量低于50%时进入第二阶段
+        if (this.health <= this.maxHealth / 2 && this.phase === 1) this.phase = 2;
+
+        if (this.phase === 1) {
+          // 第一阶段：先下降到目标位置，然后左右移动
+          if (this.y < this.targetY) this.y += this.speed;
+          else {
+            this.x += this.dx;
+            if (this.x <= 0 || this.x + this.width >= canvasWidth) this.dx *= -1;
+          }
+        } else {
+          // 第二阶段：追逐玩家模式
+          const targetX = player.x - this.width / 2;
+          if (Math.abs(this.x - targetX) > 2) {
+            // 使用缓慢的插值移动，让BOSS平滑地追随玩家
+            this.x += (targetX - this.x) * 0.02;
+          }
+          // 重力效果：每帧增加少量向下速度（减慢下落速度）
+          this.vy += 0.005;
+          this.y += this.vy;
+          // 触地后弹起
+          if (this.y + this.height >= canvasHeight) {
+            this.y = canvasHeight - this.height;
+            this.vy = -Math.random() * 8 - 5;  // 随机弹起速度
+            this.bounceTargetY = Math.random() * canvasHeight * 0.4 + canvasHeight * 0.1;
+          }
+          // 到达弹起目标高度时停止上升
+          if (this.vy < 0 && this.y <= this.bounceTargetY) {
+            this.vy = 0;
+          }
+        }
+      }
+
+      // 绘制BOSS和血量条
+      draw() {
+        // 受击时的闪光效果
+        if (bossFlashTimer > 0) {
+          ctx.filter = 'brightness(300%) saturate(0%)';
+        }
+        const currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.boss1 : assetImages.boss2;
+        ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
+        ctx.filter = 'none';
+
+        // 绘制BOSS血量条
+        const barWidth = canvasWidth * 0.8, barHeight = 20, barX = canvasWidth / 2 - barWidth / 2, barY = 10;
+        ctx.fillStyle = '#555';
+        ctx.fillRect(barX, barY, barWidth, barHeight);  // 背景条
+
+        const hpPercent = this.health / this.maxHealth;
+        // 根据血量百分比设置颜色
+        ctx.fillStyle = hpPercent > 0.5 ? 'green' : (hpPercent > 0.2 ? 'orange' : 'red');
+        ctx.fillRect(barX, barY, barWidth * hpPercent, barHeight);  // 血量条
+
+        ctx.strokeStyle = 'white';
+        ctx.strokeRect(barX, barY, barWidth, barHeight);  // 边框
+      }
+    }
+
+    // 爆炸效果类
+    class Explosion {
+      constructor(x, y) {
+        this.x = x;  // 爆炸中心X坐标
+        this.y = y;  // 爆炸中心Y坐标
+        this.particles = [];  // 粒子数组
+        this.init();
+      }
+
+      // 初始化爆炸粒子
+      init() {
+        const particleCount = 8;  // 粒子数量
+        for (let i = 0; i < particleCount; i++) {
+          const angle = Math.random() * Math.PI * 2;  // 随机角度
+          const speed = Math.random() * 3 + 1;  // 随机速度
+          this.particles.push({
+            x: this.x, y: this.y,  // 初始位置
+            vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,  // 速度分量
+            size: Math.random() * 8 + 4,  // 粒子大小
+            life: Math.random() * 20 + 20,  // 生命周期
+            opacity: 1,  // 透明度
+            color: '#ff69b4'  // 粒子颜色
+          });
+        }
+      }
+
+      // 更新粒子状态
+      update() {
+        this.particles.forEach((p, index) => {
+          p.x += p.vx;
+          p.y += p.vy;  // 更新位置
+          p.life--;  // 减少生命值
+          p.opacity = p.life / 30;  // 更新透明度
+          if (p.life <= 0) this.particles.splice(index, 1);  // 移除死亡粒子
+        });
+      }
+
+      // 绘制爆炸效果
+      draw() {
+        this.particles.forEach(p => {
+          ctx.save();
+          ctx.globalAlpha = p.opacity;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+
+      // 检查爆炸是否结束
+      isFinished() {
+        return this.particles.length === 0;
+      }
+    }
+
+    // 闪光效果类
+    class FlashEffect {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.life = 15;
+        this.maxLife = 15;
+        this.images = [];
+        this.angles = [];
+
+        // 随机显示1-2张闪光图片
+        const count = Math.random() < 0.5 ? 1 : 2;
+        for (let i = 0; i < count; i++) {
+          this.images.push(Math.random() < 0.5 ? assetImages.flash1 : assetImages.flash2);
+          this.angles.push(Math.random() * Math.PI * 2);
+        }
+      }
+
+      update() {
+        this.life--;
+      }
+
+      draw() {
+        const alpha = this.life / this.maxLife;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        for (let i = 0; i < this.images.length; i++) {
+          ctx.save();
+          const offsetX = i * 20 - 10;
+          const offsetY = i * 15 - 7;
+          ctx.translate(this.x + offsetX, this.y + offsetY);
+          ctx.rotate(this.angles[i]);
+          ctx.drawImage(this.images[i], -25, -25, 50, 50);
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+
+      isFinished() {
+        return this.life <= 0;
+      }
+    }
+
+    // 初始化游戏
+    function init() {
+      resizeCanvas();  // 调整画布尺寸
+      player = new Player();  // 创建玩家
+      bullets = [];  // 清空子弹数组
+      bears = [];  // 清空小熊数组
+      explosions = [];  // 清空爆炸数组
+      flashEffects = [];  // 清空闪光效果数组
+      boss = null;  // 重置BOSS
+      killCount = 0;  // 重置总击杀数
+      killsSinceLastLife = 0;  // 重置回血计数器
+      bearSpawnTimer = 0;  // 重置小熊生成计时器
+      bossSpawned = false;  // 重置BOSS生成标志
+      playerInvulnerable = false;  // 重置无敌状态
+      invulnerabilityTimer = 0;  // 重置无敌计时器
+      gameState = 'playing';  // 设置游戏状态为游戏中
+    }
+
+    // 生成小熊
+    function spawnBears() {
+      const numColumns = 6;  // 列数
+      const bearWidth = canvasWidth / 6;  // 每列宽度
+      for (let i = 0; i < numColumns; i++) {
+        if (Math.random() > 0.3) {  // 70%概率生成小熊
+          const x = i * bearWidth;  // 计算X坐标
+          const y = -bearWidth;  // 从屏幕上方开始
+          let canSpawn = true;
+
+          // 检查是否与BOSS重叠
+          if (boss && boss.y > -boss.height) {
+            const bossLeft = boss.x;
+            const bossRight = boss.x + boss.width;
+            const bearLeft = x;
+            const bearRight = x + bearWidth;
+            if (!(bearRight <= bossLeft || bearLeft >= bossRight)) {
+              canSpawn = false;  // 与BOSS重叠，不生成
+            }
+          }
+
+          if (canSpawn) {
+            bears.push(new Bear(x, y));
+          }
+        }
+      }
+    }
+
+    // 处理所有碰撞检测
+    function handleCollisions() {
+      // 子弹与小熊的碰撞
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        for (let j = bears.length - 1; j >= 0; j--) {
+          if (bullets[i] && isColliding(bullets[i], bears[j])) {
+            flashEffects.push(new FlashEffect(bullets[i].x + bullets[i].width / 2, bullets[i].y + bullets[i].height / 2));
+            //explosions.push(new Explosion(bullets[i].x, bullets[i].y));  // 创建爆炸效果
+            bullets.splice(i, 1);  // 移除子弹
+            bears[j].health--;  // 减少小熊血量
+            bears[j].flashTimer = 3;  // 设置小熊闪光效果
+            if (bears[j].health <= 0) {
+              bears.splice(j, 1);  // 移除小熊
+              killCount++;  // 增加总击杀数
+              killsSinceLastLife++;  // 增加回血计数器
+              player.updateCharacterCount();  // 更新角色数量
+            }
+            break;
+          }
+        }
+      }
+
+      // 子弹与BOSS的碰撞
+      if (boss) {
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          if (bullets[i] && isColliding(bullets[i], boss)) {
+            flashEffects.push(new FlashEffect(bullets[i].x + bullets[i].width / 2, bullets[i].y + bullets[i].height / 2));
+            //explosions.push(new Explosion(bullets[i].x, bullets[i].y));  // 创建爆炸效果
+            bullets.splice(i, 1);  // 移除子弹
+            boss.health--;  // 减BOSS血量
+            bossFlashTimer = 3;  // 设置闪光效果
+
+            // BOSS死亡判定
+            if (boss.health <= 0 && gameState === 'playing') {
+              gameState = 'bossDying';  // 设置为BOSS死亡状态
+              bossDeathPosition = {x: boss.x, y: boss.y, width: boss.width, height: boss.height};
+              boss = null;
+              screenFlashAlpha = 0.7;  // 屏幕闪光
+              triggerScreenShake(15);  // 屏幕震动
+              setTimeout(() => gameOver(true), 500);  // 0.5秒后胜利
+            }
+            break;
+          }
+        }
+      }
+
+      // 小熊与玩家的碰撞
+      for (let i = bears.length - 1; i >= 0; i--) {
+        const playerHitbox = {
+          x: player.x - (player.width * player.characterCount) / 2,
+          y: player.y,
+          width: player.width * player.characterCount,
+          height: player.height
+        };
+        if (isColliding(bears[i], playerHitbox)) {
+          bears.splice(i, 1);  // 移除小熊
+          triggerScreenShake(5);  // 屏幕震动
+          checkDead();
+        }
+      }
+
+      // BOSS与玩家的碰撞（在无敌时间外）
+      if (boss && !playerInvulnerable) {
+        const playerHitbox = {
+          x: player.x - (player.width * player.characterCount) / 2,
+          y: player.y,
+          width: player.width * player.characterCount,
+          height: player.height
+        };
+        if (isColliding(boss, playerHitbox)) {
+          playerInvulnerable = true;  // 设置无敌状态
+          invulnerabilityTimer = 60;  // 1秒无敌时间（60帧）
+          triggerScreenShake(8);  // 屏幕震动
+          checkDead();
+        }
+      }
+    }
+
+    function checkDead() {
+      if (player.characterCount > 1) {
+        player.characterCount--;  // 减少角色数量（生命）
+        killsSinceLastLife = 0;
+      } else {
+        player.isDead = true;  // 设置玩家死亡状态
+        setTimeout(() => gameOver(false), 100);  // 100毫秒后游戏结束
+      }
+    }
+
+    // 碰撞检测函数（矩形碰撞）
+    function isColliding(rect1, rect2) {
+      return rect1.x < rect2.x + rect2.width &&
+        rect1.x + rect1.width > rect2.x &&
+        rect1.y < rect2.y + rect2.height &&
+        rect1.y + rect1.height > rect2.y;
+    }
+
+    // 绘制道路中间线
+    function drawRoad() {
+      ctx.fillStyle = '#fff';  // 白色线条
+      const lineWidth = 15, lineHeight = 80, lineGap = 60;  // 线条参数
+      roadLineY += (gameState === 'playing' ? 5 : 0);  // 游戏中时线条向下移动
+      if (roadLineY > lineHeight + lineGap) roadLineY = 0;  // 循环重置
+
+      // 绘制多条线条
+      for (let y = roadLineY - (lineHeight + lineGap); y < canvasHeight; y += lineHeight + lineGap) {
+        ctx.fillRect(canvasWidth / 2 - lineWidth / 2, y, lineWidth, lineHeight);
+      }
+    }
+
+    let lastTime = 0;  // 上一帧时间
+
+    // 游戏主循环
+    function gameLoop(timestamp) {
+      updateFPS(); // 更新 FPS 显示
+      const deltaTime = timestamp - lastTime;  // 计算帧间隔
+      lastTime = timestamp;
+
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);  // 清空画布
+      drawRoad();  // 绘制道路
+
+      if (gameState === 'playing') {
+        // 更新子弹，移除超出屏幕的子弹
+        bullets.forEach((bullet, index) => {
+          bullet.update();
+          if (bullet.y < 0) bullets.splice(index, 1);
+        });
+
+        // 小熊生成计时器
+        bearSpawnTimer += deltaTime;
+        if (bearSpawnTimer > bearSpawnInterval) {
+          spawnBears();
+          bearSpawnTimer = 0;
+        }
+
+        // 更新小熊，移除超出屏幕的小熊
+        bears.forEach((bear, index) => {
+          bear.update();
+          if (bear.y > canvasHeight) bears.splice(index, 1);
+        });
+
+        // 5秒后生成BOSS
+        if (!bossSpawned && timestamp > 5000) {
+          boss = new Boss();
+          bossSpawned = true;
+        }
+
+        if (boss) boss.update();  // 更新BOSS
+        if (bossFlashTimer > 0) bossFlashTimer--;  // 更新BOSS闪光计时器
+
+        // 更新玩家无敌状态
+        if (playerInvulnerable) {
+          invulnerabilityTimer--;
+          if (invulnerabilityTimer <= 0) {
+            playerInvulnerable = false;
+          }
+        }
+
+        // 持续射击逻辑
+        if (isShooting) {
+          shootTimer += deltaTime;
+          if (shootTimer >= shootInterval) {
+            player.shoot();
+            shootTimer = 0;
+          }
+        }
+
+        handleCollisions();  // 处理碰撞
+      }
+
+      // BOSS死亡时的连续爆炸效果
+      if (gameState === 'bossDying' && Math.random() < 0.8) {
+        const x = bossDeathPosition.x + Math.random() * bossDeathPosition.width;
+        const y = bossDeathPosition.y + Math.random() * bossDeathPosition.height;
+        //explosions.push(new Explosion(x, y));
+        flashEffects.push(new FlashEffect(x, y));  // 用闪光效果替代爆炸
+      }
+
+      // 更新爆炸效果，移除结束的爆炸
+      explosions.forEach((exp, index) => {
+        exp.update();
+        if (exp.isFinished()) explosions.splice(index, 1);
+      });
+
+      // 更新闪光效果，移除结束的闪光
+      flashEffects.forEach((flash, index) => {
+        flash.update();
+        if (flash.isFinished()) flashEffects.splice(index, 1);
+      });
+
+      // 绘制游戏对象
+      bullets.forEach(b => b.draw());  // 绘制子弹
+      bears.forEach(b => b.draw());  // 绘制小熊
+      if (boss) boss.draw();  // 绘制BOSS
+
+      // 绘制玩家（死亡时始终显示，无敌时间内闪烁效果）
+      if (!playerInvulnerable || Math.floor(invulnerabilityTimer / 5) % 2 === 0) {
+        player.draw();
+      }
+
+      explosions.forEach(e => e.draw());  // 绘制爆炸效果
+      flashEffects.forEach(f => f.draw());  // 绘制闪光效果
+
+      // 屏幕闪光效果
+      if (screenFlashAlpha > 0) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${screenFlashAlpha})`;
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        screenFlashAlpha -= 0.05;  // 逐渐淡化
+      }
+      // 绘制UI信息
+      ctx.fillStyle = 'white';
+      ctx.font = '24px "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif';
+      ctx.shadowColor = 'rgba(0,0,0,0.6)';  // 阴影颜色
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+      ctx.shadowBlur = 4;
+      // 描边效果（更立体）
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+
+      ctx.textAlign = 'left';
+      ctx.fillText(`${languages[currentLang].lives}: ${player.characterCount}`, 20, 60);  // 左上角显示生命数
+      ctx.textAlign = 'right';
+      ctx.fillText(`${languages[currentLang].score}: ${killCount}`, canvasWidth - 20, 60);  // 右上角显示击杀数
+      // 清除阴影，避免影响其他绘制
+      ctx.shadowColor = 'transparent';
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.shadowBlur = 0;
+      // 继续下一帧（如果游戏未结束）
+      if (gameState !== 'over') gameLoopId = requestAnimationFrame(gameLoop);
+    }
+
+    // 开始游戏
+    function startGame() {
+      init();  // 初始化游戏
+      startScreen.classList.add('hidden');  // 隐藏开始界面
+      defeatScreen.classList.add('hidden');  // 隐藏失败界面
+      winScreen.classList.add('hidden');  // 隐藏胜利界面
+      lastTime = performance.now();  // 记录开始时间
+      if (gameLoopId) cancelAnimationFrame(gameLoopId);  // 取消上一个游戏循环
+      gameLoop(lastTime);  // 开始游戏循环
+    }
+
+    // 回到首页
+    function backToHome() {
+      init();
+      gameState = 'over';  // 设置游戏状态为结束
+      if (gameLoopId) cancelAnimationFrame(gameLoopId);  // 停止游戏循环
+      startScreen.classList.remove('hidden');  // 显示开始界面
+      defeatScreen.classList.add('hidden');  // 隐藏失败界面
+      winScreen.classList.add('hidden');  // 隐藏胜利界面
+    }
+
+    // 游戏结束
+    function gameOver(isWin) {
+      gameState = 'over';  // 设置游戏状态为结束
+      cancelAnimationFrame(gameLoopId);  // 停止游戏循环
+      if (isWin) winScreen.classList.remove('hidden');  // 显示胜利界面
+      else defeatScreen.classList.remove('hidden');  // 显示失败界面
+    }
+
+    // 调整画布尺寸
+    function resizeCanvas() {
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      canvasWidth = canvas.width;
+      canvasHeight = canvas.height;
+      if (player) {
+        player.width = canvasWidth / 7;
+        player.height = player.width * 1.2;
+      }
+    }
+
+    window.addEventListener('resize', resizeCanvas);  // 监听窗口大小变化
+
+    // 获取鼠标位置
+    function getMousePos(evt) {
+      const rect = canvas.getBoundingClientRect();
+      return {x: evt.clientX - rect.left, y: evt.clientY - rect.top};
+    }
+
+    // 获取触摸位置
+    function getTouchPos(evt) {
+      const rect = canvas.getBoundingClientRect();
+      return {x: evt.touches[0].clientX - rect.left, y: evt.touches[0].clientY - rect.top};
+    }
+
+    // 鼠标移动事件：控制玩家位置
+    container.addEventListener('mousemove', e => {
+      if (!player || gameState !== 'playing') return;
+      const pos = getMousePos(e);
+      const totalWidth = player.width * player.characterCount;
+      player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, pos.x));
+      player.y = Math.max(0, Math.min(canvasHeight - player.height, pos.y));
+    });
+
+    // 鼠标按下事件：开始持续射击
+    container.addEventListener('mousedown', () => {
+      if (player && gameState === 'playing') {
+        isShooting = true;
+        shootTimer = shootInterval; // 立即射击第一发
+      }
+    });
+
+    // 鼠标松开事件：停止射击
+    container.addEventListener('mouseup', () => {
+      isShooting = false;
+      shootTimer = 0;
+    });
+
+    // 鼠标离开画布：停止射击
+    container.addEventListener('mouseleave', () => {
+      isShooting = false;
+      shootTimer = 0;
+    });
+
+
+
+    // 触摸移动事件：控制玩家位置
+    container.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (!player || gameState !== 'playing') return;
+      const pos = getTouchPos(e);
+      const totalWidth = player.width * player.characterCount;
+      player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, pos.x));
+      player.y = Math.max(0, Math.min(canvasHeight - player.height, pos.y));
+    }, {passive: false});
+
+    // 触摸开始事件：设置位置并开始持续射击
+    container.addEventListener('touchstart', e => {
+      e.preventDefault();
+      if (player && gameState === 'playing') {
+        const pos = getTouchPos(e);
+        const totalWidth = player.width * player.characterCount;
+        player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, pos.x));
+        player.y = Math.max(0, Math.min(canvasHeight - player.height, pos.y));
+        isShooting = true;
+        shootTimer = shootInterval; // 立即射击第一发
+      }
+    }, {passive: false});
+
+    // 触摸结束事件：停止射击
+    container.addEventListener('touchend', e => {
+      e.preventDefault();
+      isShooting = false;
+      shootTimer = 0;
+    }, {passive: false});
+
+    // 触摸取消事件：停止射击
+    container.addEventListener('touchcancel', e => {
+      e.preventDefault();
+      isShooting = false;
+      shootTimer = 0;
+    }, {passive: false});
+
+    // 按钮事件监听器 - 支持移动端触摸
+    function addButtonListeners(button, handler) {
+      let touchHandled = false;
+
+      button.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        touchHandled = true;
+        handler();
+      }, {passive: false});
+
+      button.addEventListener('click', (e) => {
+        if (touchHandled) {
+          touchHandled = false;
+          return;
+        }
+        handler();
+      });
+    }
+
+    addButtonListeners(startButton, startGame);  // 开始游戏按钮
+    addButtonListeners(restartButtonDefeat, startGame);  // 失败重试按钮
+    addButtonListeners(restartButtonWin, startGame);  // 胜利重玩按钮
+    addButtonListeners(homeButtonDefeat, backToHome);  // 失败回到首页按钮
+    addButtonListeners(homeButtonWin, backToHome);  // 胜利回到首页按钮
+
+    // 屏幕震动效果函数
+    function triggerScreenShake(intensity) {
+      container.style.animation = `shake ${0.3}s`;  // 设置震动动画
+
+      // 定义震动关键帧
+      const keyframes = `@keyframes shake {
+            10%, 90% { transform: translate3d(${-intensity / 4}px, 0, 0); }
+            20%, 80% { transform: translate3d(${intensity / 2}px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(${-intensity}px, 0, 0); }
+            40%, 60% { transform: translate3d(${intensity}px, 0, 0); }
+        }`;
+
+      // 使用动态样式表避免重复添加关键帧
+      if (!document.getElementById('shake-style')) {
+        const style = document.createElement('style');
+        style.id = 'shake-style';
+        document.head.appendChild(style);
+      }
+      document.getElementById('shake-style').innerHTML = keyframes;
+
+      // 0.3秒后清除震动效果
+      setTimeout(() => container.style.animation = '', 300);
+    }
+
+    const fpsDisplay = document.getElementById('fps-display');
+    let lastTimes = performance.now();
+    let frames = 0;
+    let fps = 0;
+
+    function updateFPS(){
+      const now = performance.now();
+      frames++;
+      if(now - lastTimes >= 1000){ // 每秒更新一次
+        fps = frames;
+        frames = 0;
+        lastTimes = now;
+        fpsDisplay.textContent = 'FPS: ' + fps;
+      }
+    }
+
+    // 加载资源并初始化画布
+    loadAssets(() => {
+      resizeCanvas();
+      updateLanguage(currentLang);
+    });
+  })();
+</script>
+
+</body>
+</html>
