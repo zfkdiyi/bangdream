@@ -250,7 +250,7 @@
         startGame: '开始游戏',
         defeatMessage: '不要灰心，再来一次！',
         retry: '重试一次',
-        winMessage: '你真是个音乐天才！',
+        winMessage: '闪闪发亮 心跳不已！',
         playAgain: '再玩一次',
         backToHome: '回到首页',
         lives: '生命数',
@@ -264,7 +264,7 @@
         startGame: 'Start Game',
         defeatMessage: 'Don\'t give up, try again!',
         retry: 'Retry',
-        winMessage: 'You are a music genius!',
+        winMessage: 'KIRAKIRA DOKIDOKI!',
         playAgain: 'Play Again',
         backToHome: 'Back to Home',
         lives: 'Lives',
@@ -278,7 +278,7 @@
         startGame: 'ゲーム開始',
         defeatMessage: '諦めないで、もう一度！',
         retry: 'リトライ',
-        winMessage: 'あなたは音楽の天才です！',
+        winMessage: 'キラキラドキドキ！',
         playAgain: 'もう一度',
         backToHome: 'ホームに戻る',
         lives: 'ライフ',
@@ -316,7 +316,7 @@
       });
 
       // 更新页面标题
-      document.title = texts.title;
+      document.title = texts.title.replace('<br>',' ');
 
       // 更新语言按钮状态
       document.querySelectorAll('.lang-btn').forEach(btn => {
