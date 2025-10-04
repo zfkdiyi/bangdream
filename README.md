@@ -1,3 +1,3 @@
-# BanG Dream Note Shooter
+# BanG Dream Note Shooter Game
 
-Note Shooter game is inspired from the ED animation of GANSO! BanG Dream Chan!
+BanG Dream Note Shooter Game is a fan-made game, inspired by the ED animation of GANSO! BanG Dream Chan! 
