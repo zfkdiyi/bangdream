@@ -151,6 +151,7 @@
       pointer-events: none;
     }
 
+    .contact-btn,
     .lang-btn {
       padding: 8px 12px;
       font-size: 0.9rem;
@@ -162,6 +163,7 @@
       transition: all 0.2s;
     }
 
+    .contact-btn:hover,
     .lang-btn:hover {
       background-color: rgba(255, 105, 180, 0.3);
     }
@@ -171,13 +173,16 @@
       background-color: rgba(255, 105, 180, 0.5);
     }
     .version-info{
-      margin-top: 50px;
+      margin-top: 40px;
       font-size: 1rem;
       color: rgba(255,255,255,0.7);
       text-align: center;
       line-height: 1.8;
       @media (max-width: 500px) {
         margin-top: 30px;
+      }
+      @media (max-width: 400px) {
+        margin-top: 25px;
       }
     }
     .github-btn {
@@ -196,23 +201,99 @@
     .github-btn:hover {
       color: #ff69b4;
     }
+
+    #fps-display {
+      position:absolute;
+      bottom:5px;
+      left:5px;
+      color:#0f0;
+      font-family:monospace;
+      font-size:16px;
+      font-weight:bold;
+      text-shadow:0 0 3px #000;
+      z-index:20;
+    }
+    /* 联系作者部分 */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 400px;
+      text-align: left;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .modal-content textarea {
+      width: 100%;
+      height: 100px;
+      margin: 10px 0;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .modal-actions {
+      text-align: right;
+    }
+
+    .modal-actions button {
+      margin-left: 10px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      background-color: #4caf50;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .modal-actions button:hover {
+      background-color: #45a049;
+    }
+
+    .modal-actions button#cancel-btn {
+      background-color: #aaa;
+    }
+
+    .modal-actions button#cancel-btn:hover {
+      background-color: #888;
+    }
+
+    .close {
+      float: right;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
 <div id="game-container">
   <canvas id="game-canvas"></canvas>
-  <div id="fps-display" style="
-  position:absolute;
-  bottom:5px;
-  left:5px;
-  color:#0f0;
-  font-family:monospace;
-  font-size:16px;
-  font-weight:bold;
-  text-shadow:0 0 3px #000;
-  z-index:20;
-">FPS: 0</div>
+  <div id="fps-display">FPS: 0</div>
 
   <div id="start-screen" class="game-overlay start-adjust" >
     <img src="https://anime.bang-dream.com/bandorichan/wordpress/wp-content/uploads/2025/09/25171503/2025_BGDC_header_01-1024x341.jpg" alt="Header" style="width: 100%; position: absolute; top: 0; left: 0; z-index: -1;">
@@ -224,19 +305,33 @@
         <button class="lang-btn" data-lang="zh">中文</button>
         <button class="lang-btn" data-lang="en">English</button>
         <button class="lang-btn" data-lang="ja">日本語</button>
+        <button class="contact-btn" data-text="contact" id="contact-btn" >联系作者</button>
+      </div>
+    </div>
+    <div id="contact-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 data-text="contact">联系作者</h3>
+        <textarea id="contact-text" data-placeholder="contactHolder" placeholder="请输入内容（不超过100字 如果你希望收到作者回复，记得留下邮箱地址）"
+                  maxlength="100"></textarea>
+        <div class="modal-actions">
+          <button id="send-btn" data-text="submit">提交</button>
+          <button id="cancel-btn" data-text="close">关闭</button>
+        </div>
       </div>
     </div>
     <div class="version-info">
       <div><span data-text="version">版本</span>：0.1</div>
       <div><span data-text="updateTime">更新时间</span>：2025-10-04</div>
       <div>
-        <a href="https://github.com/zfkdiyi/bangdream" target="_blank" id="github-button" class="github-btn">
+        <a href="https://github.com/zfkdiyi/bangdream" id="github-button" class="github-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
           </svg>
           GitHub
         </a>
       </div>
+      <div id="online-count"></div>
     </div>
   </div>
 
@@ -255,7 +350,7 @@
     <div></div>
     <div style="display: flex; flex-direction: column; align-items: center;">
       <img id="win-image" src="img/win.png" alt="YOU WIN" style="max-width: 80%; max-height: 60%; object-fit: contain;">
-      <p class="overlay-text" data-text="winMessage">你真是个音乐天才！</p>
+      <p class="overlay-text" data-text="winMessage">闪闪发光，心动不已！</p>
       <button id="restart-button-win" class="start-button" data-text="playAgain">再玩一次</button>
       <button id="home-button-win" class="start-button" data-text="backToHome">回到首页</button>
     </div>
@@ -273,13 +368,17 @@
         startGame: '开始游戏',
         defeatMessage: '不要灰心，再来一次！',
         retry: '重试一次',
-        winMessage: '闪闪发亮 心跳不已！',
+        winMessage: '闪闪发光 心动不已！',
         playAgain: '再玩一次',
         backToHome: '回到首页',
         lives: '生命数',
         score: '积分',
         version: '版本',
-        updateTime: '更新时间'
+        updateTime: '更新时间',
+        contact: '联系作者',
+        submit: '提交',
+        close: '关闭',
+        contactHolder: '请输入内容（不超过100字 如果你希望收到作者回复，记得留下邮箱地址）'
       },
       en: {
         title: 'GANSO! BanG Dream Chan<br>Note Shooter',
@@ -293,7 +392,11 @@
         lives: 'Lives',
         score: 'Score',
         version: 'Version',
-        updateTime: 'Updated'
+        updateTime: 'Update time',
+        contact: 'Contact Me',
+        submit: 'Submit',
+        close: 'Close',
+        contactHolder: "Please enter your message (up to 100 characters). If you’d like a reply, don’t forget to leave your email address."
       },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
@@ -307,12 +410,16 @@
         lives: 'ライフ',
         score: 'ポイント',
         version: 'バージョン',
-        updateTime: '更新日時'
+        updateTime: '更新日時',
+        contact: 'お問い合わせ',
+        submit: '送信',
+        close: '閉じる',
+        contactHolder: "内容を入力してください（100文字以内）。返信をご希望の方は、メールアドレスを忘れずにご記入ください。"
+
       }
     };
 
     let currentLang = 'zh';
-    const githubUrl = 'https://github.com/zfkdiyi/bangdream';
 
     // 根据浏览器语言自动选择默认语言
     function detectLanguage() {
@@ -338,7 +445,13 @@
           element.innerHTML = texts[key];
         }
       });
-
+      // 更新所有 data-placeholder 的元素（placeholder 属性）
+      document.querySelectorAll('[data-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-placeholder');
+        if (texts[key]) {
+          element.setAttribute('placeholder', texts[key]);
+        }
+      });
       // 更新页面标题
       document.title = texts.title.replace('<br>',' ');
 
@@ -347,21 +460,96 @@
         btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
       });
     }
-
     // 初始化语言
     currentLang = detectLanguage();
-
     // 语言按钮事件监听
     document.addEventListener('DOMContentLoaded', () => {
       updateLanguage(currentLang);
-
       document.querySelectorAll('.lang-btn').forEach(btn => {
-          const changeLang = () => updateLanguage(btn.getAttribute('data-lang'));
-          btn.addEventListener('click', changeLang);
-          //同时绑定 touchstart 解决移动端click事件失效的问题
-          btn.addEventListener('touchstart', changeLang);
+        const changeLang = () => updateLanguage(btn.getAttribute('data-lang'));
+        btn.addEventListener('click', changeLang);
       });
     });
+
+    // 联系作者弹窗逻辑
+    const contactBtn = document.getElementById('contact-btn');
+    const modal = document.getElementById('contact-modal');
+    const closeBtn = modal.querySelector('.close');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const sendBtn = document.getElementById('send-btn');
+    const textarea = document.getElementById('contact-text');
+
+    contactBtn.onclick = () => {
+      modal.style.display = 'flex';
+    };
+
+    closeBtn.onclick = cancelBtn.onclick = () => {
+      modal.style.display = 'none';
+      textarea.value = '';
+    };
+
+    sendBtn.onclick = async () => {
+      const text = textarea.value.trim();
+      if (!text) {
+        alert('请输入内容');
+        return;
+      }
+      try {
+        const response = await fetch('https://badmintonranks.com/prod-api/bilibiliContact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: text
+        });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        if (data.code == 427) {
+          alert('请勿频繁提交');
+          return;
+        }
+        alert('已成功提交！');
+        modal.style.display = 'none';
+        textarea.value = '';
+      } catch (error) {
+        console.error(error);
+        alert('提交失败，请稍后重试');
+      }
+    };
+
+
+    const fpsDisplay = document.getElementById('fps-display');
+    let lastTimes = performance.now();
+    let frames = 0;
+    let fps = 0;
+
+    function updateFPS(){
+      const now = performance.now();
+      frames++;
+      if(now - lastTimes >= 1000){ // 每秒更新一次
+        fps = frames;
+        frames = 0;
+        lastTimes = now;
+        fpsDisplay.textContent = 'FPS: ' + fps;
+      }
+    }
+    async function sendStat() {
+      let from = document.referrer;
+      let width = window.outerWidth;
+      let height = window.window.outerHeight;
+      const res = await fetch('https://badmintonranks.com/prod-api/openStat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'from': from,
+          'width': width,
+          'height': height},
+      });
+      const data = await res.json();
+      if (data.online !== undefined) {
+        document.getElementById('online-count').textContent = `Online: ${data.online}`;
+      }
+    }
     // 获取画布和容器元素
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
@@ -459,12 +647,24 @@
           const drawX = this.x - defeatWidth / 2;
           const drawY = this.y + this.height - defeatHeight;
 
+          // 绘制阴影
+          ctx.fillStyle = 'rgba(0,0,0,0.3)';
+          ctx.beginPath();
+          ctx.ellipse(this.x, this.y + this.height, defeatWidth * 0.3, defeatWidth * 0.15, 0, 0, Math.PI * 2);
+          ctx.fill();
+
           ctx.drawImage(currentImage, drawX, drawY, defeatWidth, defeatHeight);
         } else {
           // 如果是存活状态，则沿用原先的绘制逻辑
           const totalWidth = this.width * this.characterCount;
           const startX = this.x - totalWidth / 2;
           for (let i = 0; i < this.characterCount; i++) {
+            // 绘制阴影
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(startX + i * this.width + this.width / 2, this.y + this.height, this.width * 0.3, this.width * 0.15, 0, 0, Math.PI * 2);
+            ctx.fill();
+
             ctx.drawImage(currentImage, startX + i * this.width, this.y, this.width, this.height);
           }
         }
@@ -493,17 +693,22 @@
     // 子弹类
     class Bullet {
       constructor(x, y) {
-        this.width = canvasWidth / 28;  // 子弹宽度
-        this.height = this.width * 1.6;  // 子弹高度
-        this.x = x - this.width / 2;  // X坐标（中心对齐）
-        this.y = y;  // Y坐标
-        this.speed = 10;  // 移动速度
-        this.image = assetImages.bullet;  // 子弹图像
+        this.width = canvasWidth / 28; // 子弹宽度
+        this.height = this.width * 1.6; // 子弹高度
+        this.x = x - this.width / 2; // X坐标（中心对齐）
+        this.y = y; // Y坐标
+        // 【优化】速度单位改为“像素/秒”，并与屏幕高度关联
+        this.speed = canvasHeight * 1.5; // 每秒移动1.5倍画布高度
+        this.image = assetImages.bullet; // 子弹图像
+        this.markedForDeletion = false; // 【新增】用于标记待删除的对象，替代splice
       }
 
       // 更新子弹位置（向上移动）
-      update() {
-        this.y -= this.speed;
+      update(deltaTime) { // 【优化】接收deltaTime参数
+        // 【优化】移动距离 = 速度 * 时间（秒）
+        this.y -= this.speed * (deltaTime / 1000);
+        // 【优化】如果子弹出界，标记它
+        if (this.y < -this.height) this.markedForDeletion = true;
       }
 
       // 绘制子弹
@@ -515,25 +720,36 @@
     // 粉色小熊类
     class Bear {
       constructor(x, y) {
-        this.width = canvasWidth / 6;  // 小熊宽度
-        this.height = this.width;  // 小熊高度
-        this.x = x;  // X坐标
-        this.y = y;  // Y坐标
-        this.speed = 2.5;  // 下落速度
-        this.health = 3;  // 小熊血量
-        this.animFrame = 0;  // 动画帧计数器
-        this.flashTimer = 0;  // 受击闪光计时器
+        this.width = canvasWidth / 6; // 小熊宽度
+        this.height = this.width; // 小熊高度
+        this.x = x; // X坐标
+        this.y = y; // Y坐标
+        // 【优化】速度单位改为“像素/秒”，并与屏幕高度关联
+        this.speed = canvasHeight * 0.3; // 每秒移动0.3倍画布高度
+        this.health = 3; // 小熊血量
+        this.animFrame = 0; // 动画帧计数器
+        this.flashTimer = 0; // 受击闪光计时器
+        this.markedForDeletion = false; // 【新增】用于标记待删除的对象
       }
 
       // 更新小熊位置（向下移动）
-      update() {
-        this.y += this.speed;
+      update(deltaTime) { // 【优化】接收deltaTime参数
+        // 【优化】移动距离 = 速度 * 时间（秒）
+        this.y += this.speed * (deltaTime / 1000);
         this.animFrame++;
         if (this.flashTimer > 0) this.flashTimer--;
+        // 【优化】如果小熊出界，标记它
+        if (this.y > canvasHeight) this.markedForDeletion = true;
       }
 
       // 绘制小熊
       draw() {
+        // 绘制阴影
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath();
+        ctx.ellipse(this.x + this.width / 2, this.y + this.height, this.width * 0.3, this.width * 0.15, 0, 0, Math.PI * 2);
+        ctx.fill();
+
         if (this.flashTimer > 0) {
           ctx.filter = 'brightness(300%) saturate(0%)';
         }
@@ -546,52 +762,60 @@
     // BOSS类
     class Boss {
       constructor() {
-        this.width = canvasWidth / 3;  // BOSS宽度
-        this.height = this.width * 1.1;  // BOSS高度
-        this.x = canvasWidth / 2 - this.width / 2;  // X坐标（居中）
-        this.y = -this.height;  // Y坐标（从屏幕上方开始）
-        this.speed = 1;  // 基础移动速度
-        this.health = 500;  // 当前血量
-        this.maxHealth = 500;  // BOSS初始血量
-        this.targetY = canvasHeight * 0.1;  // 第一阶段目标Y坐标
-        this.dx = 1;  // X轴移动方向
-        this.phase = 1;  // BOSS阶段（1或2）
-        this.attackSpeed = 0.8;  // 攻击速度
-        this.vy = 0;  // Y轴方向的速度
-        this.bounceTargetY = canvasHeight * 0.3;  // 弹跳目标Y坐标
-        this.animFrame = 0;  // 动画帧计数器
+        this.width = canvasWidth / 3; // BOSS宽度
+        this.height = this.width * 1.1; // BOSS高度
+        this.x = canvasWidth / 2 - this.width / 2; // X坐标（居中）
+        this.y = -this.height; // Y坐标（从屏幕上方开始）
+        // 【优化】速度单位改为“像素/秒”
+        this.speed = canvasHeight * 0.15; // 基础移动速度
+        this.health = 100; // 当前血量
+        this.maxHealth = 100; // BOSS初始血量
+        this.targetY = canvasHeight * 0.1; // 第一阶段目标Y坐标
+        // 【优化】水平移动速度
+        this.dx = canvasWidth * 0.1; // X轴移动速度
+        this.directionX = 1; // X轴移动方向
+        this.phase = 1; // BOSS阶段（1或2）
+        this.attackSpeed = 0.8; // 攻击速度 (此属性在代码中未使用，可保留或删除)
+        this.vy = 0; // Y轴方向的速度（像素/秒）
+        this.gravity = canvasHeight * 0.1; // 【新增】重力加速度（像素/秒^2）
+        this.bounceTargetY = canvasHeight * 0.3; // 弹跳目标Y坐标
+        this.animFrame = 0; // 动画帧计数器
       }
 
       // 更新BOSS状态和位置
-      update() {
+      update(deltaTime) { // 【优化】接收deltaTime参数
+        const deltaSeconds = deltaTime / 1000; // 【优化】将时间转换为秒
         this.animFrame++;
-        // 血量低于50%时进入第二阶段
-        if (this.health <= this.maxHealth / 2 && this.phase === 1) this.phase = 2;
+        if (this.health <= this.maxHealth * 0.75 && this.phase === 1) this.phase = 2;
 
         if (this.phase === 1) {
-          // 第一阶段：先下降到目标位置，然后左右移动
-          if (this.y < this.targetY) this.y += this.speed;
+          if (this.y < this.targetY) this.y += this.speed * deltaSeconds;
           else {
-            this.x += this.dx;
-            if (this.x <= 0 || this.x + this.width >= canvasWidth) this.dx *= -1;
+            this.x += this.dx * this.directionX * deltaSeconds;
+            if (this.x <= 0) {
+              this.x = 0;
+              this.directionX = 1;
+            }
+            if (this.x + this.width >= canvasWidth) {
+              this.x = canvasWidth - this.width;
+              this.directionX = -1;
+            }
           }
         } else {
-          // 第二阶段：追逐玩家模式
           const targetX = player.x - this.width / 2;
           if (Math.abs(this.x - targetX) > 2) {
-            // 使用缓慢的插值移动，让BOSS平滑地追随玩家
             this.x += (targetX - this.x) * 0.02;
           }
-          // 重力效果：每帧增加少量向下速度（减慢下落速度）
-          this.vy += 0.005;
-          this.y += this.vy;
-          // 触地后弹起
+          // 【优化】重力效果
+          this.vy += this.gravity * deltaSeconds;
+          this.y += this.vy * deltaSeconds;
+
           if (this.y + this.height >= canvasHeight) {
             this.y = canvasHeight - this.height;
-            this.vy = -Math.random() * 8 - 5;  // 随机弹起速度
+            // 【优化】弹跳速度与屏幕高度关联
+            this.vy = -(Math.random() * canvasHeight * 0.8 + canvasHeight * 0.5);
             this.bounceTargetY = Math.random() * canvasHeight * 0.4 + canvasHeight * 0.1;
           }
-          // 到达弹起目标高度时停止上升
           if (this.vy < 0 && this.y <= this.bounceTargetY) {
             this.vy = 0;
           }
@@ -600,6 +824,12 @@
 
       // 绘制BOSS和血量条
       draw() {
+        // 绘制阴影
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.beginPath();
+        ctx.ellipse(this.x + this.width / 2, this.y + this.height, this.width * 0.4, this.width * 0.2, 0, 0, Math.PI * 2);
+        ctx.fill();
+
         // 受击时的闪光效果
         if (bossFlashTimer > 0) {
           ctx.filter = 'brightness(300%) saturate(0%)';
@@ -773,78 +1003,70 @@
     // 处理所有碰撞检测
     function handleCollisions() {
       // 子弹与小熊的碰撞
-      for (let i = bullets.length - 1; i >= 0; i--) {
-        for (let j = bears.length - 1; j >= 0; j--) {
-          if (bullets[i] && isColliding(bullets[i], bears[j])) {
-            flashEffects.push(new FlashEffect(bullets[i].x + bullets[i].width / 2, bullets[i].y + bullets[i].height / 2));
-            //explosions.push(new Explosion(bullets[i].x, bullets[i].y));  // 创建爆炸效果
-            bullets.splice(i, 1);  // 移除子弹
-            bears[j].health--;  // 减少小熊血量
-            bears[j].flashTimer = 3;  // 设置小熊闪光效果
-            if (bears[j].health <= 0) {
-              bears.splice(j, 1);  // 移除小熊
-              killCount++;  // 增加总击杀数
-              killsSinceLastLife++;  // 增加回血计数器
-              player.updateCharacterCount();  // 更新角色数量
+      bullets.forEach(bullet => {
+        if (bullet.markedForDeletion) return; // 跳过已标记的子弹
+        bears.forEach(bear => {
+          if (bear.markedForDeletion) return; // 跳过已标记的小熊
+          if (isColliding(bullet, bear)) {
+            flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2));
+            bullet.markedForDeletion = true; // 【优化】标记子弹待删除
+            bear.health--;
+            bear.flashTimer = 3;
+            if (bear.health <= 0) {
+              bear.markedForDeletion = true; // 【优化】标记小熊待删除
+              killCount++;
+              killsSinceLastLife++;
+              player.updateCharacterCount();
             }
-            break;
           }
-        }
-      }
+        });
+      });
 
       // 子弹与BOSS的碰撞
       if (boss) {
-        for (let i = bullets.length - 1; i >= 0; i--) {
-          if (bullets[i] && isColliding(bullets[i], boss)) {
-            flashEffects.push(new FlashEffect(bullets[i].x + bullets[i].width / 2, bullets[i].y + bullets[i].height / 2));
-            //explosions.push(new Explosion(bullets[i].x, bullets[i].y));  // 创建爆炸效果
-            bullets.splice(i, 1);  // 移除子弹
-            boss.health--;  // 减BOSS血量
-            bossFlashTimer = 3;  // 设置闪光效果
+        bullets.forEach(bullet => {
+          if (bullet.markedForDeletion) return; // 跳过已标记的子弹
+          if (isColliding(bullet, boss)) {
+            flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2));
+            bullet.markedForDeletion = true; // 【优化】标记子弹待删除
+            boss.health--;
+            bossFlashTimer = 3;
 
-            // BOSS死亡判定
             if (boss.health <= 0 && gameState === 'playing') {
-              gameState = 'bossDying';  // 设置为BOSS死亡状态
-              bossDeathPosition = {x: boss.x, y: boss.y, width: boss.width, height: boss.height};
+              gameState = 'bossDying';
+              bossDeathPosition = { x: boss.x, y: boss.y, width: boss.width, height: boss.height };
               boss = null;
-              screenFlashAlpha = 0.7;  // 屏幕闪光
-              triggerScreenShake(15);  // 屏幕震动
-              setTimeout(() => gameOver(true), 500);  // 0.5秒后胜利
+              screenFlashAlpha = 0.7;
+              triggerScreenShake(15);
+              setTimeout(() => gameOver(true), 500);
             }
-            break;
           }
-        }
+        });
       }
 
       // 小熊与玩家的碰撞
-      for (let i = bears.length - 1; i >= 0; i--) {
-        const playerHitbox = {
-          x: player.x - (player.width * player.characterCount) / 2,
-          y: player.y,
-          width: player.width * player.characterCount,
-          height: player.height
-        };
-        if (isColliding(bears[i], playerHitbox)) {
-          bears.splice(i, 1);  // 移除小熊
-          triggerScreenShake(5);  // 屏幕震动
+      const playerHitbox = {
+        x: player.x - (player.width * player.characterCount) / 2,
+        y: player.y,
+        width: player.width * player.characterCount,
+        height: player.height
+      };
+      bears.forEach(bear => {
+        if (bear.markedForDeletion) return; // 跳过已标记的小熊
+        if (isColliding(bear, playerHitbox)) {
+          bear.markedForDeletion = true; // 【优化】标记小熊待删除
+          triggerScreenShake(5);
           checkDead();
         }
-      }
+      });
 
       // BOSS与玩家的碰撞（在无敌时间外）
-      if (boss && !playerInvulnerable) {
-        const playerHitbox = {
-          x: player.x - (player.width * player.characterCount) / 2,
-          y: player.y,
-          width: player.width * player.characterCount,
-          height: player.height
-        };
-        if (isColliding(boss, playerHitbox)) {
-          playerInvulnerable = true;  // 设置无敌状态
-          invulnerabilityTimer = 60;  // 1秒无敌时间（60帧）
-          triggerScreenShake(8);  // 屏幕震动
-          checkDead();
-        }
+      if (boss && !playerInvulnerable && isColliding(boss, playerHitbox)) {
+        playerInvulnerable = true;
+        // 【优化】无敌时间与时间关联，1.5秒
+        invulnerabilityTimer = 1500;
+        triggerScreenShake(8);
+        checkDead();
       }
     }
 
@@ -867,13 +1089,16 @@
     }
 
     // 绘制道路中间线
-    function drawRoad() {
-      ctx.fillStyle = '#fff';  // 白色线条
-      const lineWidth = 15, lineHeight = 80, lineGap = 60;  // 线条参数
-      roadLineY += (gameState === 'playing' ? 5 : 0);  // 游戏中时线条向下移动
-      if (roadLineY > lineHeight + lineGap) roadLineY = 0;  // 循环重置
+    function drawRoad(deltaTime) { // 【优化】接收deltaTime参数
+      ctx.fillStyle = '#fff';
+      const lineWidth = 15, lineHeight = 80, lineGap = 60;
+      // 【优化】道路滚动速度与屏幕高度和时间关联
+      const roadSpeed = canvasHeight * 0.6;
+      if (gameState === 'playing') {
+        roadLineY += roadSpeed * (deltaTime / 1000);
+      }
+      if (roadLineY > lineHeight + lineGap) roadLineY = 0;
 
-      // 绘制多条线条
       for (let y = roadLineY - (lineHeight + lineGap); y < canvasHeight; y += lineHeight + lineGap) {
         ctx.fillRect(canvasWidth / 2 - lineWidth / 2, y, lineWidth, lineHeight);
       }
@@ -887,15 +1112,15 @@
       const deltaTime = timestamp - lastTime;  // 计算帧间隔
       lastTime = timestamp;
 
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);  // 清空画布
-      drawRoad();  // 绘制道路
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      drawRoad(deltaTime); // 绘制道路
 
+      // 【修正】将所有“游戏进行中”的逻辑（包括对象更新和清理）都放在这个代码块里
       if (gameState === 'playing') {
-        // 更新子弹，移除超出屏幕的子弹
-        bullets.forEach((bullet, index) => {
-          bullet.update();
-          if (bullet.y < 0) bullets.splice(index, 1);
-        });
+        // 更新所有游戏对象
+        bullets.forEach(bullet => bullet.update(deltaTime));
+        bears.forEach(bear => bear.update(deltaTime));
+        if (boss) boss.update(deltaTime);
 
         // 小熊生成计时器
         bearSpawnTimer += deltaTime;
@@ -904,24 +1129,17 @@
           bearSpawnTimer = 0;
         }
 
-        // 更新小熊，移除超出屏幕的小熊
-        bears.forEach((bear, index) => {
-          bear.update();
-          if (bear.y > canvasHeight) bears.splice(index, 1);
-        });
-
         // 5秒后生成BOSS
         if (!bossSpawned && timestamp > 5000) {
           boss = new Boss();
           bossSpawned = true;
         }
 
-        if (boss) boss.update();  // 更新BOSS
-        if (bossFlashTimer > 0) bossFlashTimer--;  // 更新BOSS闪光计时器
+        if (bossFlashTimer > 0) bossFlashTimer--;
 
         // 更新玩家无敌状态
         if (playerInvulnerable) {
-          invulnerabilityTimer--;
+          invulnerabilityTimer -= deltaTime;
           if (invulnerabilityTimer <= 0) {
             playerInvulnerable = false;
           }
@@ -935,42 +1153,38 @@
             shootTimer = 0;
           }
         }
-
-        handleCollisions();  // 处理碰撞
+        handleCollisions(); // 处理碰撞
+        // 将子弹和小熊数组的清理操作移到这里
+        // 这样当游戏不再是'playing'状态时，它们就不会被移除，从而被定格在屏幕上
+        bullets = bullets.filter(b => !b.markedForDeletion);
+        bears = bears.filter(b => !b.markedForDeletion);
       }
 
-      // BOSS死亡时的连续爆炸效果
+      // BOSS死亡时的连续爆炸效果 (这个逻辑保持在外，因为它在 'bossDying' 状态下运行)
       if (gameState === 'bossDying' && Math.random() < 0.8) {
         const x = bossDeathPosition.x + Math.random() * bossDeathPosition.width;
         const y = bossDeathPosition.y + Math.random() * bossDeathPosition.height;
-        //explosions.push(new Explosion(x, y));
-        flashEffects.push(new FlashEffect(x, y));  // 用闪光效果替代爆炸
+        explosions.push(new Explosion(x, y));
+        flashEffects.push(new FlashEffect(x, y));
       }
 
-      // 更新爆炸效果，移除结束的爆炸
-      explosions.forEach((exp, index) => {
-        exp.update();
-        if (exp.isFinished()) explosions.splice(index, 1);
-      });
+      // 更新并过滤特效 (特效的生命周期独立于游戏状态)
+      flashEffects.forEach(flash => flash.update());
+      explosions.forEach(exp => exp.update());
+      flashEffects = flashEffects.filter(f => !f.isFinished());
+      explosions = explosions.filter(e => !e.isFinished());
 
-      // 更新闪光效果，移除结束的闪光
-      flashEffects.forEach((flash, index) => {
-        flash.update();
-        if (flash.isFinished()) flashEffects.splice(index, 1);
-      });
+      // 绘制所有游戏对象 (绘制逻辑永远在主干上，确保所有状态都能正确显示)
+      bullets.forEach(b => b.draw());
+      bears.forEach(b => b.draw());
+      if (boss) boss.draw();
 
-      // 绘制游戏对象
-      bullets.forEach(b => b.draw());  // 绘制子弹
-      bears.forEach(b => b.draw());  // 绘制小熊
-      if (boss) boss.draw();  // 绘制BOSS
-
-      // 绘制玩家（死亡时始终显示，无敌时间内闪烁效果）
-      if (!playerInvulnerable || Math.floor(invulnerabilityTimer / 5) % 2 === 0) {
+      if (!playerInvulnerable || Math.floor(invulnerabilityTimer / 100) % 2 === 0) {
         player.draw();
       }
 
-      explosions.forEach(e => e.draw());  // 绘制爆炸效果
-      flashEffects.forEach(f => f.draw());  // 绘制闪光效果
+      explosions.forEach(e => e.draw());
+      flashEffects.forEach(f => f.draw());
 
       // 屏幕闪光效果
       if (screenFlashAlpha > 0) {
@@ -1058,111 +1272,87 @@
       return {x: evt.touches[0].clientX - rect.left, y: evt.touches[0].clientY - rect.top};
     }
 
-    // 鼠标移动事件：控制玩家位置
-    container.addEventListener('mousemove', e => {
+    // 【优化】统一处理输入开始事件（鼠标按下或触摸开始）
+    function handleInputStart(x, y) {
+      if (player && gameState === 'playing') {
+        updatePlayerPosition(x, y); // 更新位置
+        isShooting = true;
+        shootTimer = shootInterval; // 立即射击第一发
+      }
+    }
+
+    // 【优化】统一处理输入移动事件（鼠标移动或触摸滑动）
+    function handleInputMove(x, y) {
       if (!player || gameState !== 'playing') return;
+      updatePlayerPosition(x, y);
+    }
+
+    // 【优化】统一处理输入结束事件（鼠标松开/离开或触摸结束）
+    function handleInputEnd() {
+      isShooting = false;
+      shootTimer = 0;
+    }
+
+    // 【优化】统一的玩家位置更新函数
+    function updatePlayerPosition(x, y) {
+      const totalWidth = player.width * player.characterCount;
+      player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, x));
+      player.y = Math.max(0, Math.min(canvasHeight - player.height, y));
+    }
+
+    // 鼠标事件监听
+    container.addEventListener('mousedown', e => {
       const pos = getMousePos(e);
-      const totalWidth = player.width * player.characterCount;
-      player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, pos.x));
-      player.y = Math.max(0, Math.min(canvasHeight - player.height, pos.y));
+      handleInputStart(pos.x, pos.y);
     });
 
-    // 鼠标按下事件：开始持续射击
-    container.addEventListener('mousedown', () => {
-      if (player && gameState === 'playing') {
-        isShooting = true;
-        shootTimer = shootInterval; // 立即射击第一发
-      }
+    container.addEventListener('mousemove', e => {
+      const pos = getMousePos(e);
+      handleInputMove(pos.x, pos.y);
     });
 
-    // 鼠标松开事件：停止射击
-    container.addEventListener('mouseup', () => {
-      isShooting = false;
-      shootTimer = 0;
-    });
+    container.addEventListener('mouseup', handleInputEnd);
+    container.addEventListener('mouseleave', handleInputEnd);
 
-    // 鼠标离开画布：停止射击
-    container.addEventListener('mouseleave', () => {
-      isShooting = false;
-      shootTimer = 0;
-    });
-
-
-
-    // 触摸移动事件：控制玩家位置
-    container.addEventListener('touchmove', e => {
-      e.preventDefault();
-      if (!player || gameState !== 'playing') return;
-      const pos = getTouchPos(e);
-      const totalWidth = player.width * player.characterCount;
-      player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, pos.x));
-      player.y = Math.max(0, Math.min(canvasHeight - player.height, pos.y));
-    }, {passive: false});
-
-    // 触摸开始事件：设置位置并开始持续射击
+    // 触摸事件监听
     container.addEventListener('touchstart', e => {
+      // 阻止在按钮等UI元素上的默认行为
+      if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
-      if (player && gameState === 'playing') {
-        const pos = getTouchPos(e);
-        const totalWidth = player.width * player.characterCount;
-        player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, pos.x));
-        player.y = Math.max(0, Math.min(canvasHeight - player.height, pos.y));
-        isShooting = true;
-        shootTimer = shootInterval; // 立即射击第一发
-      }
-    }, {passive: false});
+      const pos = getTouchPos(e);
+      handleInputStart(pos.x, pos.y);
+    }, { passive: false });
 
-    // 触摸结束事件：停止射击
+    container.addEventListener('touchmove', e => {
+      if (e.target.tagName !== 'CANVAS') return;
+      e.preventDefault();
+      const pos = getTouchPos(e);
+      handleInputMove(pos.x, pos.y);
+    }, { passive: false });
+
     container.addEventListener('touchend', e => {
+      if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
-      isShooting = false;
-      shootTimer = 0;
-    }, {passive: false});
+      handleInputEnd();
+    }, { passive: false });
 
-    // 触摸取消事件：停止射击
     container.addEventListener('touchcancel', e => {
+      if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
-      isShooting = false;
-      shootTimer = 0;
-    }, {passive: false});
+      handleInputEnd();
+    }, { passive: false });
 
-    // 按钮事件监听器 - 支持移动端触摸
+    // 按钮事件监听器
     function addButtonListeners(button, handler) {
-      let touchHandled = false;
-
-      button.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        touchHandled = true;
-        handler();
-      }, {passive: false});
-
       button.addEventListener('click', (e) => {
-        if (touchHandled) {
-          touchHandled = false;
-          return;
-        }
         handler();
       });
     }
-
-
-
     addButtonListeners(startButton, startGame);  // 开始游戏按钮
     addButtonListeners(restartButtonDefeat, startGame);  // 失败重试按钮
     addButtonListeners(restartButtonWin, startGame);  // 胜利重玩按钮
     addButtonListeners(homeButtonDefeat, backToHome);  // 失败回到首页按钮
     addButtonListeners(homeButtonWin, backToHome);  // 胜利回到首页按钮
-    addButtonListeners(githubButton, openGithub);
-
-    function openGithub() {
-      const a = document.createElement("a");
-      a.href = githubUrl;
-      a.target = "_blank";
-      // 插入 DOM 并触发真实点击
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
 
     // 屏幕震动效果函数
     function triggerScreenShake(intensity) {
@@ -1187,27 +1377,11 @@
       // 0.3秒后清除震动效果
       setTimeout(() => container.style.animation = '', 300);
     }
-
-    const fpsDisplay = document.getElementById('fps-display');
-    let lastTimes = performance.now();
-    let frames = 0;
-    let fps = 0;
-
-    function updateFPS(){
-      const now = performance.now();
-      frames++;
-      if(now - lastTimes >= 1000){ // 每秒更新一次
-        fps = frames;
-        frames = 0;
-        lastTimes = now;
-        fpsDisplay.textContent = 'FPS: ' + fps;
-      }
-    }
-
     // 加载资源并初始化画布
     loadAssets(() => {
       resizeCanvas();
       updateLanguage(currentLang);
+      sendStat();
     });
   })();
 </script>
