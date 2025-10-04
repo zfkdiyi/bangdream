@@ -99,10 +99,10 @@
     }
 
     .overlay-text {
-      font-size: 1.4rem;            /* 略大一点 */
-      font-weight: 600;              /* 稍微加粗 */
-      color: #ffffff;                /* 白色 */
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5), 0 0 6px rgba(255,105,180,0.6); /* 阴影 + 粉色光晕 */
+      font-size: 1.4rem; /* 略大一点 */
+      font-weight: 600; /* 稍微加粗 */
+      color: #ffffff; /* 白色 */
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 6px rgba(255, 105, 180, 0.6); /* 阴影 + 粉色光晕 */
       margin-top: 10px;
       margin-bottom: 10px;
       line-height: 1.4;
@@ -172,10 +172,11 @@
       border-color: var(--primary-color);
       background-color: rgba(255, 105, 180, 0.5);
     }
-    .version-info{
+
+    .version-info {
       margin-top: 40px;
       font-size: 1rem;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       text-align: center;
       line-height: 1.8;
       @media (max-width: 500px) {
@@ -185,9 +186,10 @@
         margin-top: 25px;
       }
     }
+
     .github-btn {
       margin-top: 10px;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -203,16 +205,17 @@
     }
 
     #fps-display {
-      position:absolute;
-      bottom:5px;
-      left:5px;
-      color:#0f0;
-      font-family:monospace;
-      font-size:16px;
-      font-weight:bold;
-      text-shadow:0 0 3px #000;
-      z-index:20;
+      position: absolute;
+      bottom: 5px;
+      left: 5px;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: bold;
+      text-shadow: 0 0 3px #000;
+      z-index: 20;
     }
+
     /* 联系作者部分 */
     .modal {
       display: none;
@@ -254,6 +257,7 @@
       font-size: 0.95rem;
       box-sizing: border-box;
     }
+
     .modal-actions {
       text-align: right;
     }
@@ -295,8 +299,10 @@
   <canvas id="game-canvas"></canvas>
   <div id="fps-display">FPS: 0</div>
 
-  <div id="start-screen" class="game-overlay start-adjust" >
-    <img src="https://anime.bang-dream.com/bandorichan/wordpress/wp-content/uploads/2025/09/25171503/2025_BGDC_header_01-1024x341.jpg" alt="Header" style="width: 100%; position: absolute; top: 0; left: 0; z-index: -1;">
+  <div id="start-screen" class="game-overlay start-adjust">
+    <img
+      src="https://anime.bang-dream.com/bandorichan/wordpress/wp-content/uploads/2025/09/25171503/2025_BGDC_header_01-1024x341.jpg"
+      alt="Header" style="width: 100%; position: absolute; top: 0; left: 0; z-index: -1;">
     <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20vh;">
       <h1 class="overlay-title" data-text="title">音符射手</h1>
       <p class="overlay-text" data-text="instructions">移动鼠标或手指来控制角色<br>按住屏幕持续发射音符！</p>
@@ -305,14 +311,15 @@
         <button class="lang-btn" data-lang="zh">中文</button>
         <button class="lang-btn" data-lang="en">English</button>
         <button class="lang-btn" data-lang="ja">日本語</button>
-        <button class="contact-btn" data-text="contact" id="contact-btn" >联系作者</button>
+        <button class="contact-btn" data-text="contact" id="contact-btn">联系作者</button>
       </div>
     </div>
     <div id="contact-modal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
         <h3 data-text="contact">联系作者</h3>
-        <textarea id="contact-text" data-placeholder="contactHolder" placeholder="请输入内容（不超过100字 如果你希望收到作者回复，记得留下邮箱地址）"
+        <textarea id="contact-text" data-placeholder="contactHolder"
+                  placeholder="请输入内容（不超过100字 如果你希望收到作者回复，记得留下邮箱地址）"
                   maxlength="100"></textarea>
         <div class="modal-actions">
           <button id="send-btn" data-text="submit">提交</button>
@@ -326,7 +333,8 @@
       <div>
         <a href="https://github.com/zfkdiyi/bangdream" id="github-button" class="github-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            <path
+              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
           </svg>
           GitHub
         </a>
@@ -338,7 +346,8 @@
   <div id="defeat-screen" class="game-overlay hidden">
     <div></div>
     <div style="display: flex; flex-direction: column; align-items: center;">
-      <img id="defeat-image" src="img/defeat.png" alt="DEFEAT" style="max-width: 80%; max-height: 60%; object-fit: contain;">
+      <img id="defeat-image" src="img/defeat.png" alt="DEFEAT"
+           style="max-width: 80%; max-height: 60%; object-fit: contain;">
       <p class="overlay-text" data-text="defeatMessage">不要灰心，再来一次！</p>
       <button id="restart-button-defeat" class="start-button" data-text="retry">重试</button>
       <button id="home-button-defeat" class="start-button" data-text="backToHome">回到首页</button>
@@ -453,13 +462,14 @@
         }
       });
       // 更新页面标题
-      document.title = texts.title.replace('<br>',' ');
+      document.title = texts.title.replace('<br>', ' ');
 
       // 更新语言按钮状态
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
       });
     }
+
     // 初始化语言
     currentLang = detectLanguage();
     // 语言按钮事件监听
@@ -523,16 +533,17 @@
     let frames = 0;
     let fps = 0;
 
-    function updateFPS(){
+    function updateFPS() {
       const now = performance.now();
       frames++;
-      if(now - lastTimes >= 1000){ // 每秒更新一次
+      if (now - lastTimes >= 1000) { // 每秒更新一次
         fps = frames;
         frames = 0;
         lastTimes = now;
         fpsDisplay.textContent = 'FPS: ' + fps;
       }
     }
+
     async function sendStat() {
       let from = document.referrer;
       let width = window.outerWidth;
@@ -543,13 +554,15 @@
           'Content-Type': 'application/json',
           'from': from,
           'width': width,
-          'height': height},
+          'height': height
+        },
       });
       const data = await res.json();
       if (data.online !== undefined) {
         document.getElementById('online-count').textContent = `Online: ${data.online}`;
       }
     }
+
     // 获取画布和容器元素
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
@@ -585,20 +598,30 @@
     let flashEffects = [];  // 闪光效果数组
     let isShooting = false;  // 是否正在射击
     let shootTimer = 0;  // 射击计时器
-    let shootInterval = 150;  // 射击间隔（毫秒）
+    let shootInterval = 80;  // 射击间隔（毫秒）越小子弹发射越密集，火力更强
 
     // 游戏资源定义
     const assets = {
       player1: 'img/player1.png',
       player2: 'img/player2.png',
+      player3: 'img/player3.png',
+      player4: 'img/player4.png',
+      player5: 'img/player5.png',
+      player6: 'img/player6.png',
       bear1: 'img/kuma1.png',
       bear2: 'img/kuma2.png',
       boss1: 'img/kkr1.png',
       boss2: 'img/kkr2.png',
-      bullet: 'img/bullet1.png',
+      boss3: 'img/kkr3.png',
+      boss4: 'img/kkr4.png',
+      bullet1: 'img/bullet1.png',
+      bullet2: 'img/bullet2.png',
+      bullet3: 'img/bullet3.png',
       flash1: 'img/flash1.png',
       flash2: 'img/flash2.png',
-      defeat: 'img/defeat1.png'
+      defeat1: 'img/defeat1.png',
+      defeat2: 'img/defeat2.png',
+      defeat3: 'img/defeat3.png'
     };
 
     const assetImages = {};  // 存储加载后的图像对象
@@ -626,24 +649,21 @@
         this.characterCount = 1;  // 角色数量（生命数）
         this.animFrame = 0;  // 动画帧计数器
         this.isDead = false;  // 死亡状态
+        this.defeatCharacters = [];  // 处于defeat状态的角色
+        this.characters = [1];  // 存储每个角色的类型编号
+        this.deadCharacterType = 1;  // 最后一个死亡角色的类型
       }
 
       // 绘制玩家角色
       draw() {
         this.animFrame++;
-        let currentImage;
-        if (this.isDead) {
-          currentImage = assetImages.defeat;
-        } else {
-          currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.player1 : assetImages.player2;
-        }
+
         if (this.isDead) {
           // 如果是死亡状态，按defeat图片的真实宽高比进行绘制
+          const currentImage = assetImages[`defeat${this.deadCharacterType}`];
           const aspectRatio = currentImage.naturalWidth / currentImage.naturalHeight;
-          // 让新宽度与原先的高度近似，使视觉上大小更协调
           const defeatWidth = this.height * 1.2;
           const defeatHeight = defeatWidth / aspectRatio;
-          // 重新计算绘制坐标，使其水平居中，且脚底位置大致不变
           const drawX = this.x - defeatWidth / 2;
           const drawY = this.y + this.height - defeatHeight;
 
@@ -655,7 +675,7 @@
 
           ctx.drawImage(currentImage, drawX, drawY, defeatWidth, defeatHeight);
         } else {
-          // 如果是存活状态，则沿用原先的绘制逻辑
+          // 绘制存活的角色
           const totalWidth = this.width * this.characterCount;
           const startX = this.x - totalWidth / 2;
           for (let i = 0; i < this.characterCount; i++) {
@@ -665,8 +685,39 @@
             ctx.ellipse(startX + i * this.width + this.width / 2, this.y + this.height, this.width * 0.3, this.width * 0.15, 0, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.drawImage(currentImage, startX + i * this.width, this.y, this.width, this.height);
+            // 根据角色类型选择不同形象
+            let characterImage;
+            const characterType = this.characters[i];
+            const isFrame2 = Math.floor(this.animFrame / 30) % 2 === 1;
+
+            if (characterType === 2) {
+              characterImage = isFrame2 ? assetImages.player4 : assetImages.player3;
+            } else if (characterType === 3) {
+              characterImage = isFrame2 ? assetImages.player6 : assetImages.player5;
+            } else {
+              characterImage = isFrame2 ? assetImages.player2 : assetImages.player1;
+            }
+
+            ctx.drawImage(characterImage, startX + i * this.width, this.y, this.width, this.height);
           }
+
+          // 绘制defeat状态的角色
+          this.defeatCharacters.forEach(defeatChar => {
+            const defeatImage = assetImages[`defeat${defeatChar.characterIndex}`];
+            const aspectRatio = defeatImage.naturalWidth / defeatImage.naturalHeight;
+            const defeatWidth = this.height * 1.2;
+            const defeatHeight = defeatWidth / aspectRatio;
+            const drawX = defeatChar.x - defeatWidth / 2;
+            const drawY = this.y + this.height - defeatHeight;
+
+            // 绘制阴影
+            ctx.fillStyle = 'rgba(0,0,0,0.3)';
+            ctx.beginPath();
+            ctx.ellipse(defeatChar.x, this.y + this.height, defeatWidth * 0.3, defeatWidth * 0.15, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.drawImage(defeatImage, drawX, drawY, defeatWidth, defeatHeight);
+          });
         }
       }
 
@@ -676,7 +727,8 @@
         const startX = this.x - totalWidth / 2;
         for (let i = 0; i < this.characterCount; i++) {
           const bulletX = startX + i * this.width + this.width / 2;
-          bullets.push(new Bullet(bulletX, this.y));
+          const bulletType = this.characters[i]; // 根据角色类型选择子弹
+          bullets.push(new Bullet(bulletX, this.y, bulletType));
         }
       }
 
@@ -685,21 +737,32 @@
         // 每击杀5个小熊增加1血
         if (killsSinceLastLife >= 5 && this.characterCount < 5) {
           player.characterCount++;
+          // 添加新角色类型：循环使用1,2,3
+          const nextType = (this.characters.length % 3) + 1;
+          this.characters.push(nextType);
           killsSinceLastLife = 0;
         }
+      }
+
+      // 更新defeat角色状态
+      updateDefeatCharacters(deltaTime) {
+        this.defeatCharacters = this.defeatCharacters.filter(defeatChar => {
+          defeatChar.timer -= deltaTime;
+          return defeatChar.timer > 0;
+        });
       }
     }
 
     // 子弹类
     class Bullet {
-      constructor(x, y) {
-        this.width = canvasWidth / 28; // 子弹宽度
+      constructor(x, y, bulletType = 1) {
+        this.width = canvasWidth / 18; // 子弹宽度
         this.height = this.width * 1.6; // 子弹高度
         this.x = x - this.width / 2; // X坐标（中心对齐）
         this.y = y; // Y坐标
         // 【优化】速度单位改为“像素/秒”，并与屏幕高度关联
         this.speed = canvasHeight * 1.5; // 每秒移动1.5倍画布高度
-        this.image = assetImages.bullet; // 子弹图像
+        this.image = assetImages[`bullet${bulletType}`]; // 根据类型选择子弹图像
         this.markedForDeletion = false; // 【新增】用于标记待删除的对象，替代splice
       }
 
@@ -726,7 +789,7 @@
         this.y = y; // Y坐标
         // 【优化】速度单位改为“像素/秒”，并与屏幕高度关联
         this.speed = canvasHeight * 0.3; // 每秒移动0.3倍画布高度
-        this.health = 3; // 小熊血量
+        this.health = 5; // 小熊血量
         this.animFrame = 0; // 动画帧计数器
         this.flashTimer = 0; // 受击闪光计时器
         this.markedForDeletion = false; // 【新增】用于标记待删除的对象
@@ -768,8 +831,8 @@
         this.y = -this.height; // Y坐标（从屏幕上方开始）
         // 【优化】速度单位改为“像素/秒”
         this.speed = canvasHeight * 0.15; // 基础移动速度
-        this.health = 100; // 当前血量
-        this.maxHealth = 100; // BOSS初始血量
+        this.health = 1300; // 当前血量
+        this.maxHealth = 1300; // BOSS初始血量
         this.targetY = canvasHeight * 0.1; // 第一阶段目标Y坐标
         // 【优化】水平移动速度
         this.dx = canvasWidth * 0.1; // X轴移动速度
@@ -780,6 +843,8 @@
         this.gravity = canvasHeight * 0.1; // 【新增】重力加速度（像素/秒^2）
         this.bounceTargetY = canvasHeight * 0.3; // 弹跳目标Y坐标
         this.animFrame = 0; // 动画帧计数器
+        this.attackState = 'normal'; // 攻击状态：normal, raising, punching
+        this.attackTimer = 0; // 攻击计时器
       }
 
       // 更新BOSS状态和位置
@@ -806,6 +871,28 @@
           if (Math.abs(this.x - targetX) > 2) {
             this.x += (targetX - this.x) * 0.02;
           }
+
+          // 检查是否接近玩家（距离玩家只差一步之遥）
+          const distanceToPlayer = player.y - (this.y + this.height);
+          if (distanceToPlayer <= player.height && this.attackState === 'normal' && this.vy >= 0) {
+            this.attackState = 'raising';
+            this.attackTimer = 300; // 0.3秒
+          }
+
+          // 处理攻击状态
+          if (this.attackState === 'raising') {
+            this.attackTimer -= deltaTime;
+            if (this.attackTimer <= 0) {
+              this.attackState = 'punching';
+              this.attackTimer = 300; // 砸拳头持续时间
+            }
+          } else if (this.attackState === 'punching') {
+            this.attackTimer -= deltaTime;
+            if (this.attackTimer <= 0) {
+              this.attackState = 'normal';
+            }
+          }
+
           // 【优化】重力效果
           this.vy += this.gravity * deltaSeconds;
           this.y += this.vy * deltaSeconds;
@@ -831,10 +918,21 @@
         ctx.fill();
 
         // 受击时的闪光效果
-        if (bossFlashTimer > 0) {
+        if (bossFlashTimer > 0 && this.health > 0) {
           ctx.filter = 'brightness(300%) saturate(0%)';
         }
-        const currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.boss1 : assetImages.boss2;
+
+        // 根据攻击状态选择图片
+        let currentImage;
+        if (this.attackState === 'raising') {
+          currentImage = assetImages.boss3; // 举起拳头
+        } else if (this.attackState === 'punching') {
+          currentImage = assetImages.boss4; // 砸下拳头
+        } else {
+          // 正常状态下的动画切换
+          currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.boss1 : assetImages.boss2;
+        }
+
         ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
         ctx.filter = 'none';
 
@@ -970,6 +1068,11 @@
       playerInvulnerable = false;  // 重置无敌状态
       invulnerabilityTimer = 0;  // 重置无敌计时器
       gameState = 'playing';  // 设置游戏状态为游戏中
+      if (player) {
+        player.defeatCharacters = [];  // 清空defeat角色
+        player.characters = [1];  // 重置角色类型数组
+        player.deadCharacterType = 1;  // 重置死亡角色类型
+      }
     }
 
     // 生成小熊
@@ -1031,11 +1134,9 @@
             bullet.markedForDeletion = true; // 【优化】标记子弹待删除
             boss.health--;
             bossFlashTimer = 3;
-
             if (boss.health <= 0 && gameState === 'playing') {
               gameState = 'bossDying';
-              bossDeathPosition = { x: boss.x, y: boss.y, width: boss.width, height: boss.height };
-              boss = null;
+              bossDeathPosition = {x: boss.x, y: boss.y, width: boss.width, height: boss.height};
               screenFlashAlpha = 0.7;
               triggerScreenShake(15);
               setTimeout(() => gameOver(true), 500);
@@ -1045,38 +1146,76 @@
       }
 
       // 小熊与玩家的碰撞
-      const playerHitbox = {
-        x: player.x - (player.width * player.characterCount) / 2,
-        y: player.y,
-        width: player.width * player.characterCount,
-        height: player.height
-      };
       bears.forEach(bear => {
-        if (bear.markedForDeletion) return; // 跳过已标记的小熊
-        if (isColliding(bear, playerHitbox)) {
-          bear.markedForDeletion = true; // 【优化】标记小熊待删除
-          triggerScreenShake(5);
-          checkDead();
+        if (bear.markedForDeletion) return;
+        const totalWidth = player.width * player.characterCount;
+        const startX = player.x - totalWidth / 2;
+
+        for (let i = 0; i < player.characterCount; i++) {
+          const charHitbox = {
+            x: startX + i * player.width,
+            y: player.y,
+            width: player.width,
+            height: player.height
+          };
+
+          if (isColliding(bear, charHitbox)) {
+            bear.markedForDeletion = true;
+            triggerScreenShake(5);
+            checkDead(i);
+            return;
+          }
         }
       });
 
       // BOSS与玩家的碰撞（在无敌时间外）
-      if (boss && !playerInvulnerable && isColliding(boss, playerHitbox)) {
-        playerInvulnerable = true;
-        // 【优化】无敌时间与时间关联，1.5秒
-        invulnerabilityTimer = 1500;
-        triggerScreenShake(8);
-        checkDead();
+      if (boss && !playerInvulnerable) {
+        const totalWidth = player.width * player.characterCount;
+        const startX = player.x - totalWidth / 2;
+
+        for (let i = 0; i < player.characterCount; i++) {
+          const charHitbox = {
+            x: startX + i * player.width,
+            y: player.y,
+            width: player.width,
+            height: player.height
+          };
+
+          if (isColliding(boss, charHitbox)) {
+            playerInvulnerable = true;
+            invulnerabilityTimer = 1500;
+            triggerScreenShake(8);
+            checkDead(i);
+            return;
+          }
+        }
       }
     }
 
-    function checkDead() {
+    function checkDead(hitCharacterIndex) {
       if (player.characterCount > 1) {
+        // 计算被击中角色的位置
+        const totalWidth = player.width * player.characterCount;
+        const startX = player.x - totalWidth / 2;
+        const hitCharacterX = startX + hitCharacterIndex * player.width + player.width / 2;
+        const hitCharacterType = player.characters[hitCharacterIndex];
+
+        // 添加defeat角色
+        player.defeatCharacters.push({
+          x: hitCharacterX,
+          characterIndex: hitCharacterType,
+          timer: 1200 // 角色被击败1200毫秒后消失
+        });
+
+        // 从角色数组中移除被击中的角色
+        player.characters.splice(hitCharacterIndex, 1);
         player.characterCount--;  // 减少角色数量（生命）
         killsSinceLastLife = 0;
       } else {
+        // 记录最后一个角色的类型
+        player.deadCharacterType = player.characters[hitCharacterIndex];
         player.isDead = true;  // 设置玩家死亡状态
-        setTimeout(() => gameOver(false), 100);  // 100毫秒后游戏结束
+        setTimeout(() => gameOver(false), 500);  // 400毫秒后游戏结束
       }
     }
 
@@ -1121,6 +1260,7 @@
         bullets.forEach(bullet => bullet.update(deltaTime));
         bears.forEach(bear => bear.update(deltaTime));
         if (boss) boss.update(deltaTime);
+        player.updateDefeatCharacters(deltaTime);
 
         // 小熊生成计时器
         bearSpawnTimer += deltaTime;
@@ -1321,26 +1461,26 @@
       e.preventDefault();
       const pos = getTouchPos(e);
       handleInputStart(pos.x, pos.y);
-    }, { passive: false });
+    }, {passive: false});
 
     container.addEventListener('touchmove', e => {
       if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
       const pos = getTouchPos(e);
       handleInputMove(pos.x, pos.y);
-    }, { passive: false });
+    }, {passive: false});
 
     container.addEventListener('touchend', e => {
       if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
       handleInputEnd();
-    }, { passive: false });
+    }, {passive: false});
 
     container.addEventListener('touchcancel', e => {
       if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
       handleInputEnd();
-    }, { passive: false });
+    }, {passive: false});
 
     // 按钮事件监听器
     function addButtonListeners(button, handler) {
@@ -1348,6 +1488,7 @@
         handler();
       });
     }
+
     addButtonListeners(startButton, startGame);  // 开始游戏按钮
     addButtonListeners(restartButtonDefeat, startGame);  // 失败重试按钮
     addButtonListeners(restartButtonWin, startGame);  // 胜利重玩按钮
@@ -1377,6 +1518,7 @@
       // 0.3秒后清除震动效果
       setTimeout(() => container.style.animation = '', 300);
     }
+
     // 加载资源并初始化画布
     loadAssets(() => {
       resizeCanvas();
