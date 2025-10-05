@@ -1,6 +1,6 @@
 # BanG Dream Note Shooter 音符射手
 
-**BanG Dream Note Shooter Game** is a fan-made web game, inspired by the ending animation of "GANSO! BanG Dream Chan!". 
+**BanG Dream Note Shooter Game** is a fan-made web game, inspired by the ending animation of *GANSO! BanG Dream Chan!*. 
 
 **BanG Dream音符射手**是一个自制的网页小游戏，是仿照《元祖BanG Dream酱》的片尾动画中出现的桥段制作而成。
 
@@ -18,7 +18,7 @@ When the player defeats a certain number of Michelles, they gain +1 Life (a new 
 
 The game ends in failure when all Lives are lost, and in victory when Tsurumaki Kokoro is defeated.
 
-玩家通过移动鼠标或手指触碰来控制角色，按住鼠标左键或按住屏幕持续发射音符。
+玩家通过移动鼠标或手指触屏来控制角色，按住鼠标左键或按住屏幕持续发射音符。
 
 玩家角色击落一定数量的米歇尔后会增加1生命值（新增一个队友），玩家角色碰到米歇尔或者BOSS弦卷心会扣去1生命值（失去一个队友）。
 
@@ -29,7 +29,7 @@ The game ends in failure when all Lives are lost, and in victory when Tsurumaki 
 - Langeuage Selector (CHN/ENG/JPN)
 - Multiple Player Character (Minato Yukina/Maruyama Aya/Kurata Mashiro)
 - Difficulty Selector (Easy/Normal/Hard/Endless)
-- Scoring System 
+- Scoring System：For now, you earn 1 point for each Michelle you defeat.
 - All character movements, defeat poses, note colors, and Makimaki Kokoro’s actions and attack animations are traced from anime screenshots to match the original exactly.
 
 - 语言选择（中/英/日）
