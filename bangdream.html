@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>音符射手</title>
+  <title>音符射手 元祖Bang Dram</title>
   <style>
     :root {
       --primary-color: #ff69b4; /* Hot Pink */
@@ -93,10 +93,6 @@
         font-size: 1.6rem;
         margin: 10px 0px;
       }
-    }
-
-    #win-title {
-      text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
     }
 
     .overlay-text {
@@ -333,8 +329,8 @@
       <h1 class="overlay-title" data-text="title">音符射手</h1>
       <p class="overlay-text" data-text="instructions">移动鼠标或手指来控制角色<br>按住屏幕持续发射音符！</p>
       <div class="difficulty-selector">
-        <button class="difficulty-btn" data-difficulty="easy" data-text="easy">容易</button>
-        <button class="difficulty-btn" data-difficulty="normal" data-text="normal">中等</button>
+        <button class="difficulty-btn" data-difficulty="easy" data-text="easy">简单</button>
+        <button class="difficulty-btn" data-difficulty="normal" data-text="normal">普通</button>
         <button class="difficulty-btn" data-difficulty="hard" data-text="hard">困难</button>
         <button class="difficulty-btn" data-difficulty="endless" data-text="endless">无尽模式</button>
       </div>
@@ -627,12 +623,18 @@
     const startScreen = document.getElementById('start-screen');
     const defeatScreen = document.getElementById('defeat-screen');
     const winScreen = document.getElementById('win-screen');
+
     const startButton = document.getElementById('start-button');
     const restartButtonDefeat = document.getElementById('restart-button-defeat');
     const restartButtonWin = document.getElementById('restart-button-win');
     const homeButtonDefeat = document.getElementById('home-button-defeat');
     const homeButtonWin = document.getElementById('home-button-win');
-    const githubButton = document.getElementById('github-button');
+    startButton.addEventListener('click', startGame);// 开始游戏按钮
+    restartButtonDefeat.addEventListener('click', startGame);// 失败重试按钮
+    restartButtonWin.addEventListener('click', startGame);// 胜利重玩按钮
+    homeButtonDefeat.addEventListener('click', backToHome);// 失败回到首页按钮
+    homeButtonWin.addEventListener('click', backToHome);// 胜利回到首页按钮
+
 
     // 游戏基础变量
     let canvasWidth, canvasHeight;  // 画布尺寸
@@ -790,8 +792,9 @@
         // 每击杀5个小熊增加1血
         if (killsSinceLastLife >= 5 && this.characterCount < 5) {
           player.characterCount++;
-          // 添加新角色类型：循环使用1,2,3
-          const nextType = (this.characters.length % 3) + 1;
+          // 添加新角色随机1,2,3
+          // const nextType = (this.characters.length % 3) + 1;
+          const nextType = Math.floor(Math.random() * 3) + 1;
           this.characters.push(nextType);
           killsSinceLastLife = 0;
         }
@@ -900,7 +903,6 @@
         this.dx = canvasWidth * 0.1; // X轴移动速度
         this.directionX = 1; // X轴移动方向
         this.phase = 1; // BOSS阶段（1或2）
-        this.attackSpeed = 0.8; // 攻击速度 (此属性在代码中未使用，可保留或删除)
         this.vy = 0; // Y轴方向的速度（像素/秒）
         this.gravity = canvasHeight * 0.1; // 【新增】重力加速度（像素/秒^2）
         this.bounceTargetY = canvasHeight * 0.3; // 弹跳目标Y坐标
@@ -936,9 +938,10 @@
           if (Math.abs(this.x - targetX) > 2) {
             this.x += (targetX - this.x) * 0.02;
           }
-          // 接近玩家时变成举起拳头状态持续0.3秒
+          // 接近玩家时（玩家在BOSS的下方，且距离小于玩家的身高）变成举起拳头状态持续0.3秒
           const distanceToPlayer = player.y - (this.y + this.height);
-          if (distanceToPlayer <= player.height && this.attackState === 'normal' && this.vy >= 0) {
+          if (distanceToPlayer >=0 && distanceToPlayer <= player.height &&
+            this.attackState === 'normal' && this.vy >= 0) {
             this.attackState = 'raising';
             this.attackTimer = 300;
           }
@@ -1261,7 +1264,8 @@
 
           if (isColliding(boss, charHitbox)) {
             playerInvulnerable = true;
-            invulnerabilityTimer = 1500;
+            // 玩家无敌时间1.8秒，避免重复受到伤害
+            invulnerabilityTimer = 1800;
             triggerScreenShake(8);
             checkDead(i);
             return;
@@ -1332,38 +1336,20 @@
       ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       drawRoad(deltaTime); // 绘制道路
 
-      // 【修正】将所有“游戏进行中”的逻辑（包括对象更新和清理）都放在这个代码块里
+      // 将所有“游戏进行中”的逻辑（包括对象更新和清理）都放在这个代码块里
       if (gameState === 'playing') {
-        // 更新所有游戏对象
         const gameTime = timestamp - gameStartTime; // 计算游戏时间
+        // 更新所有游戏对象
         bullets.forEach(bullet => bullet.update(deltaTime));
         bears.forEach(bear => bear.update(deltaTime));
-        if (boss) boss.update(deltaTime, gameTime);
-        player.updateDefeatCharacters(deltaTime);
-
-        // 小熊生成计时器
-        bearSpawnTimer += deltaTime;
-        if (bearSpawnTimer > bearSpawnInterval) {
-          spawnBears();
-          bearSpawnTimer = 0;
+        if (boss) {
+          boss.update(deltaTime, gameTime);
         }
-
-        // 5秒后生成BOSS
-        if (!bossSpawned && timestamp > 5000) {
-          boss = new Boss();
-          bossSpawned = true;
+        if(player){
+          // 更新玩家角色所在位置
+          updatePlayerPosition(deltaTime);
+          player.updateDefeatCharacters(deltaTime);
         }
-
-        if (bossFlashTimer > 0) bossFlashTimer--;
-
-        // 更新玩家无敌状态
-        if (playerInvulnerable) {
-          invulnerabilityTimer -= deltaTime;
-          if (invulnerabilityTimer <= 0) {
-            playerInvulnerable = false;
-          }
-        }
-
         // 持续射击逻辑
         if (isShooting) {
           shootTimer += deltaTime;
@@ -1372,6 +1358,26 @@
             shootTimer = 0;
           }
         }
+        // 小熊生成计时器
+        bearSpawnTimer += deltaTime;
+        if (bearSpawnTimer > bearSpawnInterval) {
+          spawnBears();
+          bearSpawnTimer = 0;
+        }
+        // 5秒后生成BOSS
+        if (!bossSpawned && timestamp > 5000) {
+          boss = new Boss();
+          bossSpawned = true;
+        }
+        if (bossFlashTimer > 0) bossFlashTimer--;
+        // 更新玩家无敌状态
+        if (playerInvulnerable) {
+          invulnerabilityTimer -= deltaTime;
+          if (invulnerabilityTimer <= 0) {
+            playerInvulnerable = false;
+          }
+        }
+
         handleCollisions(); // 处理碰撞
         // 将子弹和小熊数组的清理操作移到这里
         // 这样当游戏不再是'playing'状态时，它们就不会被移除，从而被定格在屏幕上
@@ -1495,9 +1501,10 @@
         player.height = player.width * 1.2;
       }
     }
-
     window.addEventListener('resize', resizeCanvas);  // 监听窗口大小变化
 
+    // 定义一个目标位置的全局变量，方便玩家角色位置更新函数里使用
+    let targetPos = { x: player ? player.x : 0, y: player ? player.y : 0 };
     // 获取鼠标位置
     function getMousePos(evt) {
       const rect = canvas.getBoundingClientRect();
@@ -1510,49 +1517,64 @@
       return {x: evt.touches[0].clientX - rect.left, y: evt.touches[0].clientY - rect.top};
     }
 
-    // 【优化】统一处理输入开始事件（鼠标按下或触摸开始）
+    // 鼠标按下或触摸开始 开始射击
     function handleInputStart(x, y) {
-      if (player && gameState === 'playing') {
-        updatePlayerPosition(x, y); // 更新位置
-        isShooting = true;
-        shootTimer = shootInterval; // 立即射击第一发
-      }
+      isShooting = true;
+      shootTimer = shootInterval; // 立即射击第一发
+
     }
 
-    // 【优化】统一处理输入移动事件（鼠标移动或触摸滑动）
+    // 鼠标移动或触摸滑动 角色目标位置更新
     function handleInputMove(x, y) {
-      if (!player || gameState !== 'playing') return;
-      updatePlayerPosition(x, y);
+      targetPos.x = x;
+      targetPos.y = y;
     }
 
-    // 【优化】统一处理输入结束事件（鼠标松开/离开或触摸结束）
+    // 鼠标松开/离开或触摸结束 停止射击
     function handleInputEnd() {
       isShooting = false;
       shootTimer = 0;
     }
 
-    // 【优化】统一的玩家位置更新函数
-    function updatePlayerPosition(x, y) {
+    // 玩家位置更新函数
+    function updatePlayerPosition(deltaTime) {
+      // 下面代码的作用是让玩家角色平滑移动，从而修复移动端点击任意位置会瞬移过去，不会接触到移动路线上任何物体的bug
+      // speed数值越大，角色移动越接近真实的随鼠标移动/移动端瞬移，speed数值越小，角色移动的滞后性越大
+      const speed = 2400;
+      const dx = targetPos.x - player.x;
+      const dy = targetPos.y - player.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance > 1) {
+        const moveDist = Math.min(speed * deltaTime / 1000, distance); // 注意 deltaTime 单位 ms
+        player.x += dx / distance * moveDist;
+        player.y += dy / distance * moveDist;
+      }
+
+      // 下面三行代码作用是避免角色移动位置超出边界
       const totalWidth = player.width * player.characterCount;
-      player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, x));
-      player.y = Math.max(0, Math.min(canvasHeight - player.height, y));
+      player.x = Math.max(totalWidth / 2, Math.min(canvasWidth - totalWidth / 2, player.x));
+      player.y = Math.max(0, Math.min(canvasHeight - player.height, player.y));
     }
 
-    // 鼠标事件监听
+    // 鼠标按下
     container.addEventListener('mousedown', e => {
       const pos = getMousePos(e);
       handleInputStart(pos.x, pos.y);
     });
 
+    //鼠标移动
     container.addEventListener('mousemove', e => {
       const pos = getMousePos(e);
       handleInputMove(pos.x, pos.y);
     });
 
+    //鼠标松开按钮
     container.addEventListener('mouseup', handleInputEnd);
-    container.addEventListener('mouseleave', handleInputEnd);
 
-    // 触摸事件监听
+    // 如果希望鼠标移到画布范围以外依然保持射击，就注释下面这行
+    // container.addEventListener('mouseleave', handleInputEnd);
+
+    // 触摸开始 （手指首次触碰屏幕）
     container.addEventListener('touchstart', e => {
       // 阻止在按钮等UI元素上的默认行为
       if (e.target.tagName !== 'CANVAS') return;
@@ -1561,6 +1583,7 @@
       handleInputStart(pos.x, pos.y);
     }, {passive: false});
 
+    // 触摸移动 （手指在屏幕上滑动时连续触发）
     container.addEventListener('touchmove', e => {
       if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
@@ -1568,30 +1591,20 @@
       handleInputMove(pos.x, pos.y);
     }, {passive: false});
 
+    // 触摸结束 (手指离开屏幕时触发)
     container.addEventListener('touchend', e => {
       if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
       handleInputEnd();
     }, {passive: false});
 
+    // 触摸取消 (系统取消触控，例如来电弹窗出现)
     container.addEventListener('touchcancel', e => {
       if (e.target.tagName !== 'CANVAS') return;
       e.preventDefault();
       handleInputEnd();
     }, {passive: false});
 
-    // 按钮事件监听器
-    function addButtonListeners(button, handler) {
-      button.addEventListener('click', (e) => {
-        handler();
-      });
-    }
-
-    addButtonListeners(startButton, startGame);  // 开始游戏按钮
-    addButtonListeners(restartButtonDefeat, startGame);  // 失败重试按钮
-    addButtonListeners(restartButtonWin, startGame);  // 胜利重玩按钮
-    addButtonListeners(homeButtonDefeat, backToHome);  // 失败回到首页按钮
-    addButtonListeners(homeButtonWin, backToHome);  // 胜利回到首页按钮
 
     // 屏幕震动效果函数
     function triggerScreenShake(intensity) {
