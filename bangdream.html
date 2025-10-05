@@ -91,6 +91,7 @@
       }
       @media (max-width: 375px) {
         font-size: 1.6rem;
+        margin: 10px 0px;
       }
     }
 
@@ -99,17 +100,20 @@
     }
 
     .overlay-text {
-      font-size: 1.4rem; /* 略大一点 */
+      font-size: 22px; /* 略大一点 */
       font-weight: 600; /* 稍微加粗 */
       color: #ffffff; /* 白色 */
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 6px rgba(255, 105, 180, 0.6); /* 阴影 + 粉色光晕 */
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin: 10px 0;
       line-height: 1.4;
+      @media (max-width: 450px) {
+        font-size: 18px;
+        margin: 8px 0;
+      }
     }
 
     .start-button {
-      margin: 16px 0px;
+      margin: 15px 0px;
       padding: 10px 20px;
       font-size: 1.3rem;
       font-weight: bold;
@@ -120,6 +124,11 @@
       cursor: pointer;
       box-shadow: 0 5px 15px var(--shadow-color);
       transition: transform 0.2s, box-shadow 0.2s;
+      @media (max-width: 400px) {
+        padding: 8px 16px;
+        font-size: 1.2rem;
+        margin: 12px 0px;
+      }
     }
 
     .start-button:hover {
@@ -139,35 +148,48 @@
       }
     }
 
+    .difficulty-selector,
     .language-selector {
       display: flex;
       gap: 10px;
-      margin-top: 20px;
+      margin: 10px 0;
       transition: opacity 0.3s ease;
+      @media (max-width: 450px) {
+        margin: 5px 0;
+      }
     }
 
+    .difficulty-selector.hidden,
     .language-selector.hidden {
       opacity: 0;
       pointer-events: none;
     }
 
     .contact-btn,
+    .difficulty-btn,
     .lang-btn {
       padding: 8px 12px;
-      font-size: 0.9rem;
+      font-size: 15px;
       color: var(--text-color);
       background-color: rgba(0, 0, 0, 0.5);
       border: 2px solid transparent;
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.2s;
+      @media (max-width: 450px) {
+        padding: 4px 8px;
+        font-size: 12px;
+      }
     }
 
     .contact-btn:hover,
+    .difficulty-btn:hover,
     .lang-btn:hover {
       background-color: rgba(255, 105, 180, 0.3);
     }
 
+    .contact-btn.active,
+    .difficulty-btn.active,
     .lang-btn.active {
       border-color: var(--primary-color);
       background-color: rgba(255, 105, 180, 0.5);
@@ -175,7 +197,7 @@
 
     .version-info {
       margin-top: 40px;
-      font-size: 1rem;
+      font-size: 16px;
       color: rgba(255, 255, 255, 0.7);
       text-align: center;
       line-height: 1.8;
@@ -183,7 +205,8 @@
         margin-top: 30px;
       }
       @media (max-width: 400px) {
-        margin-top: 25px;
+        margin-top: 20px;
+        font-size: 14px;
       }
     }
 
@@ -209,11 +232,11 @@
       bottom: 5px;
       left: 5px;
       color: #0f0;
-      font-family: monospace;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       text-shadow: 0 0 3px #000;
       z-index: 20;
+      line-height: 1.2;
     }
 
     /* 联系作者部分 */
@@ -297,7 +320,10 @@
 
 <div id="game-container">
   <canvas id="game-canvas"></canvas>
-  <div id="fps-display">FPS: 0</div>
+  <div id="fps-display">
+    <div id="mode-display"></div>
+    <div>FPS: 0</div>
+  </div>
 
   <div id="start-screen" class="game-overlay start-adjust">
     <img
@@ -306,6 +332,12 @@
     <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20vh;">
       <h1 class="overlay-title" data-text="title">音符射手</h1>
       <p class="overlay-text" data-text="instructions">移动鼠标或手指来控制角色<br>按住屏幕持续发射音符！</p>
+      <div class="difficulty-selector">
+        <button class="difficulty-btn" data-difficulty="easy" data-text="easy">容易</button>
+        <button class="difficulty-btn" data-difficulty="normal" data-text="normal">中等</button>
+        <button class="difficulty-btn" data-difficulty="hard" data-text="hard">困难</button>
+        <button class="difficulty-btn" data-difficulty="endless" data-text="endless">无尽模式</button>
+      </div>
       <button id="start-button" class="start-button" data-text="startGame">开始游戏</button>
       <div id="language-selector" class="language-selector">
         <button class="lang-btn" data-lang="zh">中文</button>
@@ -328,8 +360,8 @@
       </div>
     </div>
     <div class="version-info">
-      <div><span data-text="version">版本</span>：0.1</div>
-      <div><span data-text="updateTime">更新时间</span>：2025-10-04</div>
+      <div><span data-text="version">版本</span>：0.2</div>
+      <div><span data-text="updateTime">更新时间</span>：2025-10-05</div>
       <div>
         <a href="https://github.com/zfkdiyi/bangdream" id="github-button" class="github-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -344,32 +376,30 @@
   </div>
 
   <div id="defeat-screen" class="game-overlay hidden">
-    <div></div>
     <div style="display: flex; flex-direction: column; align-items: center;">
+      <p id="game-time-defeat" class="overlay-text"></p>
       <img id="defeat-image" src="img/defeat.png" alt="DEFEAT"
            style="max-width: 80%; max-height: 60%; object-fit: contain;">
       <p class="overlay-text" data-text="defeatMessage">不要灰心，再来一次！</p>
       <button id="restart-button-defeat" class="start-button" data-text="retry">重试</button>
       <button id="home-button-defeat" class="start-button" data-text="backToHome">回到首页</button>
     </div>
-    <div></div>
   </div>
 
   <div id="win-screen" class="game-overlay hidden">
-    <div></div>
     <div style="display: flex; flex-direction: column; align-items: center;">
+      <p id="game-time-win" class="overlay-text"></p>
       <img id="win-image" src="img/win.png" alt="YOU WIN" style="max-width: 80%; max-height: 60%; object-fit: contain;">
       <p class="overlay-text" data-text="winMessage">闪闪发光，心动不已！</p>
       <button id="restart-button-win" class="start-button" data-text="playAgain">再玩一次</button>
       <button id="home-button-win" class="start-button" data-text="backToHome">回到首页</button>
     </div>
-    <div></div>
   </div>
 </div>
 
 <script>
   (function () {
-    // 多语言配置
+    let currentLang = 'zh';
     const languages = {
       zh: {
         title: '元祖！BanG Dream酱<br>音符射手',
@@ -387,7 +417,13 @@
         contact: '联系作者',
         submit: '提交',
         close: '关闭',
-        contactHolder: '请输入内容（不超过100字 如果你希望收到作者回复，记得留下邮箱地址）'
+        contactHolder: '请输入内容（不超过100字 如果你希望收到作者回复，记得留下邮箱地址）',
+        easy: '容易',
+        normal: '中等',
+        hard: '困难',
+        endless: '无尽模式',
+        gameTime: '游戏时间',
+        mode: '模式'
       },
       en: {
         title: 'GANSO! BanG Dream Chan<br>Note Shooter',
@@ -405,6 +441,12 @@
         contact: 'Contact Me',
         submit: 'Submit',
         close: 'Close',
+        easy: 'Easy',
+        normal: 'Normal',
+        hard: 'Hard',
+        endless: 'Endless',
+        gameTime: 'Game Time',
+        mode: 'Mode',
         contactHolder: "Please enter your message (up to 100 characters). If you’d like a reply, don’t forget to leave your email address."
       },
       ja: {
@@ -423,64 +465,56 @@
         contact: 'お問い合わせ',
         submit: '送信',
         close: '閉じる',
-        contactHolder: "内容を入力してください（100文字以内）。返信をご希望の方は、メールアドレスを忘れずにご記入ください。"
-
+        contactHolder: "内容を入力してください（100文字以内）。返信をご希望の方は、メールアドレスを忘れずにご記入ください。",
+        easy: '簡単',
+        normal: '普通',
+        hard: '難しい',
+        endless: '無限モード',
+        gameTime: 'ゲーム時間',
+        mode: 'モード'
       }
     };
-
-    let currentLang = 'zh';
-
-    // 根据浏览器语言自动选择默认语言
-    function detectLanguage() {
-      const browserLang = navigator.language || navigator.userLanguage;
-      if (browserLang.startsWith('zh')) {
-        return 'zh';
-      } else if (browserLang.startsWith('ja')) {
-        return 'ja';
-      } else {
-        return 'en';
-      }
-    }
-
-    // 更新界面文字
-    function updateLanguage(lang) {
-      currentLang = lang;
-      const texts = languages[lang];
-
-      // 更新所有带有 data-text 属性的元素
-      document.querySelectorAll('[data-text]').forEach(element => {
-        const key = element.getAttribute('data-text');
-        if (texts[key]) {
-          element.innerHTML = texts[key];
-        }
+    // 自动检测浏览器语言
+    const detectLanguage = () => {
+      const lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      if (lang.startsWith('zh')) return 'zh';
+      if (lang.startsWith('ja')) return 'ja';
+      return 'en';
+    };
+    // 更新语言内容
+    const updateLanguage = (lang) => {
+      const texts = languages[lang] || languages.en;
+      // 更新文字内容
+      document.querySelectorAll('[data-text]').forEach(el => {
+        const key = el.dataset.text;
+        if (texts[key]) el.innerHTML = texts[key];
       });
-      // 更新所有 data-placeholder 的元素（placeholder 属性）
-      document.querySelectorAll('[data-placeholder]').forEach(element => {
-        const key = element.getAttribute('data-placeholder');
-        if (texts[key]) {
-          element.setAttribute('placeholder', texts[key]);
-        }
+      // 更新 placeholder
+      document.querySelectorAll('[data-placeholder]').forEach(el => {
+        const key = el.dataset.placeholder;
+        if (texts[key]) el.placeholder = texts[key];
       });
-      // 更新页面标题
-      document.title = texts.title.replace('<br>', ' ');
-
+      // 更新页面标题 (用正则替换掉所有<br>换行符）
+      document.title = texts.title.replace(/<br\s*\/?>/g, ' ');
       // 更新语言按钮状态
       document.querySelectorAll('.lang-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+        btn.classList.toggle('active', btn.dataset.lang === lang);
       });
-    }
-
-    // 初始化语言
-    currentLang = detectLanguage();
-    // 语言按钮事件监听
+    };
+    // 初始化
     document.addEventListener('DOMContentLoaded', () => {
+      currentLang = detectLanguage();
       updateLanguage(currentLang);
+      updateModeDisplay();
+      // 语言切换按钮监听
       document.querySelectorAll('.lang-btn').forEach(btn => {
-        const changeLang = () => updateLanguage(btn.getAttribute('data-lang'));
-        btn.addEventListener('click', changeLang);
+        btn.addEventListener('click', () => {
+          currentLang = btn.dataset.lang;
+          updateLanguage(currentLang);
+          updateModeDisplay();
+        });
       });
     });
-
     // 联系作者弹窗逻辑
     const contactBtn = document.getElementById('contact-btn');
     const modal = document.getElementById('contact-modal');
@@ -488,16 +522,13 @@
     const cancelBtn = document.getElementById('cancel-btn');
     const sendBtn = document.getElementById('send-btn');
     const textarea = document.getElementById('contact-text');
-
     contactBtn.onclick = () => {
       modal.style.display = 'flex';
     };
-
     closeBtn.onclick = cancelBtn.onclick = () => {
       modal.style.display = 'none';
       textarea.value = '';
     };
-
     sendBtn.onclick = async () => {
       const text = textarea.value.trim();
       if (!text) {
@@ -526,13 +557,12 @@
         alert('提交失败，请稍后重试');
       }
     };
-
-
+    // FPS和模式显示
     const fpsDisplay = document.getElementById('fps-display');
+    const modeDisplay = document.getElementById('mode-display');
     let lastTimes = performance.now();
     let frames = 0;
     let fps = 0;
-
     function updateFPS() {
       const now = performance.now();
       frames++;
@@ -540,10 +570,14 @@
         fps = frames;
         frames = 0;
         lastTimes = now;
-        fpsDisplay.textContent = 'FPS: ' + fps;
+        fpsDisplay.children[1].textContent = 'FPS: ' + fps;
       }
     }
-
+    function updateModeDisplay() {
+      const texts = languages[currentLang] || languages.en;
+      modeDisplay.textContent = texts.mode + ': ' + texts[currentDifficulty].replace(texts.mode, '');
+    }
+    //获取在线人数
     async function sendStat() {
       let from = document.referrer;
       let width = window.outerWidth;
@@ -562,6 +596,27 @@
         document.getElementById('online-count').textContent = `Online: ${data.online}`;
       }
     }
+    //游戏难度和模式选择
+    let currentDifficulty = 'normal';
+    let gameStartTime = 0;
+    let isEndlessMode = false;
+    // 更新难度按钮被选中的状态
+    function updateDifficultyButtons() {
+      document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-difficulty') === currentDifficulty);
+      });
+    }
+    // 初始化难度按钮状态
+    updateDifficultyButtons();
+    // 难度按钮点击事件
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentDifficulty = btn.getAttribute('data-difficulty');
+        isEndlessMode = currentDifficulty === 'endless';
+        updateDifficultyButtons();
+        updateModeDisplay();
+      });
+    });
 
     // 获取画布和容器元素
     const canvas = document.getElementById('game-canvas');
@@ -625,7 +680,6 @@
     };
 
     const assetImages = {};  // 存储加载后的图像对象
-
     // 加载游戏资源
     function loadAssets(callback) {
       let loadedCount = 0;
@@ -638,7 +692,6 @@
         };
       });
     }
-
     // 玩家类
     class Player {
       constructor() {
@@ -814,7 +867,7 @@
         ctx.fill();
 
         if (this.flashTimer > 0) {
-          ctx.filter = 'brightness(300%) saturate(0%)';
+          ctx.filter = 'brightness(200%) saturate(0%)';
         }
         const currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.bear1 : assetImages.bear2;
         ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
@@ -831,8 +884,17 @@
         this.y = -this.height; // Y坐标（从屏幕上方开始）
         // 【优化】速度单位改为“像素/秒”
         this.speed = canvasHeight * 0.15; // 基础移动速度
-        this.health = 1300; // 当前血量
-        this.maxHealth = 1300; // BOSS初始血量
+        // 根据难度设置血量
+        let bossHealth;
+        if (currentDifficulty === 'hard') {
+          bossHealth = 2500;
+        } else if (currentDifficulty === 'easy') {
+          bossHealth = 700;
+        } else {
+          bossHealth = 1400;
+        }
+        this.health = bossHealth; // 当前血量
+        this.maxHealth = bossHealth; // BOSS初始血量
         this.targetY = canvasHeight * 0.1; // 第一阶段目标Y坐标
         // 【优化】水平移动速度
         this.dx = canvasWidth * 0.1; // X轴移动速度
@@ -848,11 +910,14 @@
       }
 
       // 更新BOSS状态和位置
-      update(deltaTime) { // 【优化】接收deltaTime参数
+      update(deltaTime, gameTime) { // 【优化】接收deltaTime和gameTime参数
         const deltaSeconds = deltaTime / 1000; // 【优化】将时间转换为秒
         this.animFrame++;
-        if (this.health <= this.maxHealth * 0.75 && this.phase === 1) this.phase = 2;
-
+        // BOSS血量75%以下或游戏时间超过20秒 进入第二阶段
+        if ((this.health <= this.maxHealth * 0.75 || gameTime > 20000) && this.phase === 1) {
+          this.phase = 2;
+        }
+        //第一阶段 BOSS水平巡航
         if (this.phase === 1) {
           if (this.y < this.targetY) this.y += this.speed * deltaSeconds;
           else {
@@ -871,17 +936,16 @@
           if (Math.abs(this.x - targetX) > 2) {
             this.x += (targetX - this.x) * 0.02;
           }
-
-          // 检查是否接近玩家（距离玩家只差一步之遥）
+          // 接近玩家时变成举起拳头状态持续0.3秒
           const distanceToPlayer = player.y - (this.y + this.height);
           if (distanceToPlayer <= player.height && this.attackState === 'normal' && this.vy >= 0) {
             this.attackState = 'raising';
-            this.attackTimer = 300; // 0.3秒
+            this.attackTimer = 300;
           }
-
           // 处理攻击状态
           if (this.attackState === 'raising') {
             this.attackTimer -= deltaTime;
+            //砸拳头
             if (this.attackTimer <= 0) {
               this.attackState = 'punching';
               this.attackTimer = 300; // 砸拳头持续时间
@@ -892,23 +956,28 @@
               this.attackState = 'normal';
             }
           }
-
-          // 【优化】重力效果
-          this.vy += this.gravity * deltaSeconds;
+          let factor = 1;
+          if (currentDifficulty === 'hard') {
+            factor = 1.25;
+          } else if (currentDifficulty === 'easy') {
+            factor = 0.75;
+          }
+          // BOSS下降速度 难度越大下降越快
+          this.vy += this.gravity * deltaSeconds * factor;
           this.y += this.vy * deltaSeconds;
-
+          // BOSS触底后反弹
           if (this.y + this.height >= canvasHeight) {
             this.y = canvasHeight - this.height;
             // 【优化】弹跳速度与屏幕高度关联
             this.vy = -(Math.random() * canvasHeight * 0.8 + canvasHeight * 0.5);
-            this.bounceTargetY = Math.random() * canvasHeight * 0.4 + canvasHeight * 0.1;
+            // bounceTargetY越小代表反弹后的高度越接近画面顶部，
+            this.bounceTargetY = Math.random() * canvasHeight * 0.8;
           }
           if (this.vy < 0 && this.y <= this.bounceTargetY) {
             this.vy = 0;
           }
         }
       }
-
       // 绘制BOSS和血量条
       draw() {
         // 绘制阴影
@@ -916,12 +985,10 @@
         ctx.beginPath();
         ctx.ellipse(this.x + this.width / 2, this.y + this.height, this.width * 0.4, this.width * 0.2, 0, 0, Math.PI * 2);
         ctx.fill();
-
-        // 受击时的闪光效果
+        // BOSS受击时的闪光效果（暂时注释）
         if (bossFlashTimer > 0 && this.health > 0) {
-          ctx.filter = 'brightness(300%) saturate(0%)';
+          //ctx.filter = 'brightness(200%) saturate(0%)';
         }
-
         // 根据攻击状态选择图片
         let currentImage;
         if (this.attackState === 'raising') {
@@ -936,7 +1003,8 @@
         ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
         ctx.filter = 'none';
 
-        // 绘制BOSS血量条
+        // 绘制BOSS血量条（无尽模式下不显示）
+        if (isEndlessMode) { return; }
         const barWidth = canvasWidth * 0.8, barHeight = 20, barX = canvasWidth / 2 - barWidth / 2, barY = 10;
         ctx.fillStyle = '#555';
         ctx.fillRect(barX, barY, barWidth, barHeight);  // 背景条
@@ -1068,6 +1136,7 @@
       playerInvulnerable = false;  // 重置无敌状态
       invulnerabilityTimer = 0;  // 重置无敌计时器
       gameState = 'playing';  // 设置游戏状态为游戏中
+      gameStartTime = performance.now();  // 记录游戏开始时间
       if (player) {
         player.defeatCharacters = [];  // 清空defeat角色
         player.characters = [1];  // 重置角色类型数组
@@ -1131,15 +1200,18 @@
           if (bullet.markedForDeletion) return; // 跳过已标记的子弹
           if (isColliding(bullet, boss)) {
             flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2));
-            bullet.markedForDeletion = true; // 【优化】标记子弹待删除
-            boss.health--;
+            bullet.markedForDeletion = true; // 标记子弹待删除
+            //无尽模式下BOSS不掉血
+            if (!isEndlessMode) {
+              boss.health--;
+            }
             bossFlashTimer = 3;
             if (boss.health <= 0 && gameState === 'playing') {
               gameState = 'bossDying';
               bossDeathPosition = {x: boss.x, y: boss.y, width: boss.width, height: boss.height};
               screenFlashAlpha = 0.7;
               triggerScreenShake(15);
-              setTimeout(() => gameOver(true), 500);
+              setTimeout(() => gameOver(true), 400); // BOSS死亡400毫秒后游戏结束
             }
           }
         });
@@ -1215,7 +1287,7 @@
         // 记录最后一个角色的类型
         player.deadCharacterType = player.characters[hitCharacterIndex];
         player.isDead = true;  // 设置玩家死亡状态
-        setTimeout(() => gameOver(false), 500);  // 400毫秒后游戏结束
+        setTimeout(() => gameOver(false), 400);  // 玩家死亡400毫秒后游戏结束
       }
     }
 
@@ -1257,9 +1329,10 @@
       // 【修正】将所有“游戏进行中”的逻辑（包括对象更新和清理）都放在这个代码块里
       if (gameState === 'playing') {
         // 更新所有游戏对象
+        const gameTime = timestamp - gameStartTime; // 计算游戏时间
         bullets.forEach(bullet => bullet.update(deltaTime));
         bears.forEach(bear => bear.update(deltaTime));
-        if (boss) boss.update(deltaTime);
+        if (boss) boss.update(deltaTime, gameTime);
         player.updateDefeatCharacters(deltaTime);
 
         // 小熊生成计时器
@@ -1377,12 +1450,30 @@
       winScreen.classList.add('hidden');  // 隐藏胜利界面
     }
 
+    // 格式化游戏时间
+    function formatGameTime(milliseconds) {
+      const totalSeconds = Math.floor(milliseconds / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
     // 游戏结束
     function gameOver(isWin) {
       gameState = 'over';  // 设置游戏状态为结束
       cancelAnimationFrame(gameLoopId);  // 停止游戏循环
-      if (isWin) winScreen.classList.remove('hidden');  // 显示胜利界面
-      else defeatScreen.classList.remove('hidden');  // 显示失败界面
+
+      // 计算游戏时间并显示
+      const gameTime = performance.now() - gameStartTime;
+      const timeText = `${languages[currentLang].gameTime}: ${formatGameTime(gameTime)}`;
+
+      if (isWin) {
+        document.getElementById('game-time-win').textContent = timeText;
+        winScreen.classList.remove('hidden');  // 显示胜利界面
+      } else {
+        document.getElementById('game-time-defeat').textContent = timeText;
+        defeatScreen.classList.remove('hidden');  // 显示失败界面
+      }
     }
 
     // 调整画布尺寸
@@ -1515,14 +1606,13 @@
       }
       document.getElementById('shake-style').innerHTML = keyframes;
 
-      // 0.3秒后清除震动效果
-      setTimeout(() => container.style.animation = '', 300);
+      // 0.2秒后清除震动效果
+      setTimeout(() => container.style.animation = '', 200);
     }
 
     // 加载资源并初始化画布
     loadAssets(() => {
       resizeCanvas();
-      updateLanguage(currentLang);
       sendStat();
     });
   })();
