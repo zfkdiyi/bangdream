@@ -169,7 +169,7 @@
     .difficulty-btn,
     .lang-btn {
       padding: 8px 12px;
-      font-size: 15px;
+      font-size: 16px;
       color: var(--text-color);
       background-color: rgba(0, 0, 0, 0.5);
       border: 2px solid transparent;
@@ -178,7 +178,7 @@
       transition: all 0.2s;
       @media (max-width: 450px) {
         padding: 4px 8px;
-        font-size: 12px;
+        font-size: 14px;
       }
     }
 
@@ -441,14 +441,14 @@
         contact: 'Contact Me',
         submit: 'Submit',
         close: 'Close',
+        contactHolder: "Please enter your message (up to 100 characters). If you’d like a reply, don’t forget to leave your email address.",
         easy: 'Easy',
         normal: 'Normal',
         hard: 'Hard',
         endless: 'Endless',
         gameTime: 'Game Time',
         mode: 'Mode',
-        contactHolder: "Please enter your message (up to 100 characters). If you’d like a reply, don’t forget to leave your email address."
-      },
+        },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
         instructions: 'マウスや指で キャラクターを操作<br>画面を押し続けて ノートを連射！',
@@ -721,10 +721,10 @@
           const drawY = this.y + this.height - defeatHeight;
 
           // 绘制阴影
-          ctx.fillStyle = 'rgba(0,0,0,0.3)';
-          ctx.beginPath();
-          ctx.ellipse(this.x, this.y + this.height, defeatWidth * 0.3, defeatWidth * 0.15, 0, 0, Math.PI * 2);
-          ctx.fill();
+          // ctx.fillStyle = 'rgba(0,0,0,0.3)';
+          // ctx.beginPath();
+          // ctx.ellipse(this.x, this.y + this.height, defeatWidth * 0.3, defeatWidth * 0.15, 0, 0, Math.PI * 2);
+          // ctx.fill();
 
           ctx.drawImage(currentImage, drawX, drawY, defeatWidth, defeatHeight);
         } else {
@@ -913,8 +913,8 @@
       update(deltaTime, gameTime) { // 【优化】接收deltaTime和gameTime参数
         const deltaSeconds = deltaTime / 1000; // 【优化】将时间转换为秒
         this.animFrame++;
-        // BOSS血量75%以下或游戏时间超过20秒 进入第二阶段
-        if ((this.health <= this.maxHealth * 0.75 || gameTime > 20000) && this.phase === 1) {
+        // BOSS血量75%以下或游戏时间超过15秒 进入第二阶段
+        if ((this.health <= this.maxHealth * 0.75 || gameTime > 15000) && this.phase === 1) {
           this.phase = 2;
         }
         //第一阶段 BOSS水平巡航
@@ -957,10 +957,13 @@
             }
           }
           let factor = 1;
+          let bounceFactor = 0.8;
           if (currentDifficulty === 'hard') {
             factor = 1.25;
+            bounceFactor = 1
           } else if (currentDifficulty === 'easy') {
             factor = 0.75;
+            bounceFactor = 0.6;
           }
           // BOSS下降速度 难度越大下降越快
           this.vy += this.gravity * deltaSeconds * factor;
@@ -970,8 +973,8 @@
             this.y = canvasHeight - this.height;
             // 【优化】弹跳速度与屏幕高度关联
             this.vy = -(Math.random() * canvasHeight * 0.8 + canvasHeight * 0.5);
-            // bounceTargetY越小代表反弹后的高度越接近画面顶部，
-            this.bounceTargetY = Math.random() * canvasHeight * 0.8;
+            // bounceTargetY越小代表BOSS反弹后的高度越接近画面顶部，
+            this.bounceTargetY = Math.random() * canvasHeight * bounceFactor - canvasHeight * 0.1;
           }
           if (this.vy < 0 && this.y <= this.bounceTargetY) {
             this.vy = 0;
@@ -1392,9 +1395,10 @@
       bears.forEach(b => b.draw());
       if (boss) boss.draw();
 
-      if (!playerInvulnerable || Math.floor(invulnerabilityTimer / 100) % 2 === 0) {
+      // 无敌状态下玩家角色闪烁，注释掉下面这一行就代表不闪烁
+      //if (!playerInvulnerable || Math.floor(invulnerabilityTimer / 100) % 2 === 0) {
         player.draw();
-      }
+     // }
 
       explosions.forEach(e => e.draw());
       flashEffects.forEach(f => f.draw());
