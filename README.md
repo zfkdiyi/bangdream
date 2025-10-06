@@ -1,6 +1,6 @@
 # BanG Dream Note Shooter 音符射手
 
-**BanG Dream Note Shooter Game** is a fan-made web game, inspired by [this scene](https://github.com/zfkdiyi/bangdream/blob/main/img/anime.gif) from the ending animation of *GANSO! BanG Dream Chan!*. 
+**BanG Dream Note Shooter Game** is a fan-made web game, inspired by [this scene](https://github.com/zfkdiyi/bangdream/blob/main/img/anime.gif) from the ending animation of *GANSO! BanG Dream Chan!*
 
 **BanG Dream音符射手**是一个自制的网页小游戏，仿照《元祖BanG Dream酱》的片尾动画中出现的[一个桥段](https://github.com/zfkdiyi/bangdream/blob/main/img/anime.gif)制作而成。
 
