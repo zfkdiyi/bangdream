@@ -1,8 +1,8 @@
 # BanG Dream Note Shooter 音符射手
 
-**BanG Dream Note Shooter Game** is a fan-made web game, inspired by the ending animation of *GANSO! BanG Dream Chan!*. 
+**BanG Dream Note Shooter Game** is a fan-made web game, inspired by [this scene](https://github.com/zfkdiyi/bangdream/blob/main/img/anime.gif) from the ending animation of *GANSO! BanG Dream Chan!*. 
 
-**BanG Dream音符射手**是一个自制的网页小游戏，是仿照《元祖BanG Dream酱》的片尾动画中出现的桥段制作而成。
+**BanG Dream音符射手**是一个自制的网页小游戏，仿照《元祖BanG Dream酱》的片尾动画中出现的[一个桥段](https://github.com/zfkdiyi/bangdream/blob/main/img/anime.gif)制作而成。
 
 ## Where to play 游戏地址
 
@@ -47,7 +47,7 @@ The game ends in failure when all lives are lost, and in victory when Tsurumaki 
 -  More Common Enemy
 -  More Teammate Character
 -  New Gameplay & Items
--  I’m not good at drawing, so adding new boss or player characters is quite difficult for me.
+-  I have no drawing skills so adding new boss or player characters is quite difficult for me.
 If anyone skilled in illustration could help create new character images (boss movement, attack poses, microphone-holding motions, downed poses), it would be a huge help!
 
 -  背景音乐
@@ -57,7 +57,7 @@ If anyone skilled in illustration could help create new character images (boss m
 -  更多小兵角色（哈卡奈机器人、珍妮弗）
 -  更多队友角色（今井莉莎、市谷有咲）
 -  新玩法、新道具 （巧克力卷、咖啡、薯条、企鹅、石头、护盾、钢琴、新武器）
--  我本人不会画画，所以要增加新的BOSS和队友角色会很困难，如果有朋友能够帮忙绘制新的角色图像就帮大忙了（BOSS移动、攻击造型、抱着话筒的小人移动、倒地造型）
+-  作者并不会画画，所以要增加新的BOSS和队友角色会很困难，如果有朋友能够帮忙绘制新的角色图像就帮大忙了（BOSS移动、攻击造型、抱着话筒的小人移动、倒地造型）
 
 ## Copyright Notice 版权声明
 
