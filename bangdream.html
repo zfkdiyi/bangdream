@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>音符射手 元祖Bang Dram</title>
+  <title>音符射手 元祖BanG Dream</title>
   <style>
     :root {
       --primary-color: #ff69b4; /* Hot Pink */
@@ -419,7 +419,11 @@
         hard: '困难',
         endless: '无尽模式',
         gameTime: '游戏时间',
-        mode: '模式'
+        mode: '模式',
+        alertEmpty: '请输入内容',
+        alertFrequent: '请勿频繁提交',
+        alertSuccess: '已成功提交！',
+        alertError: '提交失败，请稍后重试'
       },
       en: {
         title: 'GANSO! BanG Dream Chan<br>Note Shooter',
@@ -444,6 +448,10 @@
         endless: 'Endless',
         gameTime: 'Game Time',
         mode: 'Mode',
+        alertEmpty: 'Please enter content',
+        alertFrequent: 'Please do not submit frequently',
+        alertSuccess: 'Successfully submitted!',
+        alertError: 'Submission failed, please try again later'
         },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
@@ -467,7 +475,11 @@
         hard: '難しい',
         endless: '無限モード',
         gameTime: 'ゲーム時間',
-        mode: 'モード'
+        mode: 'モード',
+        alertEmpty: '内容を入力してください',
+        alertFrequent: '頻繁に送信しないでください',
+        alertSuccess: '送信が完了しました！',
+        alertError: '送信に失敗しました。しばらくしてからもう一度お試しください'
       }
     };
     // 自动检测浏览器语言
@@ -528,7 +540,7 @@
     sendBtn.onclick = async () => {
       const text = textarea.value.trim();
       if (!text) {
-        alert('请输入内容');
+        alert(languages[currentLang].alertEmpty);
         return;
       }
       try {
@@ -542,15 +554,15 @@
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         if (data.code == 427) {
-          alert('请勿频繁提交');
+          alert(languages[currentLang].alertFrequent);
           return;
         }
-        alert('已成功提交！');
+        alert(languages[currentLang].alertSuccess);
         modal.style.display = 'none';
         textarea.value = '';
       } catch (error) {
         console.error(error);
-        alert('提交失败，请稍后重试');
+        alert(languages[currentLang].alertError);
       }
     };
     // FPS和模式显示
