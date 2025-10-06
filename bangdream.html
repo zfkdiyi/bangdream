@@ -854,7 +854,7 @@
     }
     // 发送游戏结果统计
     function gameStat(stage, mode, fps, win, duration, kumaKill, kumaLive,  maxCombo, lifeLost, bossDamage, finalScore) {
-      fetch('http://localhost/dev-api/gameStat', {
+      fetch('https://badmintonranks.com/prod-api/gameStat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
