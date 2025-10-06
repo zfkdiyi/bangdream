@@ -14,9 +14,9 @@
 
 Players control the character by moving the mouse or touching the screen. Hold down the left mouse button or keep pressing on the screen to continuously shoot musical notes.
 
-When the player defeats a certain number of Michelles, they gain +1 Life (a new teammate joins). If the player character collides with Michelle or the boss Tsurumaki Kokoro, they lose 1 Life (a teammate leaves).
+When the player defeats a certain number of Michelles, they gain +1 life (a new teammate joins). If the player character collides with Michelle or the boss Tsurumaki Kokoro, they lose 1 Life (a teammate leaves).
 
-The game ends in failure when all Lives are lost, and in victory when Tsurumaki Kokoro is defeated.
+The game ends in failure when all lives are lost, and in victory when Tsurumaki Kokoro is defeated.
 
 玩家通过移动鼠标或手指触屏来控制角色，按住鼠标左键或按住屏幕持续发射音符。
 
@@ -45,16 +45,19 @@ The game ends in failure when all Lives are lost, and in victory when Tsurumaki 
 -  Mulit Levels
 -  More Boss Character
 -  More Common Enemy
--  More Player Character
+-  More Teammate Character
 -  New Gameplay & Items
+-  I’m not good at drawing, so adding new boss or player characters is quite difficult for me.
+If anyone skilled in illustration could help create new character images (boss movement, attack poses, microphone-holding motions, downed poses), it would be a huge help!
 
 -  背景音乐
 -  游戏效果音
 -  多个关卡
 -  更多BOSS角色（户山香澄、3D麻里奈）
 -  更多小兵角色（哈卡奈机器人、珍妮弗）
--  更多玩家角色（今井莉莎、市谷有咲）
--  新玩法、新道具 （巧克力卷、咖啡、企鹅、石头、护盾、钢琴、新武器）
+-  更多队友角色（今井莉莎、市谷有咲）
+-  新玩法、新道具 （巧克力卷、咖啡、薯条、企鹅、石头、护盾、钢琴、新武器）
+-  我本人不会画画，所以要增加新的BOSS和队友角色会很困难，如果有朋友能够帮忙绘制新的角色图像就帮大忙了（BOSS移动、攻击造型、抱着话筒的小人移动、倒地造型）
 
 ## Copyright Notice 版权声明
 
