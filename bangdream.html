@@ -95,8 +95,9 @@
       }
     }
 
+    .result-text,
     .overlay-text {
-      font-size: 22px; /* 略大一点 */
+      font-size: 22px;
       font-weight: 600; /* 稍微加粗 */
       color: #ffffff; /* 白色 */
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 6px rgba(255, 105, 180, 0.6); /* 阴影 + 粉色光晕 */
@@ -107,9 +108,23 @@
         margin: 8px 0;
       }
     }
+    .result-text {
+      font-size: 28px;
+      line-height: 1.8;
+      margin: 0;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 10px rgba(255, 105, 180, 0.8);
+      @media (max-width: 450px) {
+        font-size: 22px;
+      }
+    }
 
+    .end-button,
     .start-button {
-      margin: 15px 0px;
       padding: 10px 20px;
       font-size: 1.3rem;
       font-weight: bold;
@@ -123,13 +138,20 @@
       @media (max-width: 400px) {
         padding: 8px 16px;
         font-size: 1.2rem;
-        margin: 12px 0px;
       }
     }
 
+    .end-button:hover,
     .start-button:hover {
       transform: scale(1.1);
       box-shadow: 0 8px 25px var(--shadow-color);
+    }
+
+    .end-button {
+      margin: 15px 0px;
+      @media (max-width: 400px) {
+        margin: 12px 0px;
+      }
     }
 
     @keyframes pulse {
@@ -235,6 +257,8 @@
       line-height: 1.2;
     }
 
+
+
     /* 联系作者部分 */
     .modal {
       display: none;
@@ -310,6 +334,99 @@
       font-size: 1.3rem;
       cursor: pointer;
     }
+
+
+
+    .music-control:hover {
+      background: rgba(255, 105, 180, 1);
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+    }
+
+    .music-control svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+      transition: all 0.2s ease;
+    }
+
+    .start-button-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin: 15px 0px;
+    }
+
+    .music-control {
+      position: absolute;
+      left: calc(50% + 90px);
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 0;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 105, 180, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+    }
+
+    /* 游戏中的音乐控制按钮 */
+    .game-music-control {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 105, 180, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+      z-index: 15;
+    }
+
+    .game-music-control:hover {
+      background: rgba(255, 105, 180, 1);
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+    }
+
+    .game-music-control svg {
+      width: 16px;
+      height: 16px;
+      fill: white;
+      transition: all 0.2s ease;
+    }
+
+    @media (max-width: 400px) {
+      .music-control {
+        left: calc(50% + 70px);
+        width: 36px;
+        height: 36px;
+      }
+      .music-control svg {
+        width: 18px;
+        height: 18px;
+      }
+      .game-music-control {
+        width: 28px;
+        height: 28px;
+        bottom: 10px;
+        right: 10px;
+      }
+      .game-music-control svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -317,9 +434,29 @@
 <div id="game-container">
   <canvas id="game-canvas"></canvas>
   <div id="fps-display">
-    <div id="mode-display"></div>
     <div>FPS: 0</div>
   </div>
+
+  <!-- 游戏中的音乐控制按钮 -->
+  <div id="game-music-control" class="game-music-control" style="display: none;" >
+    <svg id="game-music-icon-play" viewBox="0 0 24 24" >
+      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+      </svg>
+    <svg id="game-music-icon-mute" viewBox="0 0 24 24" style="display: none;">
+      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+    </svg>
+  </div>
+
+  <!-- 背景音乐 -->
+  <audio id="menu-music" loop preload="auto">
+    <source src="https://github.com/zfkdiyi/bangdream/raw/refs/heads/main/img/menu.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="battle-music" loop preload="auto">
+    <source src="https://github.com/zfkdiyi/bangdream/raw/refs/heads/main/img/battle1.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="end-music" loop preload="auto">
+    <source src="https://github.com/zfkdiyi/bangdream/raw/refs/heads/main/img/end.mp3" type="audio/mpeg">
+  </audio>
 
   <div id="start-screen" class="game-overlay start-adjust">
     <img
@@ -334,7 +471,17 @@
         <button class="difficulty-btn" data-difficulty="hard" data-text="hard">困难</button>
         <button class="difficulty-btn" data-difficulty="endless" data-text="endless">无尽模式</button>
       </div>
-      <button id="start-button" class="start-button" data-text="startGame">开始游戏</button>
+      <div class="start-button-container">
+        <button id="start-button" class="start-button" data-text="startGame">开始游戏</button>
+        <div id="music-control" class="music-control" >
+          <svg id="music-icon-play" viewBox="0 0 24 24" >
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+          </svg>
+          <svg id="music-icon-mute" viewBox="0 0 24 24" style="display: none;">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+        </div>
+      </div>
       <div id="language-selector" class="language-selector">
         <button class="lang-btn" data-lang="zh">中文</button>
         <button class="lang-btn" data-lang="en">English</button>
@@ -373,22 +520,22 @@
 
   <div id="defeat-screen" class="game-overlay hidden">
     <div style="display: flex; flex-direction: column; align-items: center;">
-      <p id="game-time-defeat" class="overlay-text"></p>
+      <p id="game-time-defeat" class="result-text"></p>
       <img id="defeat-image" src="img/defeat.png" alt="DEFEAT"
            style="max-width: 80%; max-height: 60%; object-fit: contain;">
       <p class="overlay-text" data-text="defeatMessage">不要灰心，再来一次！</p>
-      <button id="restart-button-defeat" class="start-button" data-text="retry">重试</button>
-      <button id="home-button-defeat" class="start-button" data-text="backToHome">回到首页</button>
+      <button id="restart-button-defeat" class="end-button" data-text="retry">重试</button>
+      <button id="home-button-defeat" class="end-button" data-text="backToHome">回到首页</button>
     </div>
   </div>
 
   <div id="win-screen" class="game-overlay hidden">
     <div style="display: flex; flex-direction: column; align-items: center;">
-      <p id="game-time-win" class="overlay-text"></p>
+      <p id="game-time-win" class="result-text"></p>
       <img id="win-image" src="img/win.png" alt="YOU WIN" style="max-width: 80%; max-height: 60%; object-fit: contain;">
       <p class="overlay-text" data-text="winMessage">闪闪发光，心动不已！</p>
-      <button id="restart-button-win" class="start-button" data-text="playAgain">再玩一次</button>
-      <button id="home-button-win" class="start-button" data-text="backToHome">回到首页</button>
+      <button id="restart-button-win" class="end-button" data-text="playAgain">再玩一次</button>
+      <button id="home-button-win" class="end-button" data-text="backToHome">回到首页</button>
     </div>
   </div>
 </div>
@@ -423,7 +570,10 @@
         alertEmpty: '请输入内容',
         alertFrequent: '请勿频繁提交',
         alertSuccess: '已成功提交！',
-        alertError: '提交失败，请稍后重试'
+        alertError: '提交失败，请稍后重试',
+        killScore: '击杀得分',
+        maxCombo: '最大连击',
+        totalScore: '总得分'
       },
       en: {
         title: 'GANSO! BanG Dream Chan<br>Note Shooter',
@@ -451,7 +601,10 @@
         alertEmpty: 'Please enter content',
         alertFrequent: 'Please do not submit frequently',
         alertSuccess: 'Successfully submitted!',
-        alertError: 'Submission failed, please try again later'
+        alertError: 'Submission failed, please try again later',
+        killScore: 'Kill Score',
+        maxCombo: 'Max Combo',
+        totalScore: 'Total Score'
         },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
@@ -479,7 +632,10 @@
         alertEmpty: '内容を入力してください',
         alertFrequent: '頻繁に送信しないでください',
         alertSuccess: '送信が完了しました！',
-        alertError: '送信に失敗しました。しばらくしてからもう一度お試しください'
+        alertError: '送信に失敗しました。しばらくしてからもう一度お試しください',
+        killScore: '撃破スコア',
+        maxCombo: '最大コンボ',
+        totalScore: '合計スコア'
       }
     };
     // 自动检测浏览器语言
@@ -509,17 +665,114 @@
         btn.classList.toggle('active', btn.dataset.lang === lang);
       });
     };
+    // 音乐控制相关变量
+    let menuMusic, battleMusic, endMusic;
+    let currentMusic = null;
+    let isMusicEnabled = false;
+
+    // 播放指定音乐
+    const playMusic = (musicType) => {
+      // 停止所有音乐
+      [menuMusic, battleMusic, endMusic].forEach(music => {
+        if (music) {
+          music.pause();
+          music.currentTime = 0;
+        }
+      });
+      // 播放指定音乐
+      if (isMusicEnabled) {
+        if (musicType === 'menu') {
+          currentMusic = menuMusic;
+        } else if (musicType === 'battle') {
+          currentMusic = battleMusic;
+        } else if (musicType === 'end') {
+          currentMusic = endMusic;
+        }
+
+        if (currentMusic) {
+          currentMusic.play().catch(e => console.log('音乐播放失败:', e));
+        }
+      }
+    };
+
+    // 更新音乐按钮图标
+    const updateMusicIcons = () => {
+      const playIcons = document.querySelectorAll('[id$="-icon-play"]');
+      const muteIcons = document.querySelectorAll('[id$="-icon-mute"]');
+
+      playIcons.forEach(icon => {
+        icon.style.display = isMusicEnabled ? 'none' : 'block';
+      });
+      muteIcons.forEach(icon => {
+        icon.style.display = isMusicEnabled ? 'block' : 'none';
+      });
+    };
+
+    // 切换音乐开关
+    const toggleMusic = () => {
+      isMusicEnabled = !isMusicEnabled;
+      updateMusicIcons();
+
+      if (!isMusicEnabled) {
+        // 关闭音乐
+        [menuMusic, battleMusic, endMusic].forEach(music => {
+          if (music) music.pause();
+        });
+      } else {
+        // 开启音乐，根据当前状态播放对应音乐
+        if (gameState === 'playing') {
+          playMusic('battle');
+        } else if (gameState === 'over') {
+          const isGameOverScreen = !startScreen.classList.contains('hidden') ? false : true;
+          if (isGameOverScreen) {
+            playMusic('end');
+          } else {
+            playMusic('menu');
+          }
+        } else {
+          playMusic('menu');
+        }
+      }
+    };
+
+    // 初始化音乐控制
+    const initMusicControl = () => {
+      menuMusic = document.getElementById('menu-music');
+      battleMusic = document.getElementById('battle-music');
+      endMusic = document.getElementById('end-music');
+
+      const musicControl = document.getElementById('music-control');
+      const gameMusicControl = document.getElementById('game-music-control');
+
+      // 主菜单音乐控制按钮
+      musicControl.addEventListener('click', toggleMusic);
+
+      // 游戏中音乐控制按钮
+      gameMusicControl.addEventListener('click', toggleMusic);
+
+      // 尝试自动播放菜单音乐 (Chrome不允许用户一打开网站就自动播放声音，此处仅为象征性尝试)
+      menuMusic.play().then(() => {
+        isMusicEnabled = true;
+        currentMusic = menuMusic;
+        updateMusicIcons();
+      }).catch((e) => {
+        // 自动播放失败，保持静音状态
+        //console.log('音乐播放失败:', e);
+        isMusicEnabled = false;
+        updateMusicIcons();
+      });
+    };
+
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {
       currentLang = detectLanguage();
       updateLanguage(currentLang);
-      updateModeDisplay();
+      initMusicControl();
       // 语言切换按钮监听
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentLang = btn.dataset.lang;
           updateLanguage(currentLang);
-          updateModeDisplay();
         });
       });
     });
@@ -565,9 +818,8 @@
         alert(languages[currentLang].alertError);
       }
     };
-    // FPS和模式显示
+    // FPS显示
     const fpsDisplay = document.getElementById('fps-display');
-    const modeDisplay = document.getElementById('mode-display');
     let lastTimes = performance.now();
     let frames = 0;
     let fps = 0;
@@ -578,12 +830,8 @@
         fps = frames;
         frames = 0;
         lastTimes = now;
-        fpsDisplay.children[1].textContent = 'FPS: ' + fps;
+        fpsDisplay.textContent = 'FPS: ' + fps;
       }
-    }
-    function updateModeDisplay() {
-      const texts = languages[currentLang] || languages.en;
-      modeDisplay.textContent = texts.mode + ': ' + texts[currentDifficulty].replace(texts.mode, '');
     }
     //获取在线人数
     async function sendStat() {
@@ -604,6 +852,26 @@
         document.getElementById('online-count').textContent = `Online: ${data.online}`;
       }
     }
+    // 发送游戏结果统计
+    function gameStat(stage, mode, fps, win, duration, kumaKill, kumaLive,  maxCombo, lifeLost, bossDamage, finalScore) {
+      fetch('http://localhost/dev-api/gameStat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'stage': stage,
+          'mode': mode,
+          'fps': fps,
+          'win': win,
+          'duration': duration,
+          'kumaKill': kumaKill,
+          'kumaLive': kumaLive,
+          'maxCombo': maxCombo,
+          'lifeLost': lifeLost,
+          'bossDamage': bossDamage,
+          'finalScore': finalScore,
+        },
+      });
+    }
     //游戏难度和模式选择
     let currentDifficulty = 'normal';
     let gameStartTime = 0;
@@ -622,7 +890,6 @@
         currentDifficulty = btn.getAttribute('data-difficulty');
         isEndlessMode = currentDifficulty === 'endless';
         updateDifficultyButtons();
-        updateModeDisplay();
       });
     });
 
@@ -651,10 +918,16 @@
     // 游戏基础变量
     let canvasWidth, canvasHeight;  // 画布尺寸
     let player, bullets, bears, boss, explosions;  // 游戏对象
+    let currentStage = 1; //当前关卡
+    let uiFont = 16; // UI字体大小
     let bearSpawnTimer = 0;  // 小熊生成计时器
     let bearSpawnInterval = 700;  // 小熊生成间隔（毫秒）
     let killCount = 0;  // 总击杀数
     let killsSinceLastLife = 0;  // 自上次获得生命以来的击杀数
+    let comboCount = 0;  // 连击数
+    let maxComboCount = 0;  // 最大连击数
+    let escapedBearCount = 0;  // 逃走小熊数
+    let deathCount = 0;  // 阵亡次数
     let bossSpawned = false;  // BOSS是否已生成
     let gameLoopId;  // 游戏循环ID
     let roadLineY = -100;  // 道路线条Y坐标
@@ -690,7 +963,9 @@
       flash2: 'img/flash2.png',
       defeat1: 'img/defeat1.png',
       defeat2: 'img/defeat2.png',
-      defeat3: 'img/defeat3.png'
+      defeat3: 'img/defeat3.png',
+      scoreIcon: 'img/kumaIcon.png',
+      comboIcon: 'img/combo.png'
     };
 
     const assetImages = {};  // 存储加载后的图像对象
@@ -869,8 +1144,12 @@
         this.y += this.speed * (deltaTime / 1000);
         this.animFrame++;
         if (this.flashTimer > 0) this.flashTimer--;
-        // 【优化】如果小熊出界，标记它
-        if (this.y > canvasHeight) this.markedForDeletion = true;
+        // 【优化】如果小熊出界，标记它并重置combo
+        if (this.y > canvasHeight) {
+          this.markedForDeletion = true;
+          comboCount = 0; // 小熊逃走时重置combo
+          escapedBearCount++; // 增加逃走小熊数
+        }
       }
 
       // 绘制小熊
@@ -901,10 +1180,10 @@
         this.speed = canvasHeight * 0.15; // 基础移动速度
         // 根据难度设置血量
         let bossHealth;
-        if (currentDifficulty === 'hard') {
-          bossHealth = 2800;
-        } else if (currentDifficulty === 'easy') {
+        if (currentDifficulty === 'easy') {
           bossHealth = 800;
+        } else if (currentDifficulty === 'hard') {
+          bossHealth = 2800;
         } else {
           bossHealth = 1400;
         }
@@ -1006,7 +1285,7 @@
         ctx.beginPath();
         ctx.ellipse(this.x + this.width / 2, this.y + this.height, this.width * 0.4, this.width * 0.2, 0, 0, Math.PI * 2);
         ctx.fill();
-        // BOSS受击时的闪光效果（暂时注释）
+        // BOSS受击时的闪光效果（暂时去掉）
         if (bossFlashTimer > 0 && this.health > 0) {
           //ctx.filter = 'brightness(200%) saturate(0%)';
         }
@@ -1026,7 +1305,7 @@
 
         // 绘制BOSS血量条（无尽模式下不显示）
         if (isEndlessMode) { return; }
-        const barWidth = canvasWidth * 0.8, barHeight = 20, barX = canvasWidth / 2 - barWidth / 2, barY = 10;
+        const barWidth = canvasWidth * 0.6, barHeight = 20, barX = canvasWidth / 2 - barWidth / 2, barY = 10;
         ctx.fillStyle = '#555';
         ctx.fillRect(barX, barY, barWidth, barHeight);  // 背景条
 
@@ -1037,6 +1316,25 @@
 
         ctx.strokeStyle = 'white';
         ctx.strokeRect(barX, barY, barWidth, barHeight);  // 边框
+
+        // 在血条中间显示血量数字
+        ctx.font = 'bold 16px "Arial", sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.textAlign = 'center';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
+        ctx.shadowBlur = 4;
+        const healthText = `${this.health} / ${this.maxHealth}`;
+        ctx.strokeText(healthText, canvasWidth / 2, barY + 15);
+        ctx.fillText(healthText, canvasWidth / 2, barY + 15);
+        // 清除阴影效果
+        ctx.shadowColor = 'transparent';
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowBlur = 0;
       }
     }
 
@@ -1152,12 +1450,24 @@
       boss = null;  // 重置BOSS
       killCount = 0;  // 重置总击杀数
       killsSinceLastLife = 0;  // 重置回血计数器
+      comboCount = 0;  // 重置连击数
+      maxComboCount = 0;  // 重置最大连击数
+      escapedBearCount = 0;  // 重置逃走小熊数
+      deathCount = 0;  // 重置阵亡次数
       bearSpawnTimer = 0;  // 重置小熊生成计时器
       bossSpawned = false;  // 重置BOSS生成标志
       playerInvulnerable = false;  // 重置无敌状态
       invulnerabilityTimer = 0;  // 重置无敌计时器
       gameState = 'playing';  // 设置游戏状态为游戏中
       gameStartTime = performance.now();  // 记录游戏开始时间
+
+      // 根据难度设置小熊生成间隔，默认中等为700
+      if (currentDifficulty === 'easy') {
+        bearSpawnInterval = 800;
+      } else if (currentDifficulty === 'hard') {
+        bearSpawnInterval = 600;
+      }
+
       if (player) {
         player.defeatCharacters = [];  // 清空defeat角色
         player.characters = [1];  // 重置角色类型数组
@@ -1169,8 +1479,17 @@
     function spawnBears() {
       const numColumns = 6;  // 列数
       const bearWidth = canvasWidth / 6;  // 每列宽度
+
+      // 根据难度设置小熊每列生成概率，默认65%概率生成，也就是每行6*0.65=3.9个熊
+      let spawnProbability = 0.65;
+      if (currentDifficulty === 'easy') {
+        spawnProbability = 0.6;
+      } else if (currentDifficulty === 'hard') {
+        spawnProbability = 0.7;
+      }
+
       for (let i = 0; i < numColumns; i++) {
-        if (Math.random() > 0.3) {  // 70%概率生成小熊
+        if (Math.random() < spawnProbability) {
           const x = i * bearWidth;  // 计算X坐标
           const y = -bearWidth;  // 从屏幕上方开始
           let canSpawn = true;
@@ -1209,6 +1528,8 @@
               bear.markedForDeletion = true; // 【优化】标记小熊待删除
               killCount++;
               killsSinceLastLife++;
+              comboCount++;
+              if (comboCount > maxComboCount) maxComboCount = comboCount;
               player.updateCharacterCount();
             }
           }
@@ -1222,8 +1543,8 @@
           if (isColliding(bullet, boss)) {
             flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2));
             bullet.markedForDeletion = true; // 标记子弹待删除
-            //无尽模式下BOSS不掉血
-            if (!isEndlessMode) {
+            //无尽模式下BOSS不掉血 不能掉成负数
+            if (!isEndlessMode && boss.health > 0) {
               boss.health--;
             }
             bossFlashTimer = 3;
@@ -1287,6 +1608,7 @@
     }
 
     function checkDead(hitCharacterIndex) {
+      deathCount++; // 增加阵亡次数
       if (player.characterCount > 1) {
         // 计算被击中角色的位置
         const totalWidth = player.width * player.characterCount;
@@ -1376,8 +1698,14 @@
           spawnBears();
           bearSpawnTimer = 0;
         }
-        // 5秒后生成BOSS
-        if (!bossSpawned && timestamp > 5000) {
+        // 游戏开始5秒后生成BOSS
+        let bossBegan = 2500;
+        if (currentDifficulty === 'easy') {
+          bossBegan = 1000;
+        } else if (currentDifficulty === 'hard') {
+          bossBegan = 5000;
+        }
+        if (!bossSpawned && gameTime > bossBegan) {
           boss = new Boss();
           bossSpawned = true;
         }
@@ -1431,25 +1759,7 @@
         screenFlashAlpha -= 0.05;  // 逐渐淡化
       }
       // 绘制UI信息
-      ctx.fillStyle = 'white';
-      ctx.font = '24px "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif';
-      ctx.shadowColor = 'rgba(0,0,0,0.6)';  // 阴影颜色
-      ctx.shadowOffsetX = 2;
-      ctx.shadowOffsetY = 2;
-      ctx.shadowBlur = 4;
-      // 描边效果（更立体）
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(0,0,0,0.6)';
-
-      ctx.textAlign = 'left';
-      ctx.fillText(`${languages[currentLang].lives}: ${player.characterCount}`, 20, 60);  // 左上角显示生命数
-      ctx.textAlign = 'right';
-      ctx.fillText(`${languages[currentLang].score}: ${killCount}`, canvasWidth - 20, 60);  // 右上角显示击杀数
-      // 清除阴影，避免影响其他绘制
-      ctx.shadowColor = 'transparent';
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      ctx.shadowBlur = 0;
+      drawGameUI();
       // 继续下一帧（如果游戏未结束）
       if (gameState !== 'over') gameLoopId = requestAnimationFrame(gameLoop);
     }
@@ -1460,6 +1770,13 @@
       startScreen.classList.add('hidden');  // 隐藏开始界面
       defeatScreen.classList.add('hidden');  // 隐藏失败界面
       winScreen.classList.add('hidden');  // 隐藏胜利界面
+
+      // 显示游戏中的音乐控制按钮
+      document.getElementById('game-music-control').style.display = 'flex';
+
+      // 切换到战斗音乐
+      playMusic('battle');
+
       lastTime = performance.now();  // 记录开始时间
       if (gameLoopId) cancelAnimationFrame(gameLoopId);  // 取消上一个游戏循环
       gameLoop(lastTime);  // 开始游戏循环
@@ -1470,9 +1787,91 @@
       init();
       gameState = 'over';  // 设置游戏状态为结束
       if (gameLoopId) cancelAnimationFrame(gameLoopId);  // 停止游戏循环
+
+      // 隐藏游戏中的音乐控制按钮
+      document.getElementById('game-music-control').style.display = 'none';
+
+      // 切换到菜单音乐
+      playMusic('menu');
+
       startScreen.classList.remove('hidden');  // 显示开始界面
       defeatScreen.classList.add('hidden');  // 隐藏失败界面
       winScreen.classList.add('hidden');  // 隐藏胜利界面
+    }
+
+    // 绘制游戏UI
+    function drawGameUI() {
+      // 设置字体样式
+      ctx.font = 'bold '+ uiFont + 'px "Arial Black", "Helvetica", sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+      ctx.shadowBlur = 4;
+
+      // 绘制左上角生命值和阵亡次数
+      const iconSize = 24;
+      ctx.textAlign = 'left';
+
+      // 第一行：生命值（红心图标）
+      ctx.fillStyle = '#ff69b4'; // 粉色（与心碎图标保持一致）
+      ctx.strokeText('❤️', 10, 62); // 红心emoji图标
+      ctx.fillText('❤️', 10, 62);
+      ctx.fillStyle = '#ffffff'; // 恢复白色
+      ctx.strokeText(player.characterCount.toString(), 40, 62);
+      ctx.fillText(player.characterCount.toString(), 40, 62);
+
+      // 第二行：阵亡次数（心碎图标）
+      ctx.fillStyle = '#ff69b4'; // 粉色
+      ctx.strokeText('💔', 10, 92); // 心碎图标
+      ctx.fillText('💔', 10, 92);
+      ctx.fillStyle = '#ffffff'; // 恢复白色
+      ctx.strokeText(deathCount.toString(), 40, 92);
+      ctx.fillText(deathCount.toString(), 40, 92);
+
+      // 绘制右上角积分图标和数字
+      if (assetImages.scoreIcon) {
+        ctx.drawImage(assetImages.scoreIcon, canvasWidth - 40, 45, iconSize, iconSize);
+
+        ctx.textAlign = 'right';
+        // 显示格式：击杀数-逃走数（如果有逃走小熊）
+        const scoreText = escapedBearCount > 0 ? `${killCount}-${escapedBearCount}` : killCount.toString();
+        ctx.strokeText(scoreText, canvasWidth - 55, 62);
+        ctx.fillText(scoreText, canvasWidth - 55, 62);
+
+        // 绘制combo数（第二行）
+        ctx.drawImage(assetImages.comboIcon, canvasWidth - 52, 75, 50, 22);
+        ctx.strokeText(comboCount.toString(), canvasWidth - 55, 92);
+        ctx.fillText(comboCount.toString(), canvasWidth - 55, 92);
+      }
+
+      // 绘制游戏时间和难度模式（游戏中和结束时都显示）
+      if (gameState === 'playing' || gameState === 'bossDying') {
+        const barWidth = canvasWidth * 0.6;
+        const barX = canvasWidth / 2 - barWidth / 2;
+        ctx.font = 'bold '+ uiFont + ' "Arial", sans-serif';
+        // 游戏时间（血条位置左侧）
+        const gameTime = performance.now() - gameStartTime;
+        const timeText = formatGameTime(gameTime);
+        ctx.textAlign = 'right';
+        ctx.strokeText(timeText, barX - 15, 25);
+        ctx.fillText(timeText, barX - 15, 25);
+
+        // 难度模式（血条位置右侧）
+        const texts = languages[currentLang];
+        const modeText = texts[currentDifficulty].replace(texts.mode,'');
+        ctx.textAlign = 'left';
+        ctx.strokeText(modeText, barX + barWidth + 15, 25);
+        ctx.fillText(modeText, barX + barWidth + 15, 25);
+      }
+
+      // 清除阴影效果
+      ctx.shadowColor = 'transparent';
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.shadowBlur = 0;
     }
 
     // 格式化游戏时间
@@ -1485,20 +1884,99 @@
 
     // 游戏结束
     function gameOver(isWin) {
+      //避免重复执行
+      if(gameState == 'over'){
+        return;
+      }
       gameState = 'over';  // 设置游戏状态为结束
       cancelAnimationFrame(gameLoopId);  // 停止游戏循环
-
-      // 计算游戏时间并显示
       const gameTime = performance.now() - gameStartTime;
-      const timeText = `${languages[currentLang].gameTime}: ${formatGameTime(gameTime)}`;
+      // 隐藏游戏中的音乐控制按钮
+      document.getElementById('game-music-control').style.display = 'none';
+      // 切换到结束音乐
+      playMusic('end');
 
-      if (isWin) {
-        document.getElementById('game-time-win').textContent = timeText;
-        winScreen.classList.remove('hidden');  // 显示胜利界面
-      } else {
-        document.getElementById('game-time-defeat').textContent = timeText;
-        defeatScreen.classList.remove('hidden');  // 显示失败界面
+      // 计算最终得分
+      const killScore = Math.max(0, (killCount - escapedBearCount) * 20);
+      const comboScore = maxComboCount * 5;
+      const deathPenalty = deathCount * 20;
+      const bossScore = boss ? (boss.maxHealth - boss.health) * 5 : 0;
+      const finalScore = Math.max(0, killScore + bossScore + comboScore - deathPenalty);
+      //发送游戏统计
+      try {
+        gameStat(currentStage, currentDifficulty, fps, isWin ? 1 : 0, Math.floor(gameTime / 1000),
+          killCount, escapedBearCount, maxComboCount, deathCount, boss ? (boss.maxHealth - boss.health) : 0, finalScore);
+      }catch (e) {
+        //忽略报错
       }
+      // 显示结算动画
+      showScoreAnimation(isWin, killScore, maxComboCount, finalScore, gameTime);
+    }
+
+    // 结算动画函数
+    function showScoreAnimation(isWin, killScore, maxComboCount, finalScore, gameTime) {
+      const targetElement = isWin ? document.getElementById('game-time-win') : document.getElementById('game-time-defeat');
+      const targetScreen = isWin ? winScreen : defeatScreen;
+      const texts = languages[currentLang];
+
+      // 显示对应界面
+      targetScreen.classList.remove('hidden');
+
+
+      const timeText = `${texts.gameTime}: ${formatGameTime(gameTime)}`;
+
+      let killScoreText = '';
+      let comboScoreText = '';
+      let finalScoreText = '';
+
+      const updateDisplay = () => {
+        targetElement.innerHTML = `${timeText}<br>${killScoreText || '&nbsp;'}<br>${comboScoreText || '&nbsp;'}<br>${finalScoreText || '&nbsp;'}`;
+      };
+
+      const animateLine = (targetValue, label, callback) => {
+        const duration = 1500;
+        const frameRate = 60;
+        const totalFrames = (duration / 1000) * frameRate;
+        let frame = 0;
+
+        const animate = () => {
+          frame++;
+          const progress = frame / totalFrames;
+          const easeProgress = 1 - Math.pow(1 - progress, 3);
+          const currentValue = Math.floor(targetValue * easeProgress);
+
+          if (label === texts.killScore) {
+            killScoreText = label + ':  ' + currentValue;
+          } else if (label === texts.maxCombo) {
+            comboScoreText = label + ':  ' + currentValue;
+          } else if (label === texts.totalScore) {
+            finalScoreText = label + ':  ' + currentValue;
+          }
+
+          updateDisplay();
+
+          if (frame < totalFrames) {
+            requestAnimationFrame(animate);
+          } else {
+            setTimeout(callback, 100);
+          }
+        };
+        animate();
+      };
+
+      // 初始显示所有4行占位
+      killScoreText = '';
+      comboScoreText = '';
+      finalScoreText = '';
+      updateDisplay();
+
+      setTimeout(() => {
+        animateLine(killScore, texts.killScore, () => {
+          animateLine(maxComboCount, texts.maxCombo, () => {
+            animateLine(finalScore, texts.totalScore, () => {});
+          });
+        });
+      }, 300);
     }
 
     // 调整画布尺寸
@@ -1511,6 +1989,11 @@
       if (player) {
         player.width = canvasWidth / 7;
         player.height = player.width * 1.2;
+      }
+      if(canvasWidth <= 390){
+        uiFont = 12;
+      }else if(canvasWidth <= 450){
+        uiFont = 14;
       }
     }
     window.addEventListener('resize', resizeCanvas);  // 监听窗口大小变化
