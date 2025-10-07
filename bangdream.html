@@ -100,9 +100,15 @@
       font-size: 22px;
       font-weight: 600; /* 稍微加粗 */
       color: #ffffff; /* 白色 */
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 6px rgba(255, 105, 180, 0.6); /* 阴影 + 粉色光晕 */
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000,
+        0 0 10px rgba(255, 105, 180, 0.8);
+      /*text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 6px rgba(255, 105, 180, 0.6);  阴影 + 粉色光晕 */
       margin: 10px 0;
-      line-height: 1.4;
+      line-height: 1.5;
       @media (max-width: 450px) {
         font-size: 18px;
         margin: 8px 0;
@@ -112,12 +118,6 @@
       font-size: 28px;
       line-height: 1.8;
       margin: 0;
-      text-shadow:
-        -2px -2px 0 #000,
-        2px -2px 0 #000,
-        -2px 2px 0 #000,
-        2px 2px 0 #000,
-        0 0 10px rgba(255, 105, 180, 0.8);
       @media (max-width: 450px) {
         font-size: 22px;
       }
@@ -408,7 +408,7 @@
 
     @media (max-width: 400px) {
       .music-control {
-        left: calc(50% + 70px);
+        left: calc(50% + 75px);
         width: 36px;
         height: 36px;
       }
@@ -503,8 +503,8 @@
       </div>
     </div>
     <div class="version-info">
-      <div><span data-text="version">版本</span>：0.3</div>
-      <div><span data-text="updateTime">更新时间</span>：2025-10-05</div>
+      <div><span data-text="version">版本</span>：0.4</div>
+      <div><span data-text="updateTime">更新时间</span>：2025-10-07</div>
       <div>
         <a href="https://github.com/zfkdiyi/bangdream" id="github-button" class="github-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -841,11 +841,9 @@
       const res = await fetch('https://badmintonranks.com/prod-api/openStat', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'from': from,
-          'width': width,
-          'height': height
+          'Content-Type': 'application/json'
         },
+        body: JSON.stringify({from ,width ,height})
       });
       const data = await res.json();
       if (data.online !== undefined) {
@@ -857,19 +855,11 @@
       fetch('https://badmintonranks.com/prod-api/gameStat', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'stage': stage,
-          'mode': mode,
-          'fps': fps,
-          'win': win,
-          'duration': duration,
-          'kumaKill': kumaKill,
-          'kumaLive': kumaLive,
-          'maxCombo': maxCombo,
-          'lifeLost': lifeLost,
-          'bossDamage': bossDamage,
-          'finalScore': finalScore,
+          'Content-Type': 'application/json'
         },
+        body: JSON.stringify({stage,mode,fps,win,duration,
+          kumaKill,kumaLive,maxCombo,lifeLost,bossDamage,finalScore
+        })
       });
     }
     //游戏难度和模式选择
@@ -920,6 +910,7 @@
     let player, bullets, bears, boss, explosions;  // 游戏对象
     let currentStage = 1; //当前关卡
     let uiFont = 16; // UI字体大小
+    let uiAdjust = 0; // UI字体距离偏移量
     let bearSpawnTimer = 0;  // 小熊生成计时器
     let bearSpawnInterval = 700;  // 小熊生成间隔（毫秒）
     let killCount = 0;  // 总击杀数
@@ -1323,18 +1314,19 @@
         ctx.strokeStyle = '#000000';
         ctx.lineWidth = 2;
         ctx.textAlign = 'center';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-        ctx.shadowOffsetX = 1;
-        ctx.shadowOffsetY = 1;
-        ctx.shadowBlur = 4;
+        //ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+        // ctx.shadowOffsetX = 1;
+        // ctx.shadowOffsetY = 1;
+        // ctx.shadowBlur = 4;
+
         const healthText = `${this.health} / ${this.maxHealth}`;
         ctx.strokeText(healthText, canvasWidth / 2, barY + 15);
         ctx.fillText(healthText, canvasWidth / 2, barY + 15);
         // 清除阴影效果
-        ctx.shadowColor = 'transparent';
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.shadowBlur = 0;
+        //ctx.shadowColor = 'transparent';
+        // ctx.shadowOffsetX = 0;
+        // ctx.shadowOffsetY = 0;
+        // ctx.shadowBlur = 0;
       }
     }
 
@@ -1806,10 +1798,11 @@
       ctx.fillStyle = '#ffffff';
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 2;
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
-      ctx.shadowBlur = 4;
+      //设置阴影
+      // ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+      // ctx.shadowOffsetX = 1;
+      // ctx.shadowOffsetY = 1;
+      // ctx.shadowBlur = 4;
 
       // 绘制左上角生命值和阵亡次数
       const iconSize = 24;
@@ -1820,16 +1813,16 @@
       ctx.strokeText('❤️', 10, 62); // 红心emoji图标
       ctx.fillText('❤️', 10, 62);
       ctx.fillStyle = '#ffffff'; // 恢复白色
-      ctx.strokeText(player.characterCount.toString(), 40, 62);
-      ctx.fillText(player.characterCount.toString(), 40, 62);
+      ctx.strokeText(player.characterCount.toString(), 36 - uiAdjust, 62);
+      ctx.fillText(player.characterCount.toString(), 36 - uiAdjust, 62);
 
       // 第二行：阵亡次数（心碎图标）
       ctx.fillStyle = '#ff69b4'; // 粉色
       ctx.strokeText('💔', 10, 92); // 心碎图标
       ctx.fillText('💔', 10, 92);
       ctx.fillStyle = '#ffffff'; // 恢复白色
-      ctx.strokeText(deathCount.toString(), 40, 92);
-      ctx.fillText(deathCount.toString(), 40, 92);
+      ctx.strokeText(deathCount.toString(), 36 - uiAdjust, 92);
+      ctx.fillText(deathCount.toString(), 36 - uiAdjust, 92);
 
       // 绘制右上角积分图标和数字
       if (assetImages.scoreIcon) {
@@ -1868,10 +1861,10 @@
       }
 
       // 清除阴影效果
-      ctx.shadowColor = 'transparent';
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      ctx.shadowBlur = 0;
+      //ctx.shadowColor = 'transparent';
+      // ctx.shadowOffsetX = 0;
+      // ctx.shadowOffsetY = 0;
+      // ctx.shadowBlur = 0;
     }
 
     // 格式化游戏时间
@@ -1992,8 +1985,10 @@
       }
       if(canvasWidth <= 390){
         uiFont = 12;
-      }else if(canvasWidth <= 450){
+        uiAdjust = 5;
+      }else if(canvasWidth <= 420){
         uiFont = 14;
+        uiAdjust = 2;
       }
     }
     window.addEventListener('resize', resizeCanvas);  // 监听窗口大小变化
