@@ -6,9 +6,9 @@
 
 ## Where to play 游戏地址
 
-[zfkdiyi.github.io/bangdream](https://zfkdiyi.github.io/bangdream)
-
 [badmintonranks.com/bangdream.html](https://badmintonranks.com/bangdream.html)
+
+[zfkdiyi.github.io/bangdream](https://zfkdiyi.github.io/bangdream)
 
 ## How To Play 玩法介绍
 
