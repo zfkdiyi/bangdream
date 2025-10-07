@@ -704,7 +704,6 @@
     };
     // 音乐控制相关变量
     let menuMusic, battleMusic, endMusic;
-    let currentMusic = null;
     let isMusicEnabled = false;
 
     // 公共前缀
@@ -735,32 +734,29 @@
         initMusicControl();
       });
     }
-
-
-
     // 播放指定音乐
     const playMusic = (musicType) => {
-      // 停止所有音乐
-      [menuMusic, battleMusic, endMusic].forEach(music => {
-        if (music) {
-          music.pause();
-          music.currentTime = 0;
-        }
-      });
-      // 播放指定音乐
-      if (isMusicEnabled) {
-        if (musicType === 'menu') {
-          currentMusic = menuMusic;
-        } else if (musicType === 'battle') {
-          currentMusic = battleMusic;
-        } else if (musicType === 'end') {
-          currentMusic = endMusic;
-        }
-
-        if (currentMusic) {
+      let currentMusic = getTargetMusic(musicType);
+      if(currentMusic) {
+        // 暂停其他音乐（不重置时间）
+        [menuMusic, battleMusic, endMusic].forEach(music => {
+          if (music && music !== currentMusic) {
+            music.pause();
+            music.currentTime = 0;
+          }
+        });
+        // 播放指定音乐
+        if (isMusicEnabled) {
           currentMusic.play().catch(e => console.log('音乐播放失败:', e));
         }
       }
+    };
+    // 获取目标音乐对象
+    const getTargetMusic = (musicType) => {
+      if (musicType === 'menu') return menuMusic;
+      if (musicType === 'battle') return battleMusic;
+      if (musicType === 'end') return endMusic;
+      return null;
     };
 
     // 更新音乐按钮图标
@@ -782,12 +778,12 @@
       updateMusicIcons();
 
       if (!isMusicEnabled) {
-        // 关闭音乐
+        // 关闭音乐（保持当前播放位置）
         [menuMusic, battleMusic, endMusic].forEach(music => {
           if (music) music.pause();
         });
       } else {
-        // 开启音乐，根据当前状态播放对应音乐
+        // 开启音乐，根据当前状态播放对应音乐（从暂停位置继续）
         if (gameState === 'playing') {
           playMusic('battle');
         } else if (gameState === 'over') {
@@ -1902,8 +1898,11 @@
       // 显示游戏中的音乐控制按钮
       document.getElementById('game-music-control').style.display = 'flex';
 
-      // 切换到战斗音乐
-      playMusic('battle');
+      // 切换到战斗音乐（重新开始游戏时重置播放位置）
+      if (battleMusic) {
+        battleMusic.currentTime = 0;
+        playMusic('battle');
+      }
 
       lastTime = performance.now();  // 记录开始时间
       if (gameLoopId) cancelAnimationFrame(gameLoopId);  // 取消上一个游戏循环
@@ -1918,10 +1917,8 @@
 
       // 隐藏游戏中的音乐控制按钮
       document.getElementById('game-music-control').style.display = 'none';
-
       // 切换到菜单音乐
       playMusic('menu');
-
       startScreen.classList.remove('hidden');  // 显示开始界面
       defeatScreen.classList.add('hidden');  // 隐藏失败界面
       winScreen.classList.add('hidden');  // 隐藏胜利界面
@@ -2018,12 +2015,12 @@
         return;
       }
       gameState = 'over';  // 设置游戏状态为结束
+      // 切换到结束音乐
+      playMusic('end');
       cancelAnimationFrame(gameLoopId);  // 停止游戏循环
       const gameTime = performance.now() - gameStartTime;
       // 隐藏游戏中的音乐控制按钮
-      document.getElementById('game-music-control').style.display = 'none';
-      // 切换到结束音乐
-      playMusic('end');
+      // document.getElementById('game-music-control').style.display = 'none';
 
       // 计算最终得分
       const killScore = Math.max(0, (killCount - escapedBearCount) * 20);
