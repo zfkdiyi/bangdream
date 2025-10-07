@@ -100,12 +100,11 @@
       font-size: 22px;
       font-weight: 600; /* 稍微加粗 */
       color: #ffffff; /* 白色 */
-      text-shadow:
-        -2px -2px 0 #000,
-        2px -2px 0 #000,
-        -2px 2px 0 #000,
-        2px 2px 0 #000,
-        0 0 10px rgba(255, 105, 180, 0.8);
+      text-shadow: -2px -2px 0 #000,
+      2px -2px 0 #000,
+      -2px 2px 0 #000,
+      2px 2px 0 #000,
+      0 0 10px rgba(255, 105, 180, 0.8);
       /*text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 6px rgba(255, 105, 180, 0.6);  阴影 + 粉色光晕 */
       margin: 10px 0;
       line-height: 1.5;
@@ -114,6 +113,7 @@
         margin: 8px 0;
       }
     }
+
     .result-text {
       font-size: 28px;
       line-height: 1.8;
@@ -214,16 +214,12 @@
     }
 
     .version-info {
-      margin-top: 40px;
+      margin-top: 20px;
       font-size: 16px;
       color: rgba(255, 255, 255, 0.7);
       text-align: center;
       line-height: 1.8;
-      @media (max-width: 500px) {
-        margin-top: 30px;
-      }
       @media (max-width: 400px) {
-        margin-top: 20px;
         font-size: 14px;
       }
     }
@@ -255,8 +251,8 @@
       text-shadow: 0 0 3px #000;
       z-index: 20;
       line-height: 1.2;
+      cursor: pointer;
     }
-
 
 
     /* 联系作者部分 */
@@ -336,7 +332,6 @@
     }
 
 
-
     .music-control:hover {
       background: rgba(255, 105, 180, 1);
       box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
@@ -412,20 +407,53 @@
         width: 36px;
         height: 36px;
       }
+
       .music-control svg {
         width: 18px;
         height: 18px;
       }
+
       .game-music-control {
         width: 28px;
         height: 28px;
         bottom: 10px;
         right: 10px;
       }
+
       .game-music-control svg {
         width: 14px;
         height: 14px;
       }
+    }
+
+    #loading-line {
+      width: 60%;
+      max-width: 400px;
+      height: 10px;
+      margin: 5px auto;
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #loading-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+      transition: width 0.25s ease-out;
+    }
+
+    #loading-text {
+      text-align: center;
+      color: white;
+      font-size: 16px;
+    }
+    /* 去除移动端点击按钮的高亮闪框 */
+    * {
+      -webkit-tap-highlight-color: transparent;
     }
   </style>
 </head>
@@ -438,30 +466,22 @@
   </div>
 
   <!-- 游戏中的音乐控制按钮 -->
-  <div id="game-music-control" class="game-music-control" style="display: none;" >
-    <svg id="game-music-icon-play" viewBox="0 0 24 24" >
-      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-      </svg>
+  <div id="game-music-control" class="game-music-control" style="display: none;">
+    <svg id="game-music-icon-play" viewBox="0 0 24 24">
+      <path
+        d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+    </svg>
     <svg id="game-music-icon-mute" viewBox="0 0 24 24" style="display: none;">
-      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+      <path
+        d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
     </svg>
   </div>
 
   <!-- 背景音乐 -->
-  <audio id="menu-music" loop preload="auto">
-    <source src="https://cdn.badmintonranks.com/menu.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="battle-music" loop preload="auto">
-    <source src="https://cdn.badmintonranks.com/battle1.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="end-music" loop preload="auto">
-    <source src="https://cdn.badmintonranks.com/end.mp3" type="audio/mpeg">
-  </audio>
+  <div id="audio-container"></div>
 
   <div id="start-screen" class="game-overlay start-adjust">
-    <img
-      src="https://anime.bang-dream.com/bandorichan/wordpress/wp-content/uploads/2025/09/25171503/2025_BGDC_header_01-1024x341.jpg"
-      alt="Header" style="width: 100%; position: absolute; top: 0; left: 0; z-index: -1;">
+    <img id="header-image" style="width: 100%; position: absolute; top: 0; left: 0; z-index: -1;">
     <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20vh;">
       <h1 class="overlay-title" data-text="title">音符射手</h1>
       <p class="overlay-text" data-text="instructions">移动鼠标或手指来控制角色<br>按住屏幕持续发射音符！</p>
@@ -473,13 +493,15 @@
       </div>
       <div class="start-button-container">
         <button id="start-button" class="start-button" data-text="startGame">开始游戏</button>
-        <div id="music-control" class="music-control" >
-          <svg id="music-icon-play" viewBox="0 0 24 24" >
-            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+        <div id="music-control" class="music-control">
+          <svg id="music-icon-play" viewBox="0 0 24 24">
+            <path
+              d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
           </svg>
           <svg id="music-icon-mute" viewBox="0 0 24 24" style="display: none;">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-            </svg>
+            <path
+              d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>
         </div>
       </div>
       <div id="language-selector" class="language-selector">
@@ -502,6 +524,12 @@
         </div>
       </div>
     </div>
+    <!-- 加载进度界面 -->
+    <div id="loading-line">
+      <div id="loading-fill"></div>
+    </div>
+    <div id="loading-text">Loading... 0%</div>
+
     <div class="version-info">
       <div><span data-text="version">版本</span>：0.4</div>
       <div><span data-text="updateTime">更新时间</span>：2025-10-07</div>
@@ -521,7 +549,7 @@
   <div id="defeat-screen" class="game-overlay hidden">
     <div style="display: flex; flex-direction: column; align-items: center;">
       <p id="game-time-defeat" class="result-text"></p>
-      <img id="defeat-image" src="img/defeat.png" alt="DEFEAT"
+      <img id="defeat-image" alt="DEFEAT"
            style="max-width: 80%; max-height: 60%; object-fit: contain;">
       <p class="overlay-text" data-text="defeatMessage">不要灰心，再来一次！</p>
       <button id="restart-button-defeat" class="end-button" data-text="retry">重试</button>
@@ -532,7 +560,7 @@
   <div id="win-screen" class="game-overlay hidden">
     <div style="display: flex; flex-direction: column; align-items: center;">
       <p id="game-time-win" class="result-text"></p>
-      <img id="win-image" src="img/win.png" alt="YOU WIN" style="max-width: 80%; max-height: 60%; object-fit: contain;">
+      <img id="win-image" alt="YOU WIN" style="max-width: 80%; max-height: 60%; object-fit: contain;">
       <p class="overlay-text" data-text="winMessage">闪闪发光，心动不已！</p>
       <button id="restart-button-win" class="end-button" data-text="playAgain">再玩一次</button>
       <button id="home-button-win" class="end-button" data-text="backToHome">回到首页</button>
@@ -605,7 +633,7 @@
         killScore: 'Kill Score',
         maxCombo: 'Max Combo',
         totalScore: 'Total Score'
-        },
+      },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
         instructions: 'マウスや指で キャラクターを操作<br>画面を押し続けて ノートを連射！',
@@ -638,6 +666,15 @@
         totalScore: '合計スコア'
       }
     };
+
+
+    // 随机选择头图
+    const setRandomHeaderImage = () => {
+      const randomIndex = Math.floor(Math.random() * 10) + 1;
+      document.getElementById('header-image').src =
+      'https://cdn.badmintonranks.com/bangdream/img/head' + randomIndex +'.jpg';
+    };
+
     // 自动检测浏览器语言
     const detectLanguage = () => {
       const lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
@@ -669,6 +706,38 @@
     let menuMusic, battleMusic, endMusic;
     let currentMusic = null;
     let isMusicEnabled = false;
+
+    // 公共前缀
+    const audioPrefix = "https://cdn.badmintonranks.com/bangdream/music/";
+    // 音乐文件名数组
+    const musicFiles = [
+      { id: "menu-music", file: "menu.mp3", loop: true },
+      { id: "battle-music", file: "battle1.mp3", loop: true },
+      { id: "end-music", file: "end.mp3", loop: true }
+    ];
+    // 遍历生成 <audio> 标签
+    function createMusic() {
+      const audioContainer = document.getElementById("audio-container");
+      musicFiles.forEach(music => {
+        const audio = document.createElement("audio");
+        audio.id = music.id;
+        audio.loop = music.loop;
+        // auto表示浏览器尽可能地提前加载整个音频文件，以便用户一点击播放就能立即开始。
+        // none表示浏览器不下载音频，除非用户点击播放。延迟大
+        audio.preload = "auto";
+
+        const source = document.createElement("source");
+        source.src = `${audioPrefix}${music.file}`;
+        source.type = "audio/mpeg";
+
+        audio.appendChild(source);
+        audioContainer.appendChild(audio);
+        initMusicControl();
+      });
+    }
+
+
+
     // 播放指定音乐
     const playMusic = (musicType) => {
       // 停止所有音乐
@@ -747,6 +816,7 @@
       gameMusicControl.addEventListener('click', toggleMusic);
       // Chrome不允许用户一打开网站就自动播放声音
     };
+
     // 初始化语言
     function setLanguage() {
       currentLang = detectLanguage();
@@ -759,6 +829,7 @@
         });
       });
     }
+
     // 联系作者弹窗逻辑
     const contactBtn = document.getElementById('contact-btn');
     const modal = document.getElementById('contact-modal');
@@ -806,6 +877,8 @@
     let lastTimes = performance.now();
     let frames = 0;
     let fps = 0;
+    let fpsVisible = true;
+
     function updateFPS() {
       const now = performance.now();
       frames++;
@@ -816,6 +889,14 @@
         fpsDisplay.textContent = 'FPS: ' + fps;
       }
     }
+    // 初始化FPS显示状态
+    function initFPS() {
+      fpsDisplay.addEventListener('click', () => {
+        fpsVisible = !fpsVisible;
+        fpsDisplay.style.display = fpsVisible ? 'block' : 'none';
+      });
+    }
+
     //获取在线人数
     async function sendStat() {
       let from = document.referrer;
@@ -826,35 +907,40 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({from ,width ,height})
+        body: JSON.stringify({from, width, height})
       });
       const data = await res.json();
       if (data.online !== undefined) {
         document.getElementById('online-count').textContent = `Online: ${data.online}`;
       }
     }
+
     // 发送游戏结果统计
-    function gameStat(stage, mode, fps, win, duration, kumaKill, kumaLive,  maxCombo, lifeLost, bossDamage, finalScore) {
+    function gameStat(stage, mode, fps, win, duration, kumaKill, kumaLive, maxCombo, lifeLost, bossDamage, finalScore) {
       fetch('https://badmintonranks.com/prod-api/gameStat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({stage,mode,fps,win,duration,
-          kumaKill,kumaLive,maxCombo,lifeLost,bossDamage,finalScore
+        body: JSON.stringify({
+          stage, mode, fps, win, duration,
+          kumaKill, kumaLive, maxCombo, lifeLost, bossDamage, finalScore
         })
       });
     }
+
     //游戏难度和模式选择
     let currentDifficulty = 'normal';
     let gameStartTime = 0;
     let isEndlessMode = false;
+
     // 更新难度按钮被选中的状态
     function updateDifficultyButtons() {
       document.querySelectorAll('.difficulty-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-difficulty') === currentDifficulty);
       });
     }
+
     // 初始化难度按钮状态
     updateDifficultyButtons();
     // 难度按钮点击事件
@@ -916,45 +1002,109 @@
     let shootTimer = 0;  // 射击计时器
     let shootInterval = 80;  // 射击间隔（毫秒）越小子弹发射越密集，火力更强
 
+
+    // 公共前缀
+    // const IMG_PATH = 'img/';
+    const IMG_PATH = 'https://cdn.badmintonranks.com/bangdream/img/';
     // 游戏资源定义
     const assets = {
-      player1: 'img/player1.png',
-      player2: 'img/player2.png',
-      player3: 'img/player3.png',
-      player4: 'img/player4.png',
-      player5: 'img/player5.png',
-      player6: 'img/player6.png',
-      bear1: 'img/kuma1.png',
-      bear2: 'img/kuma2.png',
-      boss1: 'img/kkr1.png',
-      boss2: 'img/kkr2.png',
-      boss3: 'img/kkr3.png',
-      boss4: 'img/kkr4.png',
-      bullet1: 'img/bullet1.png',
-      bullet2: 'img/bullet2.png',
-      bullet3: 'img/bullet3.png',
-      flash1: 'img/flash1.png',
-      flash2: 'img/flash2.png',
-      defeat1: 'img/defeat1.png',
-      defeat2: 'img/defeat2.png',
-      defeat3: 'img/defeat3.png',
-      scoreIcon: 'img/kumaIcon.png',
-      comboIcon: 'img/combo.png'
+      player1: 'player1.png',
+      player2: 'player2.png',
+      player3: 'player3.png',
+      player4: 'player4.png',
+      player5: 'player5.png',
+      player6: 'player6.png',
+      bear1: 'kuma1.png',
+      bear2: 'kuma2.png',
+      boss1: 'kkr1.png',
+      boss2: 'kkr2.png',
+      boss3: 'kkr3.png',
+      boss4: 'kkr4.png',
+      bullet1: 'bullet1.png',
+      bullet2: 'bullet2.png',
+      bullet3: 'bullet3.png',
+      flash1: 'flash1.png',
+      flash2: 'flash2.png',
+      defeat1: 'defeat1.png',
+      defeat2: 'defeat2.png',
+      defeat3: 'defeat3.png',
+      scoreIcon: 'kumaIcon.png',
+      comboIcon: 'combo.png',
+      win: 'win.png',
+      defeat: 'defeat.png'
     };
-    const assetImages = {};  // 存储加载后的图像对象
+    // 存储加载后的图像对象
+    const assetImages = {};
 
-    // 加载游戏资源
-    function loadAssets(callback) {
+    function loadAssets(callback, onProgress) {
       let loadedCount = 0;
-      const assetKeys = Object.keys(assets);
-      assetKeys.forEach(key => {
-        assetImages[key] = new Image();
-        assetImages[key].src = assets[key];
-        assetImages[key].onload = () => {
-          if (++loadedCount === assetKeys.length) callback();
+      const totalCount = Object.keys(assets).length;
+
+      function handleProgress() {
+        loadedCount++;
+        if (onProgress) onProgress(loadedCount, totalCount);
+        if (loadedCount === totalCount) callback();
+      }
+
+      Object.entries(assets).forEach(([key, filename]) => {
+        const img = new Image();
+        img.src = IMG_PATH + filename;
+        img.onload = handleProgress;
+        img.onerror = () => {
+          console.warn(`❌ Failed to load: ${img.src}，重试中...`);
+          retryLoad(img, IMG_PATH + filename, 3, handleProgress);
         };
+        assetImages[key] = img;
       });
     }
+
+    function retryLoad(img, src, retries, onSuccess) {
+      let attempts = 0;
+
+      function tryAgain() {
+        if (attempts >= retries) {
+          console.error(`🚫 图片加载失败，已放弃: ${src}`);
+          onSuccess(); // 即使失败，也推进进度
+          return;
+        }
+        attempts++;
+        setTimeout(() => {
+          img.src = src + '?retry=' + attempts;
+        }, 30 * attempts);
+      }
+
+      img.onerror = tryAgain;
+      img.onload = onSuccess;
+      tryAgain();
+    }
+
+    function loadData() {
+      const loadingText = document.getElementById('loading-text');
+      const progressBarFill = document.getElementById('loading-fill');
+      const loadingLine = document.getElementById('loading-line');
+      loadAssets(
+        () => {
+          progressBarFill.style.width = '100%';
+          setTimeout(() => {
+            loadingLine.style.opacity = '0';
+            loadingText.style.opacity = '0';
+            setTimeout(() => {
+              loadingLine.style.visibility = 'hidden';
+              loadingText.style.visibility = 'hidden';
+            }, 500);
+          }, 800);
+          // 给HTML图片赋值src
+          document.getElementById('win-image').src = assetImages.win.src;
+          document.getElementById('defeat-image').src = assetImages.defeat.src;
+        },
+        (loaded, total) => {
+          const percent = Math.round((loaded / total) * 100);
+          loadingText.textContent = `Loading... ${percent}%`;
+          progressBarFill.style.width = `${percent}%`;
+        }
+      );
+    }
+
     // 玩家类
     class Player {
       constructor() {
@@ -1205,7 +1355,7 @@
           }
           // 接近玩家时（玩家在BOSS的下方，且距离小于玩家的身高）变成举起拳头状态持续0.3秒
           const distanceToPlayer = player.y - (this.y + this.height);
-          if (distanceToPlayer >=0 && distanceToPlayer <= player.height &&
+          if (distanceToPlayer >= 0 && distanceToPlayer <= player.height &&
             this.attackState === 'normal' && this.vy >= 0) {
             this.attackState = 'raising';
             this.attackTimer = 300;
@@ -1243,7 +1393,7 @@
             this.vy = -(Math.random() * canvasHeight * 0.8 + canvasHeight * 0.5);
             // bounceTargetY越小代表BOSS反弹后的高度越接近画面顶部，
             this.bounceTargetY = Math.random() * canvasHeight * bounceFactor - canvasHeight * 0.1;
-            if(this.bounceTargetY < 0){
+            if (this.bounceTargetY < 0) {
               this.bounceTargetY = 0;
             }
           }
@@ -1252,6 +1402,7 @@
           }
         }
       }
+
       // 绘制BOSS和血量条
       draw() {
         // 绘制阴影
@@ -1278,7 +1429,9 @@
         ctx.filter = 'none';
 
         // 绘制BOSS血量条（无尽模式下不显示）
-        if (isEndlessMode) { return; }
+        if (isEndlessMode) {
+          return;
+        }
         const barWidth = canvasWidth * 0.6, barHeight = 20, barX = canvasWidth / 2 - barWidth / 2, barY = 10;
         ctx.fillStyle = '#555';
         ctx.fillRect(barX, barY, barWidth, barHeight);  // 背景条
@@ -1654,7 +1807,7 @@
         if (boss) {
           boss.update(deltaTime, gameTime);
         }
-        if(player){
+        if (player) {
           // 更新玩家角色所在位置
           updatePlayerPosition(deltaTime);
           player.updateDefeatCharacters(deltaTime);
@@ -1721,8 +1874,8 @@
 
       // 无敌状态下玩家角色闪烁，注释掉下面这一行就代表不闪烁
       //if (!playerInvulnerable || Math.floor(invulnerabilityTimer / 100) % 2 === 0) {
-        player.draw();
-     // }
+      player.draw();
+      // }
 
       explosions.forEach(e => e.draw());
       flashEffects.forEach(f => f.draw());
@@ -1777,7 +1930,7 @@
     // 绘制游戏UI
     function drawGameUI() {
       // 设置字体样式
-      ctx.font = 'bold '+ uiFont + 'px "Arial Black", "Helvetica", sans-serif';
+      ctx.font = 'bold ' + uiFont + 'px "Arial Black", "Helvetica", sans-serif';
       ctx.fillStyle = '#ffffff';
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 2;
@@ -1827,7 +1980,7 @@
       if (gameState === 'playing' || gameState === 'bossDying') {
         const barWidth = canvasWidth * 0.6;
         const barX = canvasWidth / 2 - barWidth / 2;
-        ctx.font = 'bold '+ uiFont + ' "Arial", sans-serif';
+        ctx.font = 'bold ' + uiFont + ' "Arial", sans-serif';
         // 游戏时间（血条位置左侧）
         const gameTime = performance.now() - gameStartTime;
         const timeText = formatGameTime(gameTime);
@@ -1837,7 +1990,7 @@
 
         // 难度模式（血条位置右侧）
         const texts = languages[currentLang];
-        const modeText = texts[currentDifficulty].replace(texts.mode,'');
+        const modeText = texts[currentDifficulty].replace(texts.mode, '');
         ctx.textAlign = 'left';
         ctx.strokeText(modeText, barX + barWidth + 15, 25);
         ctx.fillText(modeText, barX + barWidth + 15, 25);
@@ -1861,7 +2014,7 @@
     // 游戏结束
     function gameOver(isWin) {
       //避免重复执行
-      if(gameState == 'over'){
+      if (gameState == 'over') {
         return;
       }
       gameState = 'over';  // 设置游戏状态为结束
@@ -1874,15 +2027,16 @@
 
       // 计算最终得分
       const killScore = Math.max(0, (killCount - escapedBearCount) * 20);
-      const comboScore = maxComboCount * 5;
+      const comboScore = maxComboCount * 20;
       const deathPenalty = deathCount * 20;
+      const fullComboScore = (isWin && (maxComboCount == killCount)) ? maxComboCount * 10 : 0;
       const bossScore = boss ? (boss.maxHealth - boss.health) * 5 : 0;
-      const finalScore = Math.max(0, killScore + bossScore + comboScore - deathPenalty);
+      const finalScore = Math.max(0, killScore + bossScore + comboScore - deathPenalty + fullComboScore);
       //发送游戏统计
       try {
         gameStat(currentStage, currentDifficulty, fps, isWin ? 1 : 0, Math.floor(gameTime / 1000),
           killCount, escapedBearCount, maxComboCount, deathCount, boss ? (boss.maxHealth - boss.health) : 0, finalScore);
-      }catch (e) {
+      } catch (e) {
         //忽略报错
       }
       // 显示结算动画
@@ -1949,7 +2103,8 @@
       setTimeout(() => {
         animateLine(killScore, texts.killScore, () => {
           animateLine(maxComboCount, texts.maxCombo, () => {
-            animateLine(finalScore, texts.totalScore, () => {});
+            animateLine(finalScore, texts.totalScore, () => {
+            });
           });
         });
       }, 300);
@@ -1966,18 +2121,20 @@
         player.width = canvasWidth / 7;
         player.height = player.width * 1.2;
       }
-      if(canvasWidth <= 390){
+      if (canvasWidth <= 390) {
         uiFont = 12;
         uiAdjust = 5;
-      }else if(canvasWidth <= 420){
+      } else if (canvasWidth <= 450) {
         uiFont = 14;
         uiAdjust = 2;
       }
     }
+
     window.addEventListener('resize', resizeCanvas);  // 监听窗口大小变化
 
     // 定义一个目标位置的全局变量，方便玩家角色位置更新函数里使用
-    let targetPos = { x: player ? player.x : 0, y: player ? player.y : 0 };
+    let targetPos = {x: player ? player.x : 0, y: player ? player.y : 0};
+
     // 获取鼠标位置
     function getMousePos(evt) {
       const rect = canvas.getBoundingClientRect();
@@ -2104,11 +2261,15 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // 设置随机头图
+      setRandomHeaderImage();
+      // 创建音乐
+      createMusic();
       // 初始化语言
       setLanguage();
-      initMusicControl();
+      initFPS();
       // 图片资源
-      loadAssets();
+      loadData();
       // 画布尺寸
       resizeCanvas();
       sendStat();
