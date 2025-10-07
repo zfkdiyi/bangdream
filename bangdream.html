@@ -448,7 +448,15 @@
   </div>
 
   <!-- 背景音乐 -->
-  <div id="audio-container"></div>
+  <audio id="menu-music" loop preload="auto">
+    <source src="https://cdn.badmintonranks.com/menu.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="battle-music" loop preload="auto">
+    <source src="https://cdn.badmintonranks.com/battle1.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="end-music" loop preload="auto">
+    <source src="https://cdn.badmintonranks.com/end.mp3" type="audio/mpeg">
+  </audio>
 
   <div id="start-screen" class="game-overlay start-adjust">
     <img
@@ -661,35 +669,6 @@
     let menuMusic, battleMusic, endMusic;
     let currentMusic = null;
     let isMusicEnabled = false;
-
-    // 公共前缀
-    const audioPrefix = "https://cdn.jsdelivr.net/gh/zfkdiyi/bangdream/img/";
-    // 音乐文件名数组
-    const musicFiles = [
-      { id: "menu-music", file: "menu.mp3", loop: true },
-      { id: "battle-music", file: "battle1.mp3", loop: true },
-      { id: "end-music", file: "end.mp3", loop: true }
-    ];
-    // 遍历生成 <audio> 标签
-    function createMusic() {
-      const audioContainer = document.getElementById("audio-container");
-      musicFiles.forEach(music => {
-        const audio = document.createElement("audio");
-        audio.id = music.id;
-        audio.loop = music.loop;
-        // auto表示浏览器尽可能地提前加载整个音频文件，以便用户一点击播放就能立即开始。
-        // none表示浏览器不下载音频，除非用户点击播放。延迟大
-        audio.preload = "auto";
-
-        const source = document.createElement("source");
-        source.src = `${audioPrefix}${music.file}`;
-        source.type = "audio/mpeg";
-
-        audio.appendChild(source);
-        audioContainer.appendChild(audio);
-      });
-    }
-
     // 播放指定音乐
     const playMusic = (musicType) => {
       // 停止所有音乐
@@ -754,7 +733,6 @@
         }
       }
     };
-
     // 初始化音乐控制
     const initMusicControl = () => {
       menuMusic = document.getElementById('menu-music');
@@ -763,32 +741,16 @@
 
       const musicControl = document.getElementById('music-control');
       const gameMusicControl = document.getElementById('game-music-control');
-
       // 主菜单音乐控制按钮
       musicControl.addEventListener('click', toggleMusic);
-
       // 游戏中音乐控制按钮
       gameMusicControl.addEventListener('click', toggleMusic);
-
-      // 尝试自动播放菜单音乐 (Chrome不允许用户一打开网站就自动播放声音，此处仅为象征性尝试)
-      // menuMusic.play().then(() => {
-      //   isMusicEnabled = true;
-      //   currentMusic = menuMusic;
-      //   updateMusicIcons();
-      // }).catch((e) => {
-      //   // 自动播放失败，保持静音状态
-      //   //console.log('音乐播放失败:', e);
-      //   isMusicEnabled = false;
-      //   updateMusicIcons();
-      // });
+      // Chrome不允许用户一打开网站就自动播放声音
     };
-
-    // 初始化
-    document.addEventListener('DOMContentLoaded', () => {
+    // 初始化语言
+    function setLanguage() {
       currentLang = detectLanguage();
       updateLanguage(currentLang);
-      createMusic();
-      initMusicControl();
       // 语言切换按钮监听
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -796,7 +758,7 @@
           updateLanguage(currentLang);
         });
       });
-    });
+    }
     // 联系作者弹窗逻辑
     const contactBtn = document.getElementById('contact-btn');
     const modal = document.getElementById('contact-modal');
@@ -979,8 +941,8 @@
       scoreIcon: 'img/kumaIcon.png',
       comboIcon: 'img/combo.png'
     };
-
     const assetImages = {};  // 存储加载后的图像对象
+
     // 加载游戏资源
     function loadAssets(callback) {
       let loadedCount = 0;
@@ -2141,8 +2103,13 @@
       setTimeout(() => container.style.animation = '', 200);
     }
 
-    // 加载资源并初始化画布
-    loadAssets(() => {
+    document.addEventListener('DOMContentLoaded', () => {
+      // 初始化语言
+      setLanguage();
+      initMusicControl();
+      // 图片资源
+      loadAssets();
+      // 画布尺寸
       resizeCanvas();
       sendStat();
     });
