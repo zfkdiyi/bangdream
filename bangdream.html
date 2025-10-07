@@ -448,15 +448,7 @@
   </div>
 
   <!-- 背景音乐 -->
-  <audio id="menu-music" loop preload="auto">
-    <source src="https://github.com/zfkdiyi/bangdream/raw/refs/heads/main/img/menu.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="battle-music" loop preload="auto">
-    <source src="https://github.com/zfkdiyi/bangdream/raw/refs/heads/main/img/battle1.mp3" type="audio/mpeg">
-  </audio>
-  <audio id="end-music" loop preload="auto">
-    <source src="https://github.com/zfkdiyi/bangdream/raw/refs/heads/main/img/end.mp3" type="audio/mpeg">
-  </audio>
+  <div id="audio-container"></div>
 
   <div id="start-screen" class="game-overlay start-adjust">
     <img
@@ -670,6 +662,34 @@
     let currentMusic = null;
     let isMusicEnabled = false;
 
+    // 公共前缀
+    const audioPrefix = "https://cdn.jsdelivr.net/gh/zfkdiyi/bangdream/img/";
+    // 音乐文件名数组
+    const musicFiles = [
+      { id: "menu-music", file: "menu.mp3", loop: true },
+      { id: "battle-music", file: "battle1.mp3", loop: true },
+      { id: "end-music", file: "end.mp3", loop: true }
+    ];
+    // 遍历生成 <audio> 标签
+    function createMusic() {
+      const audioContainer = document.getElementById("audio-container");
+      musicFiles.forEach(music => {
+        const audio = document.createElement("audio");
+        audio.id = music.id;
+        audio.loop = music.loop;
+        // auto表示浏览器尽可能地提前加载整个音频文件，以便用户一点击播放就能立即开始。
+        // none表示浏览器不下载音频，除非用户点击播放。延迟大
+        audio.preload = "auto";
+
+        const source = document.createElement("source");
+        source.src = `${audioPrefix}${music.file}`;
+        source.type = "audio/mpeg";
+
+        audio.appendChild(source);
+        audioContainer.appendChild(audio);
+      });
+    }
+
     // 播放指定音乐
     const playMusic = (musicType) => {
       // 停止所有音乐
@@ -751,22 +771,23 @@
       gameMusicControl.addEventListener('click', toggleMusic);
 
       // 尝试自动播放菜单音乐 (Chrome不允许用户一打开网站就自动播放声音，此处仅为象征性尝试)
-      menuMusic.play().then(() => {
-        isMusicEnabled = true;
-        currentMusic = menuMusic;
-        updateMusicIcons();
-      }).catch((e) => {
-        // 自动播放失败，保持静音状态
-        //console.log('音乐播放失败:', e);
-        isMusicEnabled = false;
-        updateMusicIcons();
-      });
+      // menuMusic.play().then(() => {
+      //   isMusicEnabled = true;
+      //   currentMusic = menuMusic;
+      //   updateMusicIcons();
+      // }).catch((e) => {
+      //   // 自动播放失败，保持静音状态
+      //   //console.log('音乐播放失败:', e);
+      //   isMusicEnabled = false;
+      //   updateMusicIcons();
+      // });
     };
 
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {
       currentLang = detectLanguage();
       updateLanguage(currentLang);
+      createMusic();
       initMusicControl();
       // 语言切换按钮监听
       document.querySelectorAll('.lang-btn').forEach(btn => {
