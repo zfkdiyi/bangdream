@@ -4,11 +4,11 @@
 
 **BanG Dream音符射手**是一个自制的网页小游戏，仿照《元祖BanG Dream酱》的片尾动画中出现的[一个桥段](https://github.com/zfkdiyi/bangdream/blob/main/img/anime.gif)制作而成。
 
-## Where to play 游戏地址
-
-[zfkdiyi.github.io/bangdream](https://zfkdiyi.github.io/bangdream)
+## Where To Play 游戏地址
 
 [badmintonranks.com/bangdream.html](https://badmintonranks.com/bangdream.html)
+
+[zfkdiyi.github.io/bangdream](https://zfkdiyi.github.io/bangdream)
 
 ## How To Play 玩法介绍
 
@@ -26,21 +26,25 @@ The game ends in failure when all lives are lost, and in victory when Tsurumaki 
 
 ## Features 功能
 
-- Langeuage Selector (CHN/ENG/JPN)
-- Multiple Player Character (Minato Yukina/Maruyama Aya/Kurata Mashiro)
-- Difficulty Selector (Easy/Normal/Hard/Endless)
-- Scoring System：For now, you earn 1 point for each Michelle you defeat.
+- Langeuage selector (CHN/ENG/JPN)
+- Multiple player character (Minato Yukina/Maruyama Aya/Kurata Mashiro)
+- Difficulty selector (Easy/Normal/Hard/Endless)
+- Game results stat
+- Scoring system
 - All character movements, defeat poses, note colors, and Makimaki Kokoro’s actions and attack animations are traced from anime screenshots to match the original exactly.
+- 3 game background music (Start menu/In-game/Game-end)
 
 - 语言选择（中/英/日）
 - 三种玩家角色（凑友希那/丸山彩/仓田真白）
 - 难度选择（简单/普通/困难/无尽模式）
-- 积分统计（目前仅为每击落一只米歇尔+1分）
+- 游戏数据统计 
+- 积分结算
 - 不同角色移动、被击败的形态、各自发射音符的颜色、弦卷心的移动、攻击的造型，均来自动画截图的PS抠图，与动画里的造型保持一致
+- 三首游戏背景音乐（开始画面音乐、游戏中音乐、游戏结束音乐）
 
 ## Developing 待开发
 
--  Background Music
+-  More Background Music
 -  Sound Effects
 -  Mulit Levels
 -  More Boss Character
@@ -50,7 +54,7 @@ The game ends in failure when all lives are lost, and in victory when Tsurumaki 
 -  I have no drawing skills so adding new boss or player characters is quite difficult for me.
 If anyone skilled in illustration could help create new character images (boss movement, attack poses, microphone-holding motions, downed poses), it would be a huge help!
 
--  背景音乐
+-  更多背景音乐
 -  游戏效果音
 -  多个关卡
 -  更多BOSS角色（户山香澄、3D麻里奈）
