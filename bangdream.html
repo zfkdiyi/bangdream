@@ -115,12 +115,33 @@
     }
 
     .result-text {
-      font-size: 28px;
-      line-height: 1.8;
+      font-size: 24px;
+      line-height: 1.6;
       margin: 0;
       @media (max-width: 450px) {
-        font-size: 22px;
+        font-size: 20px;
       }
+    }
+
+    .result-text > div {
+      height: 1.6em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #result-total-text,
+    #result-combo-text {
+      height: 1.6em;
+      display: flex;
+      justify-content: center;
+    }
+
+    .result-rank,
+    .result-fullcombo {
+      height: 1.4em;
+      margin-left: 8px;
+      display: none;
     }
 
     .end-button,
@@ -218,14 +239,14 @@
       font-size: 16px;
       color: rgba(255, 255, 255, 0.7);
       text-align: center;
-      line-height: 1.8;
+      line-height: 1.6;
       @media (max-width: 400px) {
         font-size: 14px;
       }
     }
 
     .github-btn {
-      margin-top: 10px;
+      margin-top: 4px;
       color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
       display: inline-flex;
@@ -348,7 +369,35 @@
       position: relative;
       display: flex;
       justify-content: center;
-      margin: 15px 0px;
+      margin: 10px 0px;
+      /*align-items: center;
+      gap: 16px;
+      @media (max-width: 420px) {
+        gap: 12px;
+      }*/
+    }
+
+    .level-selector {
+      margin: 6px 0;
+      padding: 10px 16px;
+      font-size: 16px;
+      color: var(--text-color);
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 120px;
+      text-align: center;
+      @media (max-width: 450px) {
+        padding: 8px 14px;
+        font-size: 14px;
+        min-width: 100px;
+      }
+    }
+
+    .level-selector:hover {
+      border-color: var(--primary-color);
     }
 
     .music-control {
@@ -491,17 +540,23 @@
         <button class="difficulty-btn" data-difficulty="hard" data-text="hard">困难</button>
         <button class="difficulty-btn" data-difficulty="endless" data-text="endless">无尽模式</button>
       </div>
-      <div class="start-button-container">
-        <button id="start-button" class="start-button" data-text="startGame">开始游戏</button>
-        <div id="music-control" class="music-control">
-          <svg id="music-icon-play" viewBox="0 0 24 24">
-            <path
-              d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-          </svg>
-          <svg id="music-icon-mute" viewBox="0 0 24 24" style="display: none;">
-            <path
-              d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-          </svg>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <select id="level-selector" class="level-selector">
+          <option value="1">第1关</option>
+          <option value="2">第2关</option>
+        </select>
+        <div class="start-button-container">
+          <button id="start-button" class="start-button" data-text="startGame">开始游戏</button>
+          <div id="music-control" class="music-control">
+            <svg id="music-icon-play" viewBox="0 0 24 24">
+              <path
+                d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+            </svg>
+            <svg id="music-icon-mute" viewBox="0 0 24 24" style="display: none;">
+              <path
+                d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+          </div>
         </div>
       </div>
       <div id="language-selector" class="language-selector">
@@ -531,10 +586,10 @@
     <div id="loading-text">Loading... 0%</div>
 
     <div class="version-info">
-      <div><span data-text="version">版本</span>：0.4</div>
-      <div><span data-text="updateTime">更新时间</span>：2025-10-07</div>
+      <div><span data-text="version">版本</span>: 0.5</div>
+      <div><span data-text="updateTime">更新时间</span>: 2025-10-17</div>
       <div>
-        <a href="https://github.com/zfkdiyi/bangdream" id="github-button" class="github-btn">
+        <a href="https://github.com/zfkdiyi/bangdream" target="_blank" id="github-button" class="github-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path
               d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -546,30 +601,36 @@
     </div>
   </div>
 
-  <div id="defeat-screen" class="game-overlay hidden">
-    <div style="display: flex; flex-direction: column; align-items: center;">
-      <p id="game-time-defeat" class="result-text"></p>
-      <img id="defeat-image" alt="DEFEAT"
+  <div id="result-screen" class="game-overlay hidden">
+    <div style="display: flex; flex-direction: column; align-items: center; transform: translateY(-15%);">
+      <div class="result-text">
+        <div id="result-diff"></div>
+        <div id="result-time"></div>
+        <div id="result-kill"></div>
+        <div id="result-combo">
+          <span id="result-combo-text"></span>
+          <img id="result-fullcombo" class="result-fullcombo">
+        </div>
+        <div id="result-total">
+          <span id="result-total-text"></span>
+          <img id="result-rank" class="result-rank">
+        </div>
+      </div>
+      <img id="result-image" alt="RESULT"
            style="max-width: 80%; max-height: 60%; object-fit: contain;">
-      <p class="overlay-text" data-text="defeatMessage">不要灰心，再来一次！</p>
-      <button id="restart-button-defeat" class="end-button" data-text="retry">重试</button>
-      <button id="home-button-defeat" class="end-button" data-text="backToHome">回到首页</button>
-    </div>
-  </div>
-
-  <div id="win-screen" class="game-overlay hidden">
-    <div style="display: flex; flex-direction: column; align-items: center;">
-      <p id="game-time-win" class="result-text"></p>
-      <img id="win-image" alt="YOU WIN" style="max-width: 80%; max-height: 60%; object-fit: contain;">
-      <p class="overlay-text" data-text="winMessage">闪闪发光，心动不已！</p>
-      <button id="restart-button-win" class="end-button" data-text="playAgain">再玩一次</button>
-      <button id="home-button-win" class="end-button" data-text="backToHome">回到首页</button>
+      <p id="result-message" class="overlay-text">不要灰心，再来一次！</p>
+      <button id="restart-button" class="end-button" data-text="retry">重试</button>
+      <button id="home-button" class="end-button" data-text="backToHome">回到首页</button>
     </div>
   </div>
 </div>
 
 <script>
   (function () {
+    let mode = 'prod';
+    // 公共前缀
+    let IMG_PATH = mode == 'local' ? 'img/' : 'https://cdn.badmintonranks.com/bangdream/img/';
+    let API_PATH = mode == 'local' ? 'http://localhost/dev-api/' : 'https://badmintonranks.com/prod-api/';
     let currentLang = 'zh';
     const languages = {
       zh: {
@@ -601,7 +662,9 @@
         alertError: '提交失败，请稍后重试',
         killScore: '击杀得分',
         maxCombo: '最大连击',
-        totalScore: '总得分'
+        totalScore: '总得分',
+        level1: '第1关',
+        level2: '第2关'
       },
       en: {
         title: 'GANSO! BanG Dream Chan<br>Note Shooter',
@@ -632,7 +695,9 @@
         alertError: 'Submission failed, please try again later',
         killScore: 'Kill Score',
         maxCombo: 'Max Combo',
-        totalScore: 'Total Score'
+        totalScore: 'Total Score',
+        level1: 'Level 1',
+        level2: 'Level 2'
       },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
@@ -663,7 +728,9 @@
         alertError: '送信に失敗しました。しばらくしてからもう一度お試しください',
         killScore: '撃破スコア',
         maxCombo: '最大コンボ',
-        totalScore: '合計スコア'
+        totalScore: '合計スコア',
+        level1: 'ステージ 1',
+        level2: 'ステージ 2'
       }
     };
 
@@ -701,6 +768,12 @@
       document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === lang);
       });
+      // 更新关卡选择下拉框
+      const levelSelector = document.getElementById('level-selector');
+      if (levelSelector) {
+        levelSelector.options[0].text = texts.level1;
+        levelSelector.options[1].text = texts.level2;
+      }
     };
     // 音乐控制相关变量
     let menuMusic, battleMusic, endMusic;
@@ -847,7 +920,7 @@
         return;
       }
       try {
-        const response = await fetch('https://badmintonranks.com/prod-api/bilibiliContact', {
+        const response = await fetch(API_PATH + 'bilibiliContact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -898,7 +971,7 @@
       let from = document.referrer;
       let width = window.outerWidth;
       let height = window.window.outerHeight;
-      const res = await fetch('https://badmintonranks.com/prod-api/openStat', {
+      const res = await fetch(API_PATH + 'openStat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -912,23 +985,24 @@
     }
 
     // 发送游戏结果统计
-    function gameStat(stage, mode, fps, win, duration, kumaKill, kumaLive, maxCombo, lifeLost, bossDamage, finalScore) {
-      fetch('https://badmintonranks.com/prod-api/gameStat', {
+    function gameStat(levels, difficulty, fps, win, ranks, duration, kumaKill, kumaLive,
+                      maxCombo, life, lifeLost, bossRatio, bulletRatio, itemRatio, finalScore) {
+      fetch(API_PATH + 'gameStat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          stage, mode, fps, win, duration,
-          kumaKill, kumaLive, maxCombo, lifeLost, bossDamage, finalScore
+          levels, difficulty, fps, win, ranks, duration, kumaKill, kumaLive,
+          maxCombo, life, lifeLost, bossRatio, bulletRatio, itemRatio, finalScore
         })
       });
     }
 
     //游戏难度和模式选择
-    let currentDifficulty = 'normal';
+    let currentDifficulty = 'easy';
     let gameStartTime = 0;
-    let isEndlessMode = false;
+    let currentLevel = 1;
 
     // 更新难度按钮被选中的状态
     function updateDifficultyButtons() {
@@ -943,7 +1017,6 @@
     document.querySelectorAll('.difficulty-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         currentDifficulty = btn.getAttribute('data-difficulty');
-        isEndlessMode = currentDifficulty === 'endless';
         updateDifficultyButtons();
       });
     });
@@ -955,34 +1028,38 @@
 
     // 获取游戏界面元素
     const startScreen = document.getElementById('start-screen');
-    const defeatScreen = document.getElementById('defeat-screen');
-    const winScreen = document.getElementById('win-screen');
+    const resultScreen = document.getElementById('result-screen');
 
     const startButton = document.getElementById('start-button');
-    const restartButtonDefeat = document.getElementById('restart-button-defeat');
-    const restartButtonWin = document.getElementById('restart-button-win');
-    const homeButtonDefeat = document.getElementById('home-button-defeat');
-    const homeButtonWin = document.getElementById('home-button-win');
+    const restartButton = document.getElementById('restart-button');
+    const homeButton = document.getElementById('home-button');
     startButton.addEventListener('click', startGame);// 开始游戏按钮
-    restartButtonDefeat.addEventListener('click', startGame);// 失败重试按钮
-    restartButtonWin.addEventListener('click', startGame);// 胜利重玩按钮
-    homeButtonDefeat.addEventListener('click', backToHome);// 失败回到首页按钮
-    homeButtonWin.addEventListener('click', backToHome);// 胜利回到首页按钮
+    restartButton.addEventListener('click', startGame);// 重试按钮
+    homeButton.addEventListener('click', backToHome);// 回到首页按钮
 
 
     // 游戏基础变量
     let canvasWidth, canvasHeight;  // 画布尺寸
     let player, bullets, bears, boss, explosions;  // 游戏对象
-    let currentStage = 1; //当前关卡
+    let powerUps = []; //道具
+    let healthPacks = []; //血包
+    let bossBullets = []; //BOSS子弹
     let uiFont = 16; // UI字体大小
     let uiAdjust = 0; // UI字体距离偏移量
     let bearSpawnTimer = 0;  // 小熊生成计时器
-    let bearSpawnInterval = 700;  // 小熊生成间隔（毫秒）
-    let killCount = 0;  // 总击杀数
+    let bearInterval = 0;  // 小熊生成间隔（毫秒）
+    let bearProbability = 0;  // 小熊生成概率
+    let bossBegan = 0; // BOSS在游戏开始多久后出现
+    let maxPlayerCharacter = 5;  // 第一关玩家角色数量最大值
+    let killCount = 0;  // 小熊击杀数
     let killsSinceLastLife = 0;  // 自上次获得生命以来的击杀数
     let comboCount = 0;  // 连击数
     let maxComboCount = 0;  // 最大连击数
     let escapedBearCount = 0;  // 逃走小熊数
+    let escapedBulletCount = 0;  // 幸存BOSS子弹数
+    let escapedItemCount = 0;  // 幸存道具血包数
+    let destroyedBulletCount = 0;  // 玩家消灭的BOSS子弹数
+    let collectedItemCount = 0;  // 玩家吃掉的道具血包数
     let deathCount = 0;  // 阵亡次数
     let bossSpawned = false;  // BOSS是否已生成
     let gameLoopId;  // 游戏循环ID
@@ -990,18 +1067,19 @@
     let gameState;  // 游戏状态
     let bossDeathPosition;  // BOSS死亡位置
     let screenFlashAlpha = 0;  // 屏幕闪光透明度
-    let bossFlashTimer = 0;  // BOSS受击闪光计时器
     let playerInvulnerable = false;  // 玩家无敌状态
     let invulnerabilityTimer = 0;  // 无敌时间计时器
     let flashEffects = [];  // 闪光效果数组
     let isShooting = false;  // 是否正在射击
     let shootTimer = 0;  // 射击计时器
     let shootInterval = 80;  // 射击间隔（毫秒）越小子弹发射越密集，火力更强
+    // 第二关参数
+    let playerHealth = 3; //玩家生命值
+    let playerBulletStreams = 1; // 玩家子弹束数量
+    let maxPlayerBulletStreams = 10; // 玩家子弹束最大数量
+    let itemProbability = 1; //道具出现概率
+    let healthProbability = 1; //血包出现概率
 
-
-    // 公共前缀
-    // const IMG_PATH = 'img/';
-    const IMG_PATH = 'https://cdn.badmintonranks.com/bangdream/img/';
     // 游戏资源定义
     const assets = {
       player1: 'player1.png',
@@ -1019,20 +1097,40 @@
       bullet1: 'bullet1.png',
       bullet2: 'bullet2.png',
       bullet3: 'bullet3.png',
+      bullet4: 'bullet4.png',
       flash1: 'flash1.png',
       flash2: 'flash2.png',
+      fire1: 'fire1.png',
+      fire2: 'fire2.png',
       defeat1: 'defeat1.png',
       defeat2: 'defeat2.png',
       defeat3: 'defeat3.png',
-      scoreIcon: 'kumaIcon.png',
+      scoreIcon: 'kuma_icon.png',
       comboIcon: 'combo.png',
       win: 'win.png',
-      defeat: 'defeat.png'
+      defeat: 'defeat.png',
+      chara1: 'chara1.png',
+      chara2: 'chara2.png',
+      chara3: 'chara3.png',
+      blood: 'blood.png',
+      fullcombo: 'full_combo.png',
+      rank_sss: 'rank_sss.png',
+      rank_ssp: 'rank_ssp.png',
+      rank_ss: 'rank_ss.png',
+      rank_sp: 'rank_sp.png',
+      rank_s: 'rank_s.png',
+      rank_ap: 'rank_ap.png',
+      rank_a: 'rank_a.png',
+      rank_bp: 'rank_bp.png',
+      rank_b: 'rank_b.png',
+      rank_cp: 'rank_cp.png',
+      rank_c: 'rank_c.png',
+      rank_d: 'rank_d.png',
     };
     // 存储加载后的图像对象
     const assetImages = {};
 
-    function loadAssets(callback, onProgress) {
+    function loadAssets(callback, onProgress, onError) {
       let loadedCount = 0;
       const totalCount = Object.keys(assets).length;
 
@@ -1048,19 +1146,21 @@
         img.onload = handleProgress;
         img.onerror = () => {
           console.warn(`❌ Failed to load: ${img.src}，重试中...`);
-          retryLoad(img, IMG_PATH + filename, 3, handleProgress);
+          retryLoad(img, IMG_PATH + filename, 3, handleProgress, onError);
         };
         assetImages[key] = img;
       });
     }
 
-    function retryLoad(img, src, retries, onSuccess) {
+    function retryLoad(img, src, retries, onSuccess, onError) {
       let attempts = 0;
 
       function tryAgain() {
         if (attempts >= retries) {
           console.error(`🚫 图片加载失败，已放弃: ${src}`);
-          onSuccess(); // 即使失败，也推进进度
+          if (onError) onError();
+          //即使失败，也推进进度
+          //onSuccess();
           return;
         }
         attempts++;
@@ -1078,25 +1178,31 @@
       const loadingText = document.getElementById('loading-text');
       const progressBarFill = document.getElementById('loading-fill');
       const loadingLine = document.getElementById('loading-line');
+      let hasError = false;
       loadAssets(
         () => {
-          progressBarFill.style.width = '100%';
-          setTimeout(() => {
-            loadingLine.style.opacity = '0';
-            loadingText.style.opacity = '0';
+          if (!hasError) {
+            progressBarFill.style.width = '100%';
             setTimeout(() => {
-              loadingLine.style.visibility = 'hidden';
-              loadingText.style.visibility = 'hidden';
-            }, 500);
-          }, 800);
-          // 给HTML图片赋值src
-          document.getElementById('win-image').src = assetImages.win.src;
-          document.getElementById('defeat-image').src = assetImages.defeat.src;
+              loadingLine.style.opacity = '0';
+              loadingText.style.opacity = '0';
+              setTimeout(() => {
+                loadingLine.style.visibility = 'hidden';
+                loadingText.style.visibility = 'hidden';
+              }, 400);
+            }, 400);
+          }
         },
         (loaded, total) => {
           const percent = Math.round((loaded / total) * 100);
           loadingText.textContent = `Loading... ${percent}%`;
           progressBarFill.style.width = `${percent}%`;
+        },
+        () => {
+          if (!hasError) {
+            hasError = true;
+            loadingText.textContent += ' - Error';
+          }
         }
       );
     }
@@ -1109,17 +1215,18 @@
         this.x = canvasWidth / 2;  // X坐标（中心点）
         this.y = canvasHeight - this.height;  // Y坐标（底部）
         this.characterCount = 1;  // 角色数量（生命数）
-        this.animFrame = 0;  // 动画帧计数器
+        this.animTimer = 0;  // 动画计时器（毫秒）
         this.isDead = false;  // 死亡状态
         this.defeatCharacters = [];  // 处于defeat状态的角色
         this.characters = [1];  // 存储每个角色的类型编号
         this.deadCharacterType = 1;  // 最后一个死亡角色的类型
+        this.currentCharacterType = 1;  // 第2关当前角色类型
+        this.flashTimer = 0; // 受击闪光计时器（毫秒）
       }
-
       // 绘制玩家角色
-      draw() {
-        this.animFrame++;
-
+      draw(deltaTime) {
+        this.animTimer += deltaTime;
+        if (this.flashTimer > 0) this.flashTimer -= deltaTime;
         if (this.isDead) {
           // 如果是死亡状态，按defeat图片的真实宽高比进行绘制
           const currentImage = assetImages[`defeat${this.deadCharacterType}`];
@@ -1128,16 +1235,29 @@
           const defeatHeight = defeatWidth / aspectRatio;
           const drawX = this.x - defeatWidth / 2;
           const drawY = this.y + this.height - defeatHeight;
-
-          // 绘制阴影
-          // ctx.fillStyle = 'rgba(0,0,0,0.3)';
-          // ctx.beginPath();
-          // ctx.ellipse(this.x, this.y + this.height, defeatWidth * 0.3, defeatWidth * 0.15, 0, 0, Math.PI * 2);
-          // ctx.fill();
-
           ctx.drawImage(currentImage, drawX, drawY, defeatWidth, defeatHeight);
+        } else if (currentLevel === 2) {
+          // 第2关：绘制单个角色
+          ctx.fillStyle = 'rgba(0,0,0,0.3)';
+          ctx.beginPath();
+          ctx.ellipse(this.x, this.y + this.height, this.width * 0.3, this.width * 0.15, 0, 0, Math.PI * 2);
+          ctx.fill();
+          let characterImage;
+          const isFrame2 = Math.floor(this.animTimer / 400) % 2 === 1;
+          if (this.currentCharacterType === 2) {
+            characterImage = isFrame2 ? assetImages.player4 : assetImages.player3;
+          } else if (this.currentCharacterType === 3) {
+            characterImage = isFrame2 ? assetImages.player6 : assetImages.player5;
+          } else {
+            characterImage = isFrame2 ? assetImages.player2 : assetImages.player1;
+          }
+          if (this.flashTimer > 0) {
+            ctx.filter = 'brightness(200%) saturate(0%)';
+          }
+          ctx.drawImage(characterImage, this.x - this.width / 2, this.y, this.width, this.height);
+          ctx.filter = 'none';
         } else {
-          // 绘制存活的角色
+          // 第1关：绘制多个角色
           const totalWidth = this.width * this.characterCount;
           const startX = this.x - totalWidth / 2;
           for (let i = 0; i < this.characterCount; i++) {
@@ -1146,11 +1266,10 @@
             ctx.beginPath();
             ctx.ellipse(startX + i * this.width + this.width / 2, this.y + this.height, this.width * 0.3, this.width * 0.15, 0, 0, Math.PI * 2);
             ctx.fill();
-
             // 根据角色类型选择不同形象
             let characterImage;
             const characterType = this.characters[i];
-            const isFrame2 = Math.floor(this.animFrame / 30) % 2 === 1;
+            const isFrame2 = Math.floor(this.animTimer / 400) % 2 === 1;
 
             if (characterType === 2) {
               characterImage = isFrame2 ? assetImages.player4 : assetImages.player3;
@@ -1163,7 +1282,6 @@
             ctx.drawImage(characterImage, startX + i * this.width, this.y, this.width, this.height);
           }
 
-          // 绘制defeat状态的角色
           this.defeatCharacters.forEach(defeatChar => {
             const defeatImage = assetImages[`defeat${defeatChar.characterIndex}`];
             const aspectRatio = defeatImage.naturalWidth / defeatImage.naturalHeight;
@@ -1171,7 +1289,6 @@
             const defeatHeight = defeatWidth / aspectRatio;
             const drawX = defeatChar.x - defeatWidth / 2;
             const drawY = this.y + this.height - defeatHeight;
-
             // 绘制阴影
             ctx.fillStyle = 'rgba(0,0,0,0.3)';
             ctx.beginPath();
@@ -1185,26 +1302,55 @@
 
       // 发射子弹
       shoot() {
-        const totalWidth = this.width * this.characterCount;
-        const startX = this.x - totalWidth / 2;
-        for (let i = 0; i < this.characterCount; i++) {
-          const bulletX = startX + i * this.width + this.width / 2;
-          const bulletType = this.characters[i]; // 根据角色类型选择子弹
-          bullets.push(new Bullet(bulletX, this.y, bulletType));
+        if (currentLevel === 1) {
+          const totalWidth = this.width * this.characterCount;
+          const startX = this.x - totalWidth / 2;
+          for (let i = 0; i < this.characterCount; i++) {
+            const bulletX = startX + i * this.width + this.width / 2;
+            const bulletType = this.characters[i]; // 根据角色类型选择子弹
+            bullets.push(new Bullet(bulletX, this.y, bulletType));
+          }
+        } else {
+          // 第2关：根据子弹束数量发射多束子弹
+          const spacing = this.width / (playerBulletStreams + 1) * 1.5; // 调大子弹束间距
+
+          // player2形态且子弹束达到4时产生溅射效果
+          if (this.currentCharacterType === 2 && playerBulletStreams >= 4) {
+            const halfStreams = Math.floor(playerBulletStreams / 2);
+            // 一半直射
+            for (let i = 0; i < halfStreams; i++) {
+              const bulletX = this.x - this.width / 2 + spacing * (i + 1);
+              bullets.push(new Bullet(bulletX, this.y, this.currentCharacterType));
+            }
+            // 一半左右对称斜射（以直射为对称轴）
+            const remainingStreams = playerBulletStreams - halfStreams;
+            for (let i = 0; i < remainingStreams; i++) {
+              const angle = (i+1) * (Math.PI / 2) / (remainingStreams + 1); // 最大90度斜射
+              // - angle代表左斜， + angle 代表右斜
+              bullets.push(new Bullet(this.x, this.y, this.currentCharacterType, true,  i % 2 == 0 ? (-Math.PI / 2 - angle) : (-Math.PI / 2 + angle) )); // 左斜
+            }
+          } else {
+            // 普通直射子弹
+            for (let i = 0; i < playerBulletStreams; i++) {
+              const bulletX = this.x - this.width / 2 + spacing * (i + 1);
+              bullets.push(new Bullet(bulletX, this.y, this.currentCharacterType));
+            }
+          }
         }
       }
 
       // 根据击杀数更新角色数量
       updateCharacterCount() {
-        // 每击杀5个小熊增加1血
-        if (killsSinceLastLife >= 5 && this.characterCount < 5) {
-          player.characterCount++;
-          // 添加新角色随机1,2,3
-          // const nextType = (this.characters.length % 3) + 1;
-          const nextType = Math.floor(Math.random() * 3) + 1;
-          this.characters.push(nextType);
-          killsSinceLastLife = 0;
+        if (currentLevel === 1) {
+          // 第1关：每击杀5个小熊增加1血
+          if (killsSinceLastLife >= 5 && this.characterCount < maxPlayerCharacter) {
+            player.characterCount++;
+            const nextType = Math.floor(Math.random() * 3) + 1;
+            this.characters.push(nextType);
+            killsSinceLastLife = 0;
+          }
         }
+        // 第2关不增加角色数量
       }
 
       // 更新defeat角色状态
@@ -1218,23 +1364,47 @@
 
     // 子弹类
     class Bullet {
-      constructor(x, y, bulletType = 1) {
+      constructor(x, y, bulletType = 1, isSplash = false, angle = 0) {
         this.width = canvasWidth / 18; // 子弹宽度
         this.height = this.width * 1.6; // 子弹高度
         this.x = x - this.width / 2; // X坐标（中心对齐）
         this.y = y; // Y坐标
-        // 【优化】速度单位改为“像素/秒”，并与屏幕高度关联
         this.speed = canvasHeight * 1.5; // 每秒移动1.5倍画布高度
         this.image = assetImages[`bullet${bulletType}`]; // 根据类型选择子弹图像
         this.markedForDeletion = false; // 【新增】用于标记待删除的对象，替代splice
+        this.bulletType = bulletType; // 子弹类型
+        this.isSplash = isSplash; // 是否为溅射子弹
+        this.angle = angle; // 溅射子弹的角度
+        // 根据子弹类型设置伤害值（第2关）
+        if (currentLevel === 2) {
+          if (bulletType === 1) {
+            this.damage = 5; // player1形态伤害值为5
+            this.bearDamage = 5;
+          } else if (bulletType === 2) {
+            this.damage = 3; // player2形态普通伤害4 小熊伤害8
+            this.bearDamage = 10;
+          } else if (bulletType === 3) {
+            this.damage = 2; // player3形态伤害值为3
+            this.bearDamage = 2;
+          }
+        } else {
+          this.damage = 1; // 第1关保持原有伤害
+          this.bearDamage = 1; // 第1关保持原有伤害
+        }
       }
 
       // 更新子弹位置（向上移动）
-      update(deltaTime) { // 【优化】接收deltaTime参数
-        // 【优化】移动距离 = 速度 * 时间（秒）
-        this.y -= this.speed * (deltaTime / 1000);
-        // 【优化】如果子弹出界，标记它
-        if (this.y < -this.height) this.markedForDeletion = true;
+      update(deltaTime) {
+        if (this.isSplash) {
+          // 溅射子弹按角度移动
+          this.x += Math.cos(this.angle) * this.speed * (deltaTime / 1000);
+          this.y += Math.sin(this.angle) * this.speed * (deltaTime / 1000);
+        } else {
+          // 移动距离 = 速度 * 时间（秒）
+          this.y -= this.speed * (deltaTime / 1000);
+        }
+        // 如果子弹出界，标记它为待删除
+        if (this.y < -this.height || this.x < -this.width || this.x > canvasWidth) this.markedForDeletion = true;
       }
 
       // 绘制子弹
@@ -1250,28 +1420,44 @@
         this.height = this.width; // 小熊高度
         this.x = x; // X坐标
         this.y = y; // Y坐标
-        // 【优化】速度单位改为“像素/秒”，并与屏幕高度关联
-        this.speed = canvasHeight * 0.3; // 每秒移动0.3倍画布高度
-        this.health = 5; // 小熊血量
-        this.animFrame = 0; // 动画帧计数器
-        this.flashTimer = 0; // 受击闪光计时器
-        this.markedForDeletion = false; // 【新增】用于标记待删除的对象
+        this.baseSpeed = canvasHeight * 0.3; // 基础移动速度
+        this.speed = this.baseSpeed; // 当前移动速度
+        this.health = currentLevel === 2 ? 15 : 5; // 第2关小熊血量为15，第1关为5
+        this.animTimer = 0; // 动画计时器（毫秒）
+        this.flashTimer = 0; // 受击闪光计时器（毫秒）
+        this.markedForDeletion = false; // 用于标记待删除的对象
+        this.slowEffect = false; // 是否被减速
+        this.slowTimer = 0; // 减速效果计时器
       }
-
+      // 应用减速效果
+      applySlow() {
+        if (!this.slowEffect) {
+          this.slowEffect = true;
+          this.speed = this.baseSpeed * 0.25; // 降低75%移动速度
+          this.slowTimer = 3000; // 减速效果持续3秒
+        }
+      }
       // 更新小熊位置（向下移动）
-      update(deltaTime) { // 【优化】接收deltaTime参数
-        // 【优化】移动距离 = 速度 * 时间（秒）
+      update(deltaTime) {
+        // 更新减速效果
+        if (this.slowEffect) {
+          this.slowTimer -= deltaTime;
+          if (this.slowTimer <= 0) {
+            this.slowEffect = false;
+            this.speed = this.baseSpeed; // 恢复原速度
+          }
+        }
+        // 移动距离 = 速度 * 时间（秒）
         this.y += this.speed * (deltaTime / 1000);
-        this.animFrame++;
-        if (this.flashTimer > 0) this.flashTimer--;
-        // 【优化】如果小熊出界，标记它并重置combo
+        this.animTimer += deltaTime;
+        if (this.flashTimer > 0) this.flashTimer -= deltaTime;
+        // 如果小熊出界，标记它为待删除并重置combo
         if (this.y > canvasHeight) {
           this.markedForDeletion = true;
           comboCount = 0; // 小熊逃走时重置combo
           escapedBearCount++; // 增加逃走小熊数
         }
       }
-
       // 绘制小熊
       draw() {
         // 绘制阴影
@@ -1283,9 +1469,88 @@
         if (this.flashTimer > 0) {
           ctx.filter = 'brightness(200%) saturate(0%)';
         }
-        const currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.bear1 : assetImages.bear2;
+        const currentImage = Math.floor(this.animTimer / 400) % 2 === 0 ? assetImages.bear1 : assetImages.bear2;
         ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
         ctx.filter = 'none';
+      }
+    }
+
+    // 道具类
+    class PowerUp {
+      constructor(x, y, type) {
+        this.width = canvasWidth / 8;
+        this.height = this.width;
+        this.x = x;
+        this.y = y;
+        this.speed = canvasHeight * 0.2; // 每秒移动0.2倍画布高度
+        this.type = type;
+        this.markedForDeletion = false;
+      }
+
+      update(deltaTime) {
+        this.y += this.speed * (deltaTime / 1000);
+        if (this.y > canvasHeight) {
+          this.markedForDeletion = true;
+          escapedItemCount++; // 道具到达边缘时计为幸存
+        }
+      }
+
+      draw() {
+        const image = assetImages[`chara${this.type}`];
+        ctx.drawImage(image, this.x, this.y, this.width, this.height);
+      }
+    }
+
+    // 血包类
+    class HealthPack {
+      constructor(x, y) {
+        this.width = canvasWidth / 12;
+        this.height = canvasWidth / 8;
+        this.x = x;
+        this.y = y;
+        this.speed = canvasHeight * 0.2;
+        this.markedForDeletion = false;
+      }
+
+      update(deltaTime) {
+        this.y += this.speed * (deltaTime / 1000);
+        if (this.y > canvasHeight) {
+          this.markedForDeletion = true;
+          escapedItemCount++; // 血包到达边缘时计为幸存
+        }
+      }
+
+      draw() {
+        ctx.drawImage(assetImages.blood, this.x, this.y, this.width, this.height);
+      }
+    }
+
+    // BOSS子弹类
+    class BossBullet {
+      constructor(x, y, targetX, targetY) {
+        this.width = canvasWidth / 20;
+        this.height = this.width;
+        this.x = x;
+        this.y = y;
+        this.speedx = canvasHeight * 0.28; // BOSS子弹速度
+        this.speedy = canvasHeight * 0.26; // BOSS子弹速度
+        const angle = Math.atan2(targetY - y, targetX - x);
+        this.vx = Math.cos(angle) * this.speedx;
+        this.vy = Math.sin(angle) * this.speedy;
+        this.markedForDeletion = false;
+      }
+
+      update(deltaTime) {
+        this.x += this.vx * (deltaTime / 1000);
+        this.y += this.vy * (deltaTime / 1000);
+        if (this.x < 0 || this.x > canvasWidth || this.y < 0 || this.y > canvasHeight) {
+          this.markedForDeletion = true;
+          escapedBulletCount++; // BOSS子弹到达边缘时计为幸存
+        }
+      }
+
+      draw() {
+        ctx.drawImage(assetImages.bullet4, this.x, this.y, this.width, this.height);
       }
     }
 
@@ -1296,105 +1561,268 @@
         this.height = this.width * 1.1; // BOSS高度
         this.x = canvasWidth / 2 - this.width / 2; // X坐标（居中）
         this.y = -this.height; // Y坐标（从屏幕上方开始）
-        // 【优化】速度单位改为“像素/秒”
-        this.speed = canvasHeight * 0.15; // 基础移动速度
-        // 根据难度设置血量
-        let bossHealth;
+        this.targetY = canvasHeight * 0.1; // 第一阶段目标Y坐标
+        this.baseSpeed = canvasHeight * 0.15; // 基础移动速度
+        this.speedx = this.baseSpeed; // X轴方向的移动速度
+        this.speedy = this.baseSpeed; // Y轴方向的移动速度
+        this.directionX = 1; // X轴移动方向
+        this.phase = 1; // 从阶段1开始
+        this.gravity = canvasHeight * 0.1; // 【新增】重力加速度（像素/秒^2）
+        this.bounceTargetY = canvasHeight * 0.3; // 弹跳目标Y坐标
+        this.roamTimer = 0; // 游走计时器
+        this.roamDuration = 0; // 当前游走持续时间
+        this.animTimer = 0; // 动画计时器（毫秒）
+        this.attackState = 'normal'; // 攻击状态：normal, raising, punching
+        this.attackTimer = 0; // 攻击计时器
+        this.shootTimer = 0;
+        this.flashTimer = 0;
+        this.bulletTimer = 0; // 子弹发射计时器
+        this.isShooting = false; // 是否正在发射子弹
+        this.bulletRows = 0; // 子弹束的数量
+        this.shootedNumber = 0; //这一束已发射出去的子弹数
+        this.bulletsNumber = 0; //这一束的子弹总数
+        this.slowEffect = false; // 是否被减速
+        this.slowTimer = 0; // 减速效果计时器
+        this.downFactor = 0; // 下降速度因子（难度越大下降速度越快）
+        this.bounceFactor = 0; // 反弹高度因子（难度越大反弹高度越低）
+        this.bulletFactor = 0; // BOSS子弹数因子
+        this.bloodFactor = 0; // BOSS血量因子
+        // 根据难度设置参数
+        let bossHealth = 0;
         if (currentDifficulty === 'easy') {
-          bossHealth = 800;
+          if (currentLevel === 2) {
+            bossHealth = 4500;
+          }else{
+            bossHealth = 800;
+          }
+          this.downFactor = 0.7;
+          this.bounceFactor = 0.55;
+          this.bulletFactor = 3;
+          this.bloodFactor = 0.25;
+          this.bulletRows = 1;
+        } else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
+          if (currentLevel === 2) {
+            bossHealth = 8200;
+          }else{
+            bossHealth = 1400;
+          }
+          this.downFactor = 1;
+          this.bounceFactor = 0.7;
+          this.bulletFactor = 5;
+          this.bloodFactor = 0.5;
+          this.bulletRows = 1;
         } else if (currentDifficulty === 'hard') {
-          bossHealth = 2800;
-        } else {
-          bossHealth = 1400;
+          if (currentLevel === 2) {
+            bossHealth = 12000;
+          }else{
+            bossHealth = 2800;
+          }
+          this.downFactor = 1.3;
+          this.bounceFactor = 0.85;
+          this.bulletFactor = 7;
+          this.bloodFactor = 0.75;
+          this.bulletRows = 1;
         }
         this.health = bossHealth; // 当前血量
         this.maxHealth = bossHealth; // BOSS初始血量
-        this.targetY = canvasHeight * 0.1; // 第一阶段目标Y坐标
-        // 【优化】水平移动速度
-        this.dx = canvasWidth * 0.1; // X轴移动速度
-        this.directionX = 1; // X轴移动方向
-        this.phase = 1; // BOSS阶段（1或2）
-        this.vy = 0; // Y轴方向的速度（像素/秒）
-        this.gravity = canvasHeight * 0.1; // 【新增】重力加速度（像素/秒^2）
-        this.bounceTargetY = canvasHeight * 0.3; // 弹跳目标Y坐标
-        this.animFrame = 0; // 动画帧计数器
-        this.attackState = 'normal'; // 攻击状态：normal, raising, punching
-        this.attackTimer = 0; // 攻击计时器
       }
-
-      // 更新BOSS状态和位置
-      update(deltaTime, gameTime) { // 【优化】接收deltaTime和gameTime参数
-        const deltaSeconds = deltaTime / 1000; // 【优化】将时间转换为秒
-        this.animFrame++;
-        // BOSS血量75%以下或游戏时间超过15秒 进入第二阶段
-        if ((this.health <= this.maxHealth * 0.75 || gameTime > 15000) && this.phase === 1) {
-          this.phase = 2;
+      // 应用减速效果
+      applySlow() {
+        if (!this.slowEffect) {
+          this.slowEffect = true;
+          this.speedx = this.baseSpeed * 0.06;
+          this.speedy = this.baseSpeed * 0.06;
+          this.slowTimer = 3000; // 减速效果持续3秒
         }
-        //第一阶段 BOSS水平巡航
-        if (this.phase === 1) {
-          if (this.y < this.targetY) this.y += this.speed * deltaSeconds;
-          else {
-            this.x += this.dx * this.directionX * deltaSeconds;
-            if (this.x <= 0) {
-              this.x = 0;
-              this.directionX = 1;
+      }
+      // 更新BOSS状态和位置
+      update(deltaTime, gameTime) {
+        // 更新减速效果
+        if (this.slowEffect) {
+          this.slowTimer -= deltaTime;
+          if (this.slowTimer <= 0) {
+            this.slowEffect = false;
+            this.speedx = this.baseSpeed; // 恢复原速度
+            this.speedy = this.baseSpeed; // 恢复原速度
+          }
+        }
+        const deltaSeconds = deltaTime / 1000;
+        this.animTimer += deltaTime;
+        if (this.flashTimer > 0) this.flashTimer -= deltaTime;
+        if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
+          if(this.health <= this.maxHealth * 0.2) {
+            this.bulletRows = 2;
+          }
+        } else if (currentDifficulty === 'hard') {
+          if(this.health <= this.maxHealth * 0.2) {
+            this.bulletRows = 3;
+          }else if(this.health <= this.maxHealth * 0.4) {
+            this.bulletRows = 2;
+          }
+        }
+        const distanceToPlayer = player.y - (this.y + this.height);
+        // BOSS接近玩家到距离小于玩家的身高时，变成举起拳头状态持续0.3秒
+        if (distanceToPlayer >= 0 && distanceToPlayer <= player.height * 0.8 &&
+          this.attackState === 'normal' && this.speedy >= 0) {
+          this.attackState = 'raising';
+          this.attackTimer = 300;
+        }
+        // 处理攻击状态
+        if (this.attackState === 'raising') {
+          this.attackTimer -= deltaTime;
+          //砸拳头
+          if (this.attackTimer <= 0) {
+            this.attackState = 'punching';
+            this.attackTimer = 300;// 砸拳头持续时间
+          }
+        } else if (this.attackState === 'punching') {
+          this.attackTimer -= deltaTime;
+          if (this.attackTimer <= 0) {
+            this.attackState = 'normal';
+          }
+        }
+        if (currentLevel === 2) {
+          // 第2关BOSS达到一定血量以下 进入游走阶段
+          if ((this.health <= this.maxHealth * this.bloodFactor) && this.phase === 1) {
+            this.phase = 2; // 进入游走阶段
+          }
+          if (this.phase === 1) {
+            // 阶段1：正常左右移动
+            if (this.y < this.targetY) this.y += this.speedy * deltaSeconds;
+            else {
+              this.x += this.speedx * this.directionX * deltaSeconds;
+              if (this.x <= 0) {
+                this.x = 0;
+                this.directionX = 1;
+              }
+              if (this.x + this.width >= canvasWidth) {
+                this.x = canvasWidth - this.width;
+                this.directionX = -1;
+              }
             }
-            if (this.x + this.width >= canvasWidth) {
-              this.x = canvasWidth - this.width;
-              this.directionX = -1;
+          } else {
+            // 阶段2：游走模式
+            // 检查是否在游走状态
+            const isRoaming = this.roamTimer > 0 && this.roamTimer < this.roamDuration;
+
+            if (!isRoaming) {
+              // 下降（不锁定玩家）
+              this.speedy += this.gravity * deltaSeconds * this.downFactor;
+              this.y += this.speedy * deltaSeconds;
+              // 触底反弹
+              if (this.y + this.height >= canvasHeight) {
+                this.y = canvasHeight - this.height;
+                // 反弹到随机高度
+                this.speedy = -(Math.random() * canvasHeight * 0.8 + canvasHeight * 0.3);
+                this.bounceTargetY = Math.random() * canvasHeight * this.bounceFactor - canvasHeight * 0.35;
+                if (this.bounceTargetY < 0) {
+                  this.bounceTargetY = 0;
+                }
+                // 设置随机游走时间（4-6秒）
+                this.roamDuration = Math.random() * 2000 + 4000;
+                this.roamTimer = 0;
+              }
+              // 到达反弹高度后开始游走
+              if (this.speedy < 0 && this.y <= this.bounceTargetY) {
+                this.speedy = 0;
+                this.roamTimer = 1; // 开始游走计时
+              }
+            } else {
+              // 游走状态：只左右移动，不受重力影响
+              this.roamTimer += deltaTime;
+              this.x += this.speedx * this.directionX * deltaSeconds;
+              if (this.x <= 0) {
+                this.x = 0;
+                this.directionX = 1;
+              }
+              if (this.x + this.width >= canvasWidth) {
+                this.x = canvasWidth - this.width;
+                this.directionX = -1;
+              }
+
+              // 游走时间结束，重置计时器准备下次下降
+              if (this.roamTimer >= this.roamDuration) {
+                this.roamTimer = 0;
+                this.roamDuration = 0;
+              }
+            }
+          }
+          // 发射模式控制：BOSS每隔一段时间（4秒）发射一次子弹
+          // 容易：每次发射 3~6 发（普通：5-8发，困难：7-10发）子弹，
+          // 每颗子弹间隔 200ms
+          this.shootTimer += deltaTime;
+          if (!this.isShooting && this.shootTimer > 4000) {
+            // 开始新的发射周期
+            this.isShooting = true;
+            this.bulletTimer = 0;
+            this.shootTimer = 0;
+            this.shootedNumber = 0; //这一轮已发射出去的子弹数
+            this.bulletsNumber = Math.floor(Math.random() * 3) + this.bulletFactor; //子弹总数
+          }
+          if (this.isShooting) {
+            this.bulletTimer += deltaTime;
+            // 每200ms发射一个子弹
+            if (this.bulletTimer >= 200) {
+              // 发射多排并列子弹
+              const spacing = this.width / (this.bulletRows + 1);
+              for (let i = 0; i < this.bulletRows; i++) {
+                const bulletX = this.x + spacing * (i + 1);
+                bossBullets.push(new BossBullet(
+                  bulletX,
+                  this.y + this.height / 2,
+                  player.x,
+                  player.y
+                ));
+              }
+
+              this.bulletTimer = 0;
+              this.shootedNumber++;
+               if (this.shootedNumber >= this.bulletsNumber) {
+                // 发射完毕
+                this.isShooting = false;
+              }
             }
           }
         } else {
-          const targetX = player.x - this.width / 2;
-          if (Math.abs(this.x - targetX) > 2) {
-            this.x += (targetX - this.x) * 0.02;
+          // 第1关BOSS血量75%以下或游戏时间超过15秒 进入第二阶段
+          if ((this.health <= this.maxHealth * 0.75 || gameTime > 15000) && this.phase === 1) {
+            this.phase = 2;
           }
-          // 接近玩家时（玩家在BOSS的下方，且距离小于玩家的身高）变成举起拳头状态持续0.3秒
-          const distanceToPlayer = player.y - (this.y + this.height);
-          if (distanceToPlayer >= 0 && distanceToPlayer <= player.height &&
-            this.attackState === 'normal' && this.vy >= 0) {
-            this.attackState = 'raising';
-            this.attackTimer = 300;
-          }
-          // 处理攻击状态
-          if (this.attackState === 'raising') {
-            this.attackTimer -= deltaTime;
-            //砸拳头
-            if (this.attackTimer <= 0) {
-              this.attackState = 'punching';
-              this.attackTimer = 300; // 砸拳头持续时间
+          if (this.phase === 1) {
+            if (this.y < this.targetY) this.y += this.speedy * deltaSeconds;
+            else {
+              this.x += this.speedx * this.directionX * deltaSeconds;
+              if (this.x <= 0) {
+                this.x = 0;
+                this.directionX = 1;
+              }
+              if (this.x + this.width >= canvasWidth) {
+                this.x = canvasWidth - this.width;
+                this.directionX = -1;
+              }
             }
-          } else if (this.attackState === 'punching') {
-            this.attackTimer -= deltaTime;
-            if (this.attackTimer <= 0) {
-              this.attackState = 'normal';
+          } else {
+            const targetX = player.x - this.width / 2;
+            if (Math.abs(this.x - targetX) > 2) {
+              this.x += (targetX - this.x) * 0.02;
             }
-          }
-          let factor = 1;
-          let bounceFactor = 0.8;
-          if (currentDifficulty === 'hard') {
-            factor = 1.3;
-            bounceFactor = 1
-          } else if (currentDifficulty === 'easy') {
-            factor = 0.7;
-            bounceFactor = 0.6;
-          }
-          // BOSS下降速度 难度越大下降越快
-          this.vy += this.gravity * deltaSeconds * factor;
-          this.y += this.vy * deltaSeconds;
-          // BOSS触底后反弹
-          if (this.y + this.height >= canvasHeight) {
-            this.y = canvasHeight - this.height;
-            // 【优化】弹跳速度与屏幕高度关联
-            this.vy = -(Math.random() * canvasHeight * 0.8 + canvasHeight * 0.5);
-            // bounceTargetY越小代表BOSS反弹后的高度越接近画面顶部，
-            this.bounceTargetY = Math.random() * canvasHeight * bounceFactor - canvasHeight * 0.1;
-            if (this.bounceTargetY < 0) {
-              this.bounceTargetY = 0;
+            // 难度越大，BOSS下降速度越快
+            this.speedy += this.gravity * deltaSeconds * this.downFactor;
+            this.y += this.speedy * deltaSeconds;
+            // BOSS触底后反弹
+            if (this.y + this.height >= canvasHeight) {
+              this.y = canvasHeight - this.height;
+              // 弹跳速度与屏幕高度关联
+              this.speedy = -(Math.random() * canvasHeight * 0.8 + canvasHeight * 0.3);
+              // bounceTargetY越小，代表BOSS反弹后的高度越接近画面顶部，
+              this.bounceTargetY = Math.random() * canvasHeight * this.bounceFactor - canvasHeight * 0.35;
+              if (this.bounceTargetY < 0) {
+                this.bounceTargetY = 0;
+              }
             }
-          }
-          if (this.vy < 0 && this.y <= this.bounceTargetY) {
-            this.vy = 0;
+            if (this.speedy < 0 && this.y <= this.bounceTargetY) {
+              this.speedy = 0;
+            }
           }
         }
       }
@@ -1407,7 +1835,7 @@
         ctx.ellipse(this.x + this.width / 2, this.y + this.height, this.width * 0.4, this.width * 0.2, 0, 0, Math.PI * 2);
         ctx.fill();
         // BOSS受击时的闪光效果（暂时去掉）
-        if (bossFlashTimer > 0 && this.health > 0) {
+        if (this.flashTimer > 0 && this.health > 0) {
           //ctx.filter = 'brightness(200%) saturate(0%)';
         }
         // 根据攻击状态选择图片
@@ -1418,14 +1846,14 @@
           currentImage = assetImages.boss4; // 砸下拳头
         } else {
           // 正常状态下的动画切换
-          currentImage = Math.floor(this.animFrame / 30) % 2 === 0 ? assetImages.boss1 : assetImages.boss2;
+          currentImage = Math.floor(this.animTimer / 400) % 2 === 0 ? assetImages.boss1 : assetImages.boss2;
         }
 
         ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
         ctx.filter = 'none';
 
         // 绘制BOSS血量条（无尽模式下不显示）
-        if (isEndlessMode) {
+        if (currentDifficulty === 'endless') {
           return;
         }
         const barWidth = canvasWidth * 0.6, barHeight = 20, barX = canvasWidth / 2 - barWidth / 2, barY = 10;
@@ -1489,11 +1917,11 @@
       }
 
       // 更新粒子状态
-      update() {
+      update(deltaTime) {
         this.particles.forEach((p, index) => {
-          p.x += p.vx;
-          p.y += p.vy;  // 更新位置
-          p.life--;  // 减少生命值
+          p.x += p.vx * (deltaTime / 16.67);  // 基于时间的位置更新
+          p.y += p.vy * (deltaTime / 16.67);  // 基于时间的位置更新
+          p.life -= deltaTime / 16.67;  // 基于时间的生命值减少
           p.opacity = p.life / 30;  // 更新透明度
           if (p.life <= 0) this.particles.splice(index, 1);  // 移除死亡粒子
         });
@@ -1520,24 +1948,30 @@
 
     // 闪光效果类
     class FlashEffect {
-      constructor(x, y) {
+      constructor(x, y, isPlayer) {
         this.x = x;
         this.y = y;
         this.life = 15;
         this.maxLife = 15;
         this.images = [];
         this.angles = [];
+        this.isPlayer = isPlayer;
 
-        // 随机显示1-2张闪光图片
-        const count = Math.random() < 0.5 ? 1 : 2;
-        for (let i = 0; i < count; i++) {
-          this.images.push(Math.random() < 0.5 ? assetImages.flash1 : assetImages.flash2);
-          this.angles.push(Math.random() * Math.PI * 2);
+        // 玩家碰撞只随机显示1张闪光图
+        if(isPlayer){
+          this.images.push(Math.random() < 0.5 ? assetImages.fire1 : assetImages.fire2);
+        }else{
+          // BOSS、小熊碰撞随机显示1-2张闪光图片
+          const count = Math.random() < 0.5 ? 1 : 2;
+          for (let i = 0; i < count; i++) {
+            this.images.push(Math.random() < 0.5 ? assetImages.flash1 : assetImages.flash2);
+            this.angles.push(Math.random() * Math.PI * 2);
+          }
         }
       }
 
-      update() {
-        this.life--;
+      update(deltaTime) {
+        this.life -= deltaTime / 16.67;  // 基于时间的生命值减少
       }
 
       draw() {
@@ -1547,14 +1981,18 @@
 
         for (let i = 0; i < this.images.length; i++) {
           ctx.save();
-          const offsetX = i * 20 - 10;
-          const offsetY = i * 15 - 7;
-          ctx.translate(this.x + offsetX, this.y + offsetY);
-          ctx.rotate(this.angles[i]);
-          ctx.drawImage(this.images[i], -25, -25, 50, 50);
+          if(!this.isPlayer){
+            const offsetX = i * 20 - 10;
+            const offsetY = i * 15 - 7;
+            ctx.translate(this.x + offsetX, this.y + offsetY);
+            ctx.rotate(this.angles[i]);
+            ctx.drawImage(this.images[i], -25, -25, 50, 50);
+          }else{
+            ctx.translate(this.x, this.y);
+            ctx.drawImage(this.images[i], -5, -25, 50, 50);
+          }
           ctx.restore();
         }
-
         ctx.restore();
       }
 
@@ -1563,20 +2001,30 @@
       }
     }
 
+
+
     // 初始化游戏
     function init() {
+      currentLevel = parseInt(document.getElementById('level-selector').value);
       resizeCanvas();  // 调整画布尺寸
       player = new Player();  // 创建玩家
       bullets = [];  // 清空子弹数组
       bears = [];  // 清空小熊数组
+      powerUps = [];  // 清空道具数组
+      healthPacks = [];  // 清空血包数组
+      bossBullets = [];  // 清空BOSS子弹数组
       explosions = [];  // 清空爆炸数组
       flashEffects = [];  // 清空闪光效果数组
       boss = null;  // 重置BOSS
-      killCount = 0;  // 重置总击杀数
+      killCount = 0;  // 重置小熊击杀数
       killsSinceLastLife = 0;  // 重置回血计数器
       comboCount = 0;  // 重置连击数
       maxComboCount = 0;  // 重置最大连击数
       escapedBearCount = 0;  // 重置逃走小熊数
+      escapedBulletCount = 0;  // 重置幸存BOSS子弹数
+      escapedItemCount = 0;  // 重置幸存道具血包数
+      destroyedBulletCount = 0;  // 重置玩家消灭的BOSS子弹数
+      collectedItemCount = 0;  // 重置玩家吃掉的道具血包数
       deathCount = 0;  // 重置阵亡次数
       bearSpawnTimer = 0;  // 重置小熊生成计时器
       bossSpawned = false;  // 重置BOSS生成标志
@@ -1585,39 +2033,68 @@
       gameState = 'playing';  // 设置游戏状态为游戏中
       gameStartTime = performance.now();  // 记录游戏开始时间
 
-      // 根据难度设置小熊生成间隔，默认中等为700
+      // 清空结算界面的所有字段内容
+      document.getElementById('result-diff').textContent = '';
+      document.getElementById('result-time').textContent = '';
+      document.getElementById('result-kill').textContent = '';
+      document.getElementById('result-combo-text').textContent = '';
+      document.getElementById('result-total-text').textContent = '';
+      // 隐藏图标
+      let fullcombo = document.getElementById('result-fullcombo');
+      fullcombo.style.display = 'none';
+      fullcombo.src = IMG_PATH + assets.fullcombo;
+      document.getElementById('result-rank').style.display = 'none';
+
+
+      if (currentLevel === 2) {
+        playerHealth = 3;
+        playerBulletStreams = 1; // 重置子弹束数量
+      }
       if (currentDifficulty === 'easy') {
-        bearSpawnInterval = 800;
+        // 小熊每800毫秒出现一次
+        bearInterval = 800;
+        // 小熊每列生成概率，中等难度64%概率生成，也就是每行6*0.6=3.6个熊
+        bearProbability = 0.5;
+        maxPlayerBulletStreams = 10;
+        itemProbability = 0.3;
+        healthProbability = 0.3;
+        // 游戏开始多少秒后生成BOSS
+        bossBegan = 1000;
+      } else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
+        bearInterval = 750;
+        bearProbability = 0.6;
+        maxPlayerBulletStreams = 14;
+        itemProbability = 0.24;
+        healthProbability = 0.22;
+        bossBegan = 2000;
       } else if (currentDifficulty === 'hard') {
-        bearSpawnInterval = 600;
+        bearInterval = 700;
+        bearProbability = 0.65;
+        maxPlayerBulletStreams = 18;
+        itemProbability = 0.18;
+        healthProbability = 0.18;
+        bossBegan = 3000;
       }
 
       if (player) {
-        player.defeatCharacters = [];  // 清空defeat角色
-        player.characters = [1];  // 重置角色类型数组
-        player.deadCharacterType = 1;  // 重置死亡角色类型
+        player.defeatCharacters = []; // 清空defeat角色
+        player.characters = [1]; // 重置角色类型数组
+        player.deadCharacterType = 1; // 重置死亡角色类型
+        if (currentLevel === 2) {
+          player.currentCharacterType = 1;
+        }
       }
     }
 
     // 生成小熊
     function spawnBears() {
-      const numColumns = 6;  // 列数
+      const numColumns = 6; // 列数
       const bearWidth = canvasWidth / 6;  // 每列宽度
-
-      // 根据难度设置小熊每列生成概率，默认65%概率生成，也就是每行6*0.65=3.9个熊
-      let spawnProbability = 0.65;
-      if (currentDifficulty === 'easy') {
-        spawnProbability = 0.6;
-      } else if (currentDifficulty === 'hard') {
-        spawnProbability = 0.7;
-      }
-
       for (let i = 0; i < numColumns; i++) {
-        if (Math.random() < spawnProbability) {
+        if (Math.random() < bearProbability) {
           const x = i * bearWidth;  // 计算X坐标
           const y = -bearWidth;  // 从屏幕上方开始
           let canSpawn = true;
-
           // 检查是否与BOSS重叠
           if (boss && boss.y > -boss.height) {
             const bossLeft = boss.x;
@@ -1636,6 +2113,53 @@
       }
     }
 
+    // 生成道具和血包（仅第2关）
+    function spawnPowerUps() {
+      if (currentLevel !== 2) return;
+
+      const minDistance = canvasWidth / 10; // 最小间距
+      const newItems = [];
+
+      // 道具生成概率
+      if (Math.random() < itemProbability) {
+        const type = Math.floor(Math.random() * 3) + 1;
+        const x = findValidPosition(canvasWidth / 8, newItems, minDistance);
+        if (x !== -1) {
+          powerUps.push(new PowerUp(x, -canvasWidth / 12, type));
+          newItems.push({x, width: canvasWidth / 8});
+        }
+      }
+
+      // 血包生成概率
+      if (Math.random() < healthProbability) {
+        const x = findValidPosition(canvasWidth / 12, newItems, minDistance);
+        if (x !== -1) {
+          healthPacks.push(new HealthPack(x, -canvasWidth / 12));
+          newItems.push({x, width: canvasWidth / 12});
+        }
+      }
+    }
+
+    // 查找不重叠的有效位置
+    function findValidPosition(itemWidth, existingItems, minDistance) {
+      const maxAttempts = 10;
+      for (let i = 0; i < maxAttempts; i++) {
+        const x = Math.random() * (canvasWidth - itemWidth);
+        let valid = true;
+
+        for (const item of existingItems) {
+          const distance = Math.abs(x + itemWidth/2 - (item.x + item.width/2));
+          if (distance < minDistance) {
+            valid = false;
+            break;
+          }
+        }
+
+        if (valid) return x;
+      }
+      return -1; // 找不到有效位置
+    }
+
     // 处理所有碰撞检测
     function handleCollisions() {
       // 子弹与小熊的碰撞
@@ -1644,12 +2168,17 @@
         bears.forEach(bear => {
           if (bear.markedForDeletion) return; // 跳过已标记的小熊
           if (isColliding(bullet, bear)) {
-            flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2));
-            bullet.markedForDeletion = true; // 【优化】标记子弹待删除
-            bear.health--;
-            bear.flashTimer = 3;
+            flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
+            bullet.markedForDeletion = true; // 标记子弹待删除
+            bear.health -= (bullet.bearDamage > bear.health ? bear.health : bullet.bearDamage); // 使用子弹的伤害值
+            bear.flashTimer = 50; //小熊闪白50毫秒
+
+            // player3形态子弹击中敌人时应用减速效果
+            if (currentLevel === 2 && bullet.bulletType === 3) {
+              bear.applySlow();
+            }
             if (bear.health <= 0) {
-              bear.markedForDeletion = true; // 【优化】标记小熊待删除
+              bear.markedForDeletion = true; // 标记小熊待删除
               killCount++;
               killsSinceLastLife++;
               comboCount++;
@@ -1665,13 +2194,17 @@
         bullets.forEach(bullet => {
           if (bullet.markedForDeletion) return; // 跳过已标记的子弹
           if (isColliding(bullet, boss)) {
-            flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2));
+            flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
             bullet.markedForDeletion = true; // 标记子弹待删除
-            //无尽模式下BOSS不掉血 不能掉成负数
-            if (!isEndlessMode && boss.health > 0) {
-              boss.health--;
+            // player3形态子弹击中敌人时应用减速效果
+            if (currentLevel === 2 && bullet.bulletType === 3) {
+              boss.applySlow();
             }
-            bossFlashTimer = 3;
+            //无尽模式下BOSS不掉血 不能掉成负数
+            if (currentDifficulty !== 'endless') {
+              boss.health -= (bullet.damage > boss.health ? boss.health : bullet.damage); // 使用子弹的伤害值
+            }
+            boss.flashTimer = 50; //BOSS闪白50毫秒
             if (boss.health <= 0 && gameState === 'playing') {
               gameState = 'bossDying';
               bossDeathPosition = {x: boss.x, y: boss.y, width: boss.width, height: boss.height};
@@ -1680,6 +2213,26 @@
               setTimeout(() => gameOver(true), 400); // BOSS死亡400毫秒后游戏结束
             }
           }
+        });
+      }
+
+      // 第2关：player3子弹与BOSS子弹的碰撞（抵消效果）
+      if (currentLevel === 2) {
+        bullets.forEach(playerBullet => {
+          if (playerBullet.markedForDeletion || playerBullet.bulletType !== 3) return;
+          bossBullets.forEach(bossBullet => {
+            if (bossBullet.markedForDeletion) return;
+            if (isColliding(playerBullet, bossBullet)) {
+              // 两者一起消失并触发闪光特效
+              playerBullet.markedForDeletion = true;
+              bossBullet.markedForDeletion = true;
+              destroyedBulletCount++; // 玩家消灭BOSS子弹
+              flashEffects.push(new FlashEffect(
+                (playerBullet.x + bossBullet.x) / 2 + playerBullet.width / 2,
+                (playerBullet.y + bossBullet.y) / 2 + playerBullet.height / 2, false
+              ));
+            }
+          });
         });
       }
 
@@ -1699,7 +2252,13 @@
 
           if (isColliding(bear, charHitbox)) {
             bear.markedForDeletion = true;
+            // 撞到玩家的小熊视为幸存 combo中断
+            escapedBearCount++;
+            comboCount = 0;
+            playerBulletStreams = Math.ceil(playerBulletStreams / 2);
             triggerScreenShake(5);
+            flashEffects.push(new FlashEffect(charHitbox.x, charHitbox.y, true));
+            player.flashTimer = 200; //玩家闪白200毫秒
             checkDead(i);
             return;
           }
@@ -1708,54 +2267,142 @@
 
       // BOSS与玩家的碰撞（在无敌时间外）
       if (boss && !playerInvulnerable) {
-        const totalWidth = player.width * player.characterCount;
-        const startX = player.x - totalWidth / 2;
-
-        for (let i = 0; i < player.characterCount; i++) {
-          const charHitbox = {
-            x: startX + i * player.width,
+        if (currentLevel === 2) {
+          // 第2关：单个角色碰撞检测
+          const playerHitbox = {
+            x: player.x - player.width / 2,
             y: player.y,
             width: player.width,
             height: player.height
           };
 
-          if (isColliding(boss, charHitbox)) {
+          if (isColliding(boss, playerHitbox)) {
             playerInvulnerable = true;
-            // 玩家无敌时间1.8秒，避免重复受到伤害
-            invulnerabilityTimer = 1800;
+            // 玩家无敌时间0.8秒，避免重复受到伤害
+            invulnerabilityTimer = 800;
+            playerBulletStreams = Math.ceil(playerBulletStreams / 2);
+            player.flashTimer = 200; //玩家闪白200毫秒
             triggerScreenShake(8);
-            checkDead(i);
-            return;
+            flashEffects.push(new FlashEffect(playerHitbox.x, playerHitbox.y, true));
+            checkDead(0);
+          }
+        } else {
+          // 第1关：原有逻辑
+          const totalWidth = player.width * player.characterCount;
+          const startX = player.x - totalWidth / 2;
+
+          for (let i = 0; i < player.characterCount; i++) {
+            const charHitbox = {
+              x: startX + i * player.width,
+              y: player.y,
+              width: player.width,
+              height: player.height
+            };
+
+            if (isColliding(boss, charHitbox)) {
+              playerInvulnerable = true;
+              invulnerabilityTimer = 1800;
+              player.flashTimer = 100; //玩家闪白100毫秒
+              triggerScreenShake(8);
+              flashEffects.push(new FlashEffect(charHitbox.x, charHitbox.y, true));
+              checkDead(i);
+              return;
+            }
           }
         }
+      }
+
+      // 第2关的道具碰撞检测
+      if (currentLevel === 2) {
+        const playerHitbox = {
+          x: player.x - player.width / 2,
+          y: player.y,
+          width: player.width,
+          height: player.height
+        };
+
+        // BOSS的子弹与玩家碰撞
+        bossBullets.forEach(bullet => {
+          if (bullet.markedForDeletion) return;
+          if (isColliding(bullet, playerHitbox) && !playerInvulnerable) {
+            bullet.markedForDeletion = true;
+            escapedBulletCount++;
+            playerInvulnerable = true;
+            invulnerabilityTimer = 500;
+            playerBulletStreams = Math.ceil(playerBulletStreams / 2);
+            player.flashTimer = 100; //玩家闪白100毫秒
+            triggerScreenShake(5);
+            flashEffects.push(new FlashEffect(playerHitbox.x, playerHitbox.y, true));
+            checkDead(0);
+          }
+        });
+
+        // 道具碰撞
+        powerUps.forEach(powerUp => {
+          if (powerUp.markedForDeletion) return;
+          if (isColliding(powerUp, playerHitbox)) {
+            powerUp.markedForDeletion = true;
+            collectedItemCount++; // 玩家吃掉道具
+             if (playerBulletStreams < maxPlayerBulletStreams ) {
+               // 困难模式下，碰到的头像必须和自身形象相同，才增加子弹束数量
+               if(currentDifficulty !== 'hard' || player.currentCharacterType !== powerUp.type){
+                 playerBulletStreams++;
+               }
+            }
+            player.currentCharacterType = powerUp.type;
+
+          }
+        });
+
+        // 血包碰撞
+        healthPacks.forEach(healthPack => {
+          if (healthPack.markedForDeletion) return;
+          if (isColliding(healthPack, playerHitbox)) {
+            healthPack.markedForDeletion = true;
+            collectedItemCount++; // 玩家吃掉血包
+            playerHealth++;
+          }
+        });
+
       }
     }
 
     function checkDead(hitCharacterIndex) {
-      deathCount++; // 增加阵亡次数
-      if (player.characterCount > 1) {
-        // 计算被击中角色的位置
-        const totalWidth = player.width * player.characterCount;
-        const startX = player.x - totalWidth / 2;
-        const hitCharacterX = startX + hitCharacterIndex * player.width + player.width / 2;
-        const hitCharacterType = player.characters[hitCharacterIndex];
-
-        // 添加defeat角色
-        player.defeatCharacters.push({
-          x: hitCharacterX,
-          characterIndex: hitCharacterType,
-          timer: 1200 // 角色被击败1200毫秒后消失
-        });
-
-        // 从角色数组中移除被击中的角色
-        player.characters.splice(hitCharacterIndex, 1);
-        player.characterCount--;  // 减少角色数量（生命）
-        killsSinceLastLife = 0;
+      if (currentLevel === 2) {
+        // 第2关：减少血量
+        if(playerHealth > 0) {
+          playerHealth--;
+          deathCount++;
+        }
+        if (playerHealth <= 0) {
+          player.deadCharacterType = player.currentCharacterType;
+          player.isDead = true;
+          setTimeout(() => gameOver(false), 400);
+        }
       } else {
-        // 记录最后一个角色的类型
-        player.deadCharacterType = player.characters[hitCharacterIndex];
-        player.isDead = true;  // 设置玩家死亡状态
-        setTimeout(() => gameOver(false), 400);  // 玩家死亡400毫秒后游戏结束
+        deathCount++;
+        // 第1关：原有逻辑
+        if (player.characterCount > 1) {
+          // 计算被击中角色的位置
+          const totalWidth = player.width * player.characterCount;
+          const startX = player.x - totalWidth / 2;
+          const hitCharacterX = startX + hitCharacterIndex * player.width + player.width / 2;
+          const hitCharacterType = player.characters[hitCharacterIndex];
+
+          player.defeatCharacters.push({
+            x: hitCharacterX,
+            characterIndex: hitCharacterType,
+            timer: 1200 // 角色被击败1200毫秒后消失
+          });
+          // 从角色数组中移除被击中的角色
+          player.characters.splice(hitCharacterIndex, 1);
+          player.characterCount--;
+          killsSinceLastLife = 0;
+        } else {
+          player.deadCharacterType = player.characters[hitCharacterIndex];
+          player.isDead = true;
+          setTimeout(() => gameOver(false), 400);// 玩家死亡400毫秒后游戏结束
+        }
       }
     }
 
@@ -1768,10 +2415,10 @@
     }
 
     // 绘制道路中间线
-    function drawRoad(deltaTime) { // 【优化】接收deltaTime参数
+    function drawRoad(deltaTime) {
       ctx.fillStyle = '#fff';
       const lineWidth = 15, lineHeight = 80, lineGap = 60;
-      // 【优化】道路滚动速度与屏幕高度和时间关联
+      // 道路滚动速度与屏幕高度关联
       const roadSpeed = canvasHeight * 0.6;
       if (gameState === 'playing') {
         roadLineY += roadSpeed * (deltaTime / 1000);
@@ -1800,6 +2447,9 @@
         // 更新所有游戏对象
         bullets.forEach(bullet => bullet.update(deltaTime));
         bears.forEach(bear => bear.update(deltaTime));
+        powerUps.forEach(powerUp => powerUp.update(deltaTime));
+        healthPacks.forEach(healthPack => healthPack.update(deltaTime));
+        bossBullets.forEach(bullet => bullet.update(deltaTime));
         if (boss) {
           boss.update(deltaTime, gameTime);
         }
@@ -1818,22 +2468,15 @@
         }
         // 小熊生成计时器
         bearSpawnTimer += deltaTime;
-        if (bearSpawnTimer > bearSpawnInterval) {
+        if (bearSpawnTimer > bearInterval) {
           spawnBears();
+          spawnPowerUps(); // 生成道具和血包
           bearSpawnTimer = 0;
-        }
-        // 游戏开始5秒后生成BOSS
-        let bossBegan = 2500;
-        if (currentDifficulty === 'easy') {
-          bossBegan = 1000;
-        } else if (currentDifficulty === 'hard') {
-          bossBegan = 5000;
         }
         if (!bossSpawned && gameTime > bossBegan) {
           boss = new Boss();
           bossSpawned = true;
         }
-        if (bossFlashTimer > 0) bossFlashTimer--;
         // 更新玩家无敌状态
         if (playerInvulnerable) {
           invulnerabilityTimer -= deltaTime;
@@ -1847,31 +2490,37 @@
         // 这样当游戏不再是'playing'状态时，它们就不会被移除，从而被定格在屏幕上
         bullets = bullets.filter(b => !b.markedForDeletion);
         bears = bears.filter(b => !b.markedForDeletion);
+        powerUps = powerUps.filter(p => !p.markedForDeletion);
+        healthPacks = healthPacks.filter(h => !h.markedForDeletion);
+        bossBullets = bossBullets.filter(b => !b.markedForDeletion);
       }
 
       // BOSS死亡时的连续爆炸效果 (这个逻辑保持在外，因为它在 'bossDying' 状态下运行)
       if (gameState === 'bossDying' && Math.random() < 0.8) {
         const x = bossDeathPosition.x + Math.random() * bossDeathPosition.width;
         const y = bossDeathPosition.y + Math.random() * bossDeathPosition.height;
-        explosions.push(new Explosion(x, y));
-        flashEffects.push(new FlashEffect(x, y));
+        // explosions.push(new Explosion(x, y));
+        // flashEffects.push(new FlashEffect(x, y, false));
       }
 
       // 更新并过滤特效 (特效的生命周期独立于游戏状态)
-      flashEffects.forEach(flash => flash.update());
-      explosions.forEach(exp => exp.update());
+      flashEffects.forEach(flash => flash.update(deltaTime));
+      explosions.forEach(exp => exp.update(deltaTime));
       flashEffects = flashEffects.filter(f => !f.isFinished());
       explosions = explosions.filter(e => !e.isFinished());
 
       // 绘制所有游戏对象 (绘制逻辑永远在主干上，确保所有状态都能正确显示)
       bullets.forEach(b => b.draw());
       bears.forEach(b => b.draw());
+      powerUps.forEach(p => p.draw());
+      healthPacks.forEach(h => h.draw());
+      bossBullets.forEach(b => b.draw());
       if (boss) boss.draw();
 
-      // 无敌状态下玩家角色闪烁，注释掉下面这一行就代表不闪烁
-      //if (!playerInvulnerable || Math.floor(invulnerabilityTimer / 100) % 2 === 0) {
-      player.draw();
-      // }
+      // 无敌状态下（被BOSS击中时）玩家角色闪烁，注释掉下面这一行就代表不闪烁
+      //if (gameState == 'playing' && (!playerInvulnerable || Math.floor(invulnerabilityTimer / 100) % 2 === 0)) {
+        player.draw(deltaTime);
+      //}
 
       explosions.forEach(e => e.draw());
       flashEffects.forEach(f => f.draw());
@@ -1892,8 +2541,7 @@
     function startGame() {
       init();  // 初始化游戏
       startScreen.classList.add('hidden');  // 隐藏开始界面
-      defeatScreen.classList.add('hidden');  // 隐藏失败界面
-      winScreen.classList.add('hidden');  // 隐藏胜利界面
+      resultScreen.classList.add('hidden');  // 隐藏结算界面
 
       // 显示游戏中的音乐控制按钮
       document.getElementById('game-music-control').style.display = 'flex';
@@ -1920,8 +2568,7 @@
       // 切换到菜单音乐
       playMusic('menu');
       startScreen.classList.remove('hidden');  // 显示开始界面
-      defeatScreen.classList.add('hidden');  // 隐藏失败界面
-      winScreen.classList.add('hidden');  // 隐藏胜利界面
+      resultScreen.classList.add('hidden');  // 隐藏结算界面
     }
 
     // 绘制游戏UI
@@ -1937,25 +2584,40 @@
       // ctx.shadowOffsetY = 1;
       // ctx.shadowBlur = 4;
 
-      // 绘制左上角生命值和阵亡次数
+      // 绘制左上角生命值和音符子弹束信息
       const iconSize = 24;
+      const noteSize = 16;
       ctx.textAlign = 'left';
 
-      // 第一行：生命值（红心图标）
-      ctx.fillStyle = '#ff69b4'; // 粉色（与心碎图标保持一致）
+      // 第一行：生命值（红心图标）- 显示当前生命值和失去生命值
+      ctx.fillStyle = '#ff69b4'; // 粉色
       ctx.strokeText('❤️', 10, 62); // 红心emoji图标
       ctx.fillText('❤️', 10, 62);
-      ctx.fillStyle = '#ffffff'; // 恢复白色
-      ctx.strokeText(player.characterCount.toString(), 36 - uiAdjust, 62);
-      ctx.fillText(player.characterCount.toString(), 36 - uiAdjust, 62);
+      ctx.fillStyle = '#ffffff';// 恢复白色
 
-      // 第二行：阵亡次数（心碎图标）
-      ctx.fillStyle = '#ff69b4'; // 粉色
-      ctx.strokeText('💔', 10, 92); // 心碎图标
-      ctx.fillText('💔', 10, 92);
-      ctx.fillStyle = '#ffffff'; // 恢复白色
-      ctx.strokeText(deathCount.toString(), 36 - uiAdjust, 92);
-      ctx.fillText(deathCount.toString(), 36 - uiAdjust, 92);
+      const currentHealthValue = currentLevel === 2 ? playerHealth : player.characterCount;
+      let healthText = currentHealthValue.toString();
+      // 只有失去生命后才显示横杠和失去生命值
+      if (deathCount > 0) {
+        healthText += '-' + deathCount.toString();
+      }
+      ctx.strokeText(healthText, 36 - uiAdjust, 62);
+      ctx.fillText(healthText, 36 - uiAdjust, 62);
+
+      // 第二行：音符和子弹束数量
+      if (currentLevel === 2) {
+        // 显示当前角色对应的音符图标
+        const bulletImage = assetImages[`bullet${player.currentCharacterType}`];
+        if (bulletImage) {
+          ctx.drawImage(bulletImage, 10, 75, noteSize, noteSize * 1.5);
+        }
+        let bulletStr = playerBulletStreams.toString();
+        if(playerBulletStreams == maxPlayerBulletStreams){
+          bulletStr = bulletStr + " max!";
+        }
+        ctx.strokeText(bulletStr, 36 - uiAdjust, 92);
+        ctx.fillText(bulletStr, 36 - uiAdjust, 92);
+      }
 
       // 绘制右上角积分图标和数字
       if (assetImages.scoreIcon) {
@@ -1982,11 +2644,12 @@
         const gameTime = performance.now() - gameStartTime;
         const timeText = formatGameTime(gameTime);
         ctx.textAlign = 'right';
-        ctx.strokeText(timeText, barX - 15, 25);
-        ctx.fillText(timeText, barX - 15, 25);
+        ctx.strokeText(timeText, barX - 30, 25);
+        ctx.fillText(timeText, barX - 30, 25);
 
-        // 难度模式（血条位置右侧）
+        // 等级和难度（血条位置右侧）
         const texts = languages[currentLang];
+        // const modeText = 'Lv.' + currentLevel + ' ' + texts[currentDifficulty].replace(texts.mode, '');
         const modeText = texts[currentDifficulty].replace(texts.mode, '');
         ctx.textAlign = 'left';
         ctx.strokeText(modeText, barX + barWidth + 15, 25);
@@ -2008,6 +2671,10 @@
       return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }
 
+    function roundTo2(num) {
+      return Math.round((num * 100 + Number.EPSILON) * 100) / 100;
+    }
+
     // 游戏结束
     function gameOver(isWin) {
       //避免重复执行
@@ -2025,43 +2692,70 @@
       // 计算最终得分
       const killScore = Math.max(0, (killCount - escapedBearCount) * 20);
       const comboScore = maxComboCount * 20;
-      const deathPenalty = deathCount * 20;
-      const fullComboScore = (isWin && (maxComboCount == killCount)) ? maxComboCount * 10 : 0;
+      const deathPenalty = deathCount * 50;
+      const fullComboScore = (isWin && (maxComboCount == killCount)) ? maxComboCount * 10 : 1;
       const bossScore = boss ? (boss.maxHealth - boss.health) * 5 : 0;
-      const finalScore = Math.max(0, killScore + bossScore + comboScore - deathPenalty + fullComboScore);
+      const bearRatio = killCount > 0 ? killCount / (killCount + escapedBearCount) : 0;
+      const bossRatio = boss ? (boss.maxHealth - boss.health) / boss.maxHealth : 0;
+      const playerRatio = currentLevel == 1 ? (player.characterCount / maxPlayerCharacter) : (playerBulletStreams / maxPlayerBulletStreams);
+      const playerRatioScore = isWin ? playerRatio * 50 : playerRatio * 2;
+      const bulletRatio = destroyedBulletCount > 0 ? destroyedBulletCount / (destroyedBulletCount + escapedBulletCount) : 0;
+      const bulletRatioScore = isWin ? bulletRatio * 1000 : bulletRatio * 20;
+      const itemRatio = collectedItemCount > 0 ? collectedItemCount / (collectedItemCount + escapedItemCount) : 0;
+      const itemRatioScore = isWin ? itemRatio * 1000 : itemRatio * 5;
+      const resultRank = getResultRank(bearRatio, bossRatio, deathCount);
+      const finalScore = Math.floor(Math.max(0, killScore + bossScore + comboScore - deathPenalty + fullComboScore
+        + playerRatioScore + bulletRatioScore + itemRatioScore));
       //发送游戏统计
       try {
-        gameStat(currentStage, currentDifficulty, fps, isWin ? 1 : 0, Math.floor(gameTime / 1000),
-          killCount, escapedBearCount, maxComboCount, deathCount, boss ? (boss.maxHealth - boss.health) : 0, finalScore);
+        gameStat(currentLevel, currentDifficulty, fps, isWin ? 1 : 0, resultRank.replace('rank_', ''), Math.floor(gameTime / 1000),
+          killCount, escapedBearCount, maxComboCount, (currentLevel === 2 ? playerHealth : player.characterCount),
+          deathCount, roundTo2(bossRatio), roundTo2(bulletRatio), roundTo2(itemRatio), finalScore);
       } catch (e) {
         //忽略报错
       }
       // 显示结算动画
-      showScoreAnimation(isWin, killScore, maxComboCount, finalScore, gameTime);
+      showScoreAnimation(isWin, killScore, maxComboCount, finalScore, gameTime, bearRatio, deathCount, resultRank);
     }
 
     // 结算动画函数
-    function showScoreAnimation(isWin, killScore, maxComboCount, finalScore, gameTime) {
-      const targetElement = isWin ? document.getElementById('game-time-win') : document.getElementById('game-time-defeat');
-      const targetScreen = isWin ? winScreen : defeatScreen;
+    function showScoreAnimation(isWin, killScore, maxComboCount, finalScore, gameTime, bearRatio, deathCount, resultRank) {
       const texts = languages[currentLang];
+      // 显示结算界面
+      resultScreen.classList.remove('hidden');
+      // 获取DOM元素
+      const diffEl = document.getElementById('result-diff');
+      const timeEl = document.getElementById('result-time');
+      const killEl = document.getElementById('result-kill');
+      const comboTextEl = document.getElementById('result-combo-text');
 
-      // 显示对应界面
-      targetScreen.classList.remove('hidden');
+      const totalEl = document.getElementById('result-total-text');
+      const imageEl = document.getElementById('result-image');
+      const messageEl = document.getElementById('result-message');
+      const restartBtn = document.getElementById('restart-button');
 
+      // 设置图片和消息
+      if (isWin) {
+        imageEl.src = assetImages.win.src;
+        imageEl.alt = 'YOU WIN';
+        messageEl.textContent = texts.winMessage;
+        restartBtn.textContent = texts.playAgain;
+      } else {
+        imageEl.src = assetImages.defeat.src;
+        imageEl.alt = 'DEFEAT';
+        messageEl.textContent = texts.defeatMessage;
+        restartBtn.textContent = texts.retry;
+      }
 
-      const timeText = `${texts.gameTime}: ${formatGameTime(gameTime)}`;
+      // 回到首页按钮文本不变
+      document.getElementById('home-button').textContent = texts.backToHome;
 
-      let killScoreText = '';
-      let comboScoreText = '';
-      let finalScoreText = '';
-
-      const updateDisplay = () => {
-        targetElement.innerHTML = `${timeText}<br>${killScoreText || '&nbsp;'}<br>${comboScoreText || '&nbsp;'}<br>${finalScoreText || '&nbsp;'}`;
-      };
-
-      const animateLine = (targetValue, label, callback) => {
-        const duration = 1500;
+      // 设置固定内容
+      diffEl.textContent = `${texts['level'+currentLevel]}: ${texts[currentDifficulty]}`;
+      timeEl.textContent = `${texts.gameTime}: ${formatGameTime(gameTime)}`;
+      //数字动态递增动画
+      const animateLine = (targetValue, label, element, callback) => {
+        const duration = 1000;
         const frameRate = 60;
         const totalFrames = (duration / 1000) * frameRate;
         let frame = 0;
@@ -2071,16 +2765,7 @@
           const progress = frame / totalFrames;
           const easeProgress = 1 - Math.pow(1 - progress, 3);
           const currentValue = Math.floor(targetValue * easeProgress);
-
-          if (label === texts.killScore) {
-            killScoreText = label + ':  ' + currentValue;
-          } else if (label === texts.maxCombo) {
-            comboScoreText = label + ':  ' + currentValue;
-          } else if (label === texts.totalScore) {
-            finalScoreText = label + ':  ' + currentValue;
-          }
-
-          updateDisplay();
+          element.textContent = `${label}:  ${currentValue}`;
 
           if (frame < totalFrames) {
             requestAnimationFrame(animate);
@@ -2091,20 +2776,73 @@
         animate();
       };
 
-      // 初始显示所有4行占位
-      killScoreText = '';
-      comboScoreText = '';
-      finalScoreText = '';
-      updateDisplay();
-
       setTimeout(() => {
-        animateLine(killScore, texts.killScore, () => {
-          animateLine(maxComboCount, texts.maxCombo, () => {
-            animateLine(finalScore, texts.totalScore, () => {
+        animateLine(killScore, texts.killScore, killEl, () => {
+          animateLine(maxComboCount, texts.maxCombo, comboTextEl, () => {
+            // maxCombo数值显示完毕后，根据fullComboScore决定是否显示fullcombo图片
+            if (bearRatio === 1) {
+              document.getElementById('result-fullcombo').style.display = 'block';
+            }
+            animateLine(finalScore, texts.totalScore, totalEl, () => {
+              if(resultRank){
+                let rankImg = document.getElementById('result-rank');
+                // 给HTML图片赋值src（结算界面的图片在showScoreAnimation中动态设置）
+                rankImg.style.display = 'block';
+                rankImg.src = IMG_PATH + assets[resultRank];
+              }
             });
           });
         });
-      }, 300);
+      }, 100);
+    }
+
+    function getResultRank(bearRatio, bossRatio, deathCount) {
+      if(currentDifficulty === 'endless') {
+        return null;
+      }
+      let rank = '';
+      if(bossRatio <= 0.1){
+        rank = 'rank_d';
+      }else if (bossRatio <= 0.4){
+        rank = 'rank_c'
+      }else if (bossRatio <= 0.6){
+        rank = 'rank_cp'
+      }else if (bossRatio <= 0.8){
+        rank = 'rank_b'
+      }else if (bossRatio < 1){
+        rank = 'rank_bp'
+      }else{
+        if(bearRatio <= 0.7){
+          rank = 'rank_a'
+        }else if(bearRatio <= 0.9){
+          rank = 'rank_ap'
+        }else if(bearRatio < 1){
+          rank = 'rank_s'
+        }else{
+          if(currentLevel === 1) {
+            if (deathCount >= 9) {
+              rank = 'rank_sp'
+            }else if (deathCount >= 6) {
+              rank = 'rank_ss'
+            } else if (deathCount >= 3) {
+              rank = 'rank_ssp'
+            } else {
+              rank = 'rank_sss'
+            }
+          }else {
+            if (deathCount >= 8) {
+              rank = 'rank_sp'
+            }else if (deathCount >= 4) {
+              rank = 'rank_ss'
+            } else if (deathCount >= 1) {
+              rank = 'rank_ssp'
+            } else {
+              rank = 'rank_sss'
+            }
+          }
+        }
+      }
+      return rank;
     }
 
     // 调整画布尺寸
