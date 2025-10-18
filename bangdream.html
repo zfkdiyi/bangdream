@@ -1355,9 +1355,10 @@
         const rank = item.user_rank;
         const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
         const displayName = `${item.player_id || 'Unknown'}`;
+        const createTime = `${item.create_time || ''}`;
         const timeStr = Math.floor(item.duration / 60) + ':' + (item.duration % 60).toString().padStart(2, '0');
         const rankIcon = item.ranks ? `<img src="${IMG_PATH}rank_${item.ranks.toLowerCase()}.png" style="height: 40px; margin-right: 8px;">` : '';
-        const fullComboIcon = (item.full_combo === 1) ? `<img src="${IMG_PATH}full_combo.png" style="height: 15px;">` : '';
+        const fullComboIcon = (item.full_combo === 1) ? `<img src="${IMG_PATH}full_combo.png" style="height: 20px;">` : '';
 
         // 高亮当前用户
         const isCurrentUser = currentPlayerId && item.player_id === currentPlayerId;
@@ -1367,7 +1368,8 @@
           <div class="leaderboard-item${highlightClass}"">
             <div class="leaderboard-rank ${rankClass}">${rank}</div>
             <div class="leaderboard-info">
-              <div class="leaderboard-name">${displayName}</div>
+              <div class="leaderboard-name">${displayName}  <span style="font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);">${createTime}</span></div>
               <div class="leaderboard-details">
                 <span>${texts.maxCombo}: ${item.max_combo}</span>
                 <span>${texts.gameTime}: ${timeStr}</span>
