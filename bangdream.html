@@ -254,7 +254,6 @@
       gap: 5px;
       transition: color 0.2s;
       position: relative;
-      z-index: 1000;
       cursor: pointer;
     }
 
@@ -290,6 +289,7 @@
       align-items: center;
     }
 
+    .leaderboard-content,
     .modal-content {
       background-color: #fff;
       padding: 20px;
@@ -304,6 +304,16 @@
       margin-top: 0;
       font-size: 1.1rem;
       color: #333;
+    }
+
+    .leaderboard-modal {
+      background-color: #333;
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .leaderboard-modal h3 {
+      color: #fff;
     }
 
     .modal-content textarea {
@@ -352,6 +362,184 @@
       cursor: pointer;
     }
 
+    /* 排行榜样式 */
+    .leaderboard-modal {
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .leaderboard-filters {
+      display: flex;
+      gap: 12px;
+      margin: 15px 0;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap; /*允许换行*/
+    }
+
+    .leaderboard-filters select {
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: rgba(0, 0, 0, 0.5);
+      font-size: 14px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 80px;
+      max-width: 120px;
+      flex-shrink: 1;
+    }
+
+    .leaderboard-filters select:hover {
+      border-color: var(--primary-color);
+    }
+
+    .leaderboard-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      margin: 8px 0;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: transform 0.2s;
+    }
+
+    .leaderboard-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .leaderboard-item.highlight {
+      background: rgba(255, 105, 180, 0.3);
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+    }
+
+    .leaderboard-rank {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      margin-right: 15px;
+      color: #fff;
+    }
+
+    .leaderboard-rank.rank-1 {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+
+    .leaderboard-rank.rank-2 {
+      background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+      box-shadow: 0 0 15px rgba(192, 192, 192, 0.5);
+    }
+
+    .leaderboard-rank.rank-3 {
+      background: linear-gradient(135deg, #cd7f32, #daa520);
+      box-shadow: 0 0 15px rgba(205, 127, 50, 0.5);
+    }
+
+    .leaderboard-rank.rank-other {
+      background: linear-gradient(135deg, #6c757d, #868e96);
+    }
+
+    .leaderboard-info {
+      flex: 1;
+      color: #fff;
+    }
+
+    .leaderboard-name {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .leaderboard-details {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .leaderboard-score {
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+      text-align: right;
+      width: 130px;
+      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 8px rgba(255, 105, 180, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .empty-leaderboard {
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 16px;
+    }
+
+    @media (max-width: 450px) {
+      .leaderboard-content {
+        padding: 8px;
+      }
+      .leaderboard-filters {
+        gap: 10px;
+      }
+
+      .leaderboard-item {
+        padding: 10px;
+      }
+
+      .leaderboard-rank {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+        margin-right: 10px;
+      }
+
+      .leaderboard-details {
+        font-size: 12px;
+        gap: 8px;
+      }
+
+      .leaderboard-score {
+        font-size: 16px;
+        width: 100px;
+      }
+    }
+
 
     .music-control:hover {
       background: rgba(255, 105, 180, 1);
@@ -363,18 +551,6 @@
       height: 20px;
       fill: white;
       transition: all 0.2s ease;
-    }
-
-    .start-button-container {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      margin: 10px 0px;
-      /*align-items: center;
-      gap: 16px;
-      @media (max-width: 420px) {
-        gap: 12px;
-      }*/
     }
 
     .level-selector {
@@ -400,12 +576,37 @@
       border-color: var(--primary-color);
     }
 
+
+
+    .button-row {
+      margin: 10px 0;
+      display: grid; /* 1. 使用 Grid 布局 */
+      grid-template-columns: 1fr auto 1fr; /* 2. 定义三列网格 */
+      align-items: center; /* 垂直居中对齐所有项 */
+      width: 100%;
+      gap: 20px; /* 在列之间添加一些间距 */
+    }
+
+    /* 让第一列的元素（排行榜按钮）靠左对齐，
+      第三列的元素（音乐控件）靠右对齐。
+    */
+    .button-row > .blank_button {
+      justify-self: start; /* 在网格区域内靠左 */
+    }
+
+    .button-row > .start-button {
+      justify-self: center; /* 它会自动位于中间 auto 列，无需特殊样式 */
+    }
+
+    .button-row > .music-control {
+      /* justify-self: end;  在网格区域内靠右 */
+    }
+
+    .blank_button {
+      visibility: hidden;
+    }
+
     .music-control {
-      position: absolute;
-      left: calc(50% + 90px);
-      top: 50%;
-      transform: translateY(-50%);
-      margin-left: 0;
       width: 40px;
       height: 40px;
       background: rgba(255, 105, 180, 0.8);
@@ -452,7 +653,6 @@
 
     @media (max-width: 400px) {
       .music-control {
-        left: calc(50% + 75px);
         width: 36px;
         height: 36px;
       }
@@ -535,17 +735,20 @@
       <h1 class="overlay-title" data-text="title">音符射手</h1>
       <p class="overlay-text" data-text="instructions">移动鼠标或手指来控制角色<br>按住屏幕持续发射音符！</p>
       <div class="difficulty-selector">
-        <button class="difficulty-btn" data-difficulty="easy" data-text="easy">简单</button>
-        <button class="difficulty-btn" data-difficulty="normal" data-text="normal">普通</button>
-        <button class="difficulty-btn" data-difficulty="hard" data-text="hard">困难</button>
-        <button class="difficulty-btn" data-difficulty="endless" data-text="endless">无尽模式</button>
+        <button class="difficulty-btn" data-text="easy">简单</button>
+        <button class="difficulty-btn" data-text="normal">普通</button>
+        <button class="difficulty-btn" data-text="hard">困难</button>
+        <button class="difficulty-btn" data-text="endless">无尽模式</button>
       </div>
       <div style="display: flex; flex-direction: column; align-items: center;">
-        <select id="level-selector" class="level-selector">
-          <option value="1">第1关</option>
-          <option value="2">第2关</option>
-        </select>
-        <div class="start-button-container">
+        <div>
+          <select id="level-selector" class="level-selector">
+            <option value="1" data-text="level1">第1关</option>
+            <option value="2" data-text="level2">第2关</option>
+          </select>
+        </div>
+        <div class="button-row">
+          <button class="blank_button" ></button>
           <button id="start-button" class="start-button" data-text="startGame">开始游戏</button>
           <div id="music-control" class="music-control">
             <svg id="music-icon-play" viewBox="0 0 24 24">
@@ -580,10 +783,48 @@
       </div>
     </div>
     <!-- 加载进度界面 -->
+    <div>
+      <img id="leaderboard-button" style="display: none; cursor: pointer"/>
+    </div>
     <div id="loading-line">
       <div id="loading-fill"></div>
     </div>
     <div id="loading-text">Loading... 0%</div>
+
+
+    <!-- 排行榜弹窗 -->
+    <div id="leaderboard" class="modal">
+      <div class="leaderboard-content leaderboard-modal">
+        <span class="close" id="leaderboard-close">&times;</span>
+        <h3 data-text="leaderboard">排行榜</h3>
+
+        <div class="leaderboard-filters">
+          <select id="lb-level">
+            <option value="1" data-text="level1">第1关</option>
+            <option value="2" data-text="level2">第2关</option>
+          </select>
+          <select id="lb-difficulty">
+            <option value="easy" data-text="easy">简单</option>
+            <option value="normal" data-text="normal">普通</option>
+            <option value="hard" data-text="hard">困难</option>
+            <option value="endless" data-text="endless">无尽模式</option>
+          </select>
+          <select id="lb-order">
+            <option value="score" data-text="scoreOrder">积分顺序</option>
+            <option value="rank" data-text="rankOrder">级别顺序</option>
+          </select>
+          <select id="lb-show">
+            <option value="top30" data-text="top30">前30名</option>
+            <option value="myPosition" data-text="myPosition">我的排名</option>
+          </select>
+        </div>
+
+
+        <div id="leaderboard-list" class="leaderboard-list">
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+    </div>
 
     <div class="version-info">
       <div><span data-text="version">版本</span>: 0.5</div>
@@ -642,7 +883,7 @@
         winMessage: '闪闪发光 心动不已！',
         playAgain: '再玩一次',
         backToHome: '回到首页',
-        lives: '生命数',
+        lives: '生命',
         score: '积分',
         version: '版本',
         updateTime: '更新时间',
@@ -654,7 +895,7 @@
         normal: '中等',
         hard: '困难',
         endless: '无尽模式',
-        gameTime: '游戏时间',
+        gameTime: '用时',
         mode: '模式',
         alertEmpty: '请输入内容',
         alertFrequent: '请勿频繁提交',
@@ -664,7 +905,14 @@
         maxCombo: '最大连击',
         totalScore: '总得分',
         level1: '第1关',
-        level2: '第2关'
+        level2: '第2关',
+        scoreOrder: '积分顺序',
+        rankOrder: '级别顺序',
+        leaderboard: '排行榜',
+        noData: '暂无排行数据',
+        loadError: '加载失败，请稍后重试',
+        myPosition: '我的位置',
+        top30: '前30名'
       },
       en: {
         title: 'GANSO! BanG Dream Chan<br>Note Shooter',
@@ -687,7 +935,7 @@
         normal: 'Normal',
         hard: 'Hard',
         endless: 'Endless',
-        gameTime: 'Game Time',
+        gameTime: 'Duration',
         mode: 'Mode',
         alertEmpty: 'Please enter content',
         alertFrequent: 'Please do not submit frequently',
@@ -697,7 +945,14 @@
         maxCombo: 'Max Combo',
         totalScore: 'Total Score',
         level1: 'Level 1',
-        level2: 'Level 2'
+        level2: 'Level 2',
+        scoreOrder: 'By Score',
+        rankOrder: 'By Level',
+        leaderboard: 'Score Ranking',
+        noData: 'No leaderboard data',
+        loadError: 'Failed to load, please try again later',
+        myPosition: 'My Rank',
+        top30: 'Top 30'
       },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
@@ -730,16 +985,24 @@
         maxCombo: '最大コンボ',
         totalScore: '合計スコア',
         level1: 'ステージ 1',
-        level2: 'ステージ 2'
+        level2: 'ステージ 2',
+        scoreOrder: 'スコア順',
+        rankOrder: 'レベル順',
+        leaderboard: 'ランキング',
+        noData: 'ランキングデータがありません',
+        loadError: '読み込みに失敗しました。しばらくしてからもう一度お試しください',
+        myPosition: '自分の順位',
+        top30: 'Top 30'
       }
     };
 
 
-    // 随机选择头图
-    const setRandomHeaderImage = () => {
+    // 设首页图片
+    const setIndexImage = () => {
       const randomIndex = Math.floor(Math.random() * 10) + 1;
       document.getElementById('header-image').src =
       'https://cdn.badmintonranks.com/bangdream/img/head' + randomIndex +'.jpg';
+      document.getElementById('leaderboard-button').src = IMG_PATH + 'score_rank.png';
     };
 
     // 自动检测浏览器语言
@@ -774,6 +1037,17 @@
         levelSelector.options[0].text = texts.level1;
         levelSelector.options[1].text = texts.level2;
       }
+      // 更新排行榜下拉框
+      const leaderboardSelects = ['level-selector', 'lb-level', 'lb-difficulty', 'lb-order', 'lb-show'];
+      leaderboardSelects.forEach(selectId => {
+        const selectEl = document.getElementById(selectId);
+        if (selectEl) {
+          Array.from(selectEl.options).forEach(option => {
+            const key = option.dataset.text;
+            if (key && texts[key]) option.text = texts[key];
+          });
+        }
+      });
     };
     // 音乐控制相关变量
     let menuMusic, battleMusic, endMusic;
@@ -971,21 +1245,38 @@
       let from = document.referrer;
       let width = window.outerWidth;
       let height = window.window.outerHeight;
+      let playerId = getPlayerId();
       const res = await fetch(API_PATH + 'openStat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({from, width, height})
+        body: JSON.stringify({from, width, height, playerId})
       });
       const data = await res.json();
       if (data.online !== undefined) {
         document.getElementById('online-count').textContent = `Online: ${data.online}`;
       }
+      if (data.playerId) {
+        localStorage.setItem("playerId", data.playerId);
+        playerId = data.playerId;
+      }
+    }
+
+    // 玩家ID管理
+    let playerId = null;
+    // 获取或生成玩家ID
+    function getPlayerId() {
+      if (playerId) return playerId;
+      playerId = localStorage.getItem('playerId');
+      if (!playerId || playerId.length < 1) {
+        return "";
+      }
+      return playerId;
     }
 
     // 发送游戏结果统计
-    function gameStat(levels, difficulty, fps, win, ranks, duration, kumaKill, kumaLive,
+    async function gameStat(playerId, levels, difficulty, fps, win, ranks, duration, kumaKill, kumaLive,
                       maxCombo, life, lifeLost, bossRatio, bulletRatio, itemRatio, finalScore) {
       fetch(API_PATH + 'gameStat', {
         method: 'POST',
@@ -993,10 +1284,145 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          levels, difficulty, fps, win, ranks, duration, kumaKill, kumaLive,
+          playerId, levels, difficulty, fps, win, ranks, duration, kumaKill, kumaLive,
           maxCombo, life, lifeLost, bossRatio, bulletRatio, itemRatio, finalScore
         })
       });
+    }
+    // 排行榜数据缓存
+    let leaderboardData = null;
+    // 排行榜功能
+    async function loadLeaderboard(level, difficulty, playerId) {
+      const listEl = document.getElementById('leaderboard-list');
+      listEl.innerHTML = '<div class="loading-spinner"></div>';
+      try {
+        let url = `${API_PATH}getRanking?levels=${level}&difficulty=${difficulty}`;
+        if(playerId) {
+          url = `${API_PATH}getMyRanking?levels=${level}&difficulty=${difficulty}&playerId=${playerId}`;
+        }
+        const response = await fetch(url);
+        const data = await response.json();
+        leaderboardData = data.data;
+        renderLeaderboard();
+      } catch (e) {
+        const texts = languages[currentLang];
+        listEl.innerHTML = `<div class="empty-leaderboard">${texts.loadError}</div>`;
+      }
+    }
+
+    // 渲染排行榜
+    function renderLeaderboard() {
+      const listEl = document.getElementById('leaderboard-list');
+      const orderSelect = document.getElementById('lb-order');
+      const orderType = orderSelect ? orderSelect.value : 'score';
+      const currentPlayerId = getPlayerId();
+
+      if (!leaderboardData || leaderboardData.length === 0) {
+        const texts = languages[currentLang];
+        listEl.innerHTML = `<div class="empty-leaderboard">${texts.noData}</div>`;
+        return;
+      }
+
+      const texts = languages[currentLang];
+
+      // 根据选择的排序方式对数据进行排序
+      let sortedData = [...leaderboardData];
+      if (orderType === 'rank') {
+        // 按级别排序：SSS、SSP、SS、SP、S、AP、A、BP、B、CP、C、D
+        const rankOrder = ['sss', 'ssp', 'ss', 'sp', 's', 'ap', 'a', 'bp', 'b', 'cp', 'c', 'd'];
+        sortedData.sort((a, b) => {
+          const rankA = a.ranks ? a.ranks.toLowerCase() : 'z';
+          const rankB = b.ranks ? b.ranks.toLowerCase() : 'z';
+          const indexA = rankOrder.indexOf(rankA);
+          const indexB = rankOrder.indexOf(rankB);
+
+          // 如果等级相同，按积分从高到低排序
+          if (indexA === indexB) {
+            return (b.final_score || 0) - (a.final_score || 0);
+          }
+
+          // 等级不同，按等级顺序排序（未找到的等级排在最后）
+          if (indexA === -1) return 1;
+          if (indexB === -1) return -1;
+          return indexA - indexB;
+        });
+      }
+      // 如果是积分排序，保持原有顺序（服务器已按积分排序）
+
+      listEl.innerHTML = sortedData.map((item, index) => {
+        const rank = item.user_rank;
+        const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+        const displayName = `${item.player_id || 'Unknown'}`;
+        const timeStr = Math.floor(item.duration / 60) + ':' + (item.duration % 60).toString().padStart(2, '0');
+        const rankIcon = item.ranks ? `<img src="${IMG_PATH}rank_${item.ranks.toLowerCase()}.png" style="height: 40px; margin-right: 8px;">` : '';
+        const fullComboIcon = (item.full_combo === 1) ? `<img src="${IMG_PATH}full_combo.png" style="height: 15px;">` : '';
+
+        // 高亮当前用户
+        const isCurrentUser = currentPlayerId && item.player_id === currentPlayerId;
+        const highlightClass = isCurrentUser ? ' highlight' : '';
+
+        return `
+          <div class="leaderboard-item${highlightClass}"">
+            <div class="leaderboard-rank ${rankClass}">${rank}</div>
+            <div class="leaderboard-info">
+              <div class="leaderboard-name">${displayName}</div>
+              <div class="leaderboard-details">
+                <span>${texts.maxCombo}: ${item.max_combo}</span>
+                <span>${texts.gameTime}: ${timeStr}</span>
+                <span>${fullComboIcon}</span>
+              </div>
+            </div>
+            <div class="leaderboard-score">
+              ${rankIcon}${item.final_score}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 初始化排行榜
+    function initLeaderboard() {
+      const leaderboard = document.getElementById('leaderboard');
+      const btn = document.getElementById('leaderboard-button');
+      const closeBtn = document.getElementById('leaderboard-close');
+      const levelSelect = document.getElementById('lb-level');
+      const difficultySelect = document.getElementById('lb-difficulty');
+      const orderSelect = document.getElementById('lb-order');
+      const showSelect = document.getElementById('lb-show');
+
+      // 打开排行榜
+      btn.onclick = async () => {
+        await getPlayerId();
+        // 设置下拉框默认值为当前选择的等级和难度
+        levelSelect.value = document.getElementById('level-selector').value;
+        difficultySelect.value = currentDifficulty;
+        showSelect.value = 'top30';
+        leaderboard.style.display = 'flex';
+        loadLeaderboard(levelSelect.value, difficultySelect.value, null);
+      };
+
+      // 关闭排行榜
+      closeBtn.onclick = () => {
+        leaderboard.style.display = 'none';
+      };
+
+      // 筛选变化时重新加载
+      levelSelect.onchange = difficultySelect.onchange = showSelect.onchange = () => {
+        loadLeaderboard(levelSelect.value, difficultySelect.value,
+          showSelect.value === 'myPosition' ? getPlayerId() : null);
+      };
+
+      // 排序方式变化时只重新渲染
+      orderSelect.onchange = () => {
+        renderLeaderboard(levelSelect.value, difficultySelect.value, null);
+      };
+
+      // 点击模态框外部关闭
+      leaderboard.onclick = (e) => {
+        if (e.target === leaderboard) {
+          leaderboard.style.display = 'none';
+        }
+      };
     }
 
     //游戏难度和模式选择
@@ -1007,7 +1433,7 @@
     // 更新难度按钮被选中的状态
     function updateDifficultyButtons() {
       document.querySelectorAll('.difficulty-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-difficulty') === currentDifficulty);
+        btn.classList.toggle('active', btn.getAttribute('data-text') === currentDifficulty);
       });
     }
 
@@ -1016,7 +1442,7 @@
     // 难度按钮点击事件
     document.querySelectorAll('.difficulty-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        currentDifficulty = btn.getAttribute('data-difficulty');
+        currentDifficulty = btn.getAttribute('data-text');
         updateDifficultyButtons();
       });
     });
@@ -1178,6 +1604,7 @@
       const loadingText = document.getElementById('loading-text');
       const progressBarFill = document.getElementById('loading-fill');
       const loadingLine = document.getElementById('loading-line');
+      const scoreRank = document.getElementById('leaderboard-button');
       let hasError = false;
       loadAssets(
         () => {
@@ -1187,9 +1614,10 @@
               loadingLine.style.opacity = '0';
               loadingText.style.opacity = '0';
               setTimeout(() => {
-                loadingLine.style.visibility = 'hidden';
-                loadingText.style.visibility = 'hidden';
-              }, 400);
+                loadingLine.style.display = 'none';
+                loadingText.style.display = 'none';
+                scoreRank.style.display = 'block';
+              }, 0);
             }, 400);
           }
         },
@@ -2711,7 +3139,7 @@
         + playerRatioScore + bulletRatioScore + itemRatioScore + timeScore));
       //发送游戏统计
       try {
-        gameStat(currentLevel, currentDifficulty, fps, isWin ? 1 : 0, resultRank, gameSeconds, bearKillCount, escapedBearCount, maxComboCount, (currentLevel === 2 ? playerHealth : player.characterCount),
+        gameStat(getPlayerId(), currentLevel, currentDifficulty, fps, isWin ? 1 : 0, resultRank, gameSeconds, bearKillCount, escapedBearCount, maxComboCount, (currentLevel === 2 ? playerHealth : player.characterCount),
           deathCount, roundTo2(bossRatio), roundTo2(bulletRatio), roundTo2(itemRatio), finalScore);
       } catch (e) {
         //忽略报错
@@ -3022,18 +3450,21 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // 设置随机头图
-      setRandomHeaderImage();
+      //发送请求
+      sendStat();
+      // 设置首页图片
+      setIndexImage();
       // 创建音乐
       createMusic();
       // 初始化语言
       setLanguage();
       initFPS();
+      // 初始化排行榜
+      initLeaderboard();
       // 图片资源
       loadData();
       // 画布尺寸
       resizeCanvas();
-      sendStat();
     });
   })();
 </script>
