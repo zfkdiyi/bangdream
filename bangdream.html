@@ -839,6 +839,7 @@
         </a>
       </div>
       <div id="online-count"></div>
+      <div id="my-id"></div>
     </div>
   </div>
 
@@ -1261,6 +1262,7 @@
         localStorage.setItem("playerId", data.playerId);
         playerId = data.playerId;
       }
+      document.getElementById('my-id').textContent = `ID: ${playerId}`;
     }
 
     // 玩家ID管理
