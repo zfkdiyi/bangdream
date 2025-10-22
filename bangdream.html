@@ -806,7 +806,7 @@
       <div class="leaderboard-content leaderboard-modal">
         <span class="close" id="leaderboard-close">&times;</span>
         <span style="font-size: 20px; font-weight: bold" data-text="leaderboard">排行榜</span>
-        <span class="leaderboard-desc" data-text="leaderboard-desc">3分钟更新一次，时间15秒以下不收录</span>
+        <span class="leaderboard-desc" data-text="leaderboard-desc">2分钟更新一次，时间15秒以下不收录</span>
         <div class="leaderboard-filters">
           <select id="lb-level">
             <option value="1" data-text="level1">第1关</option>
@@ -823,8 +823,12 @@
             <option value="rank" data-text="rankOrder">级别顺序</option>
           </select>
           <select id="lb-show">
-            <option value="top30" data-text="top30">前30名</option>
-            <option value="myPosition" data-text="myPosition">我的排名</option>
+            <option value="top" data-text="show_top">前30名</option>
+            <option value="best" data-text="show_best">最好30次</option>
+            <option value="recent" data-text="show_recent">最近30次</option>
+            <option value="myRank" data-text="show_myRank">我的排名</option>
+            <option value="myBest" data-text="show_myBest">我的最好30次</option>
+            <option value="myRecent" data-text="show_myRecent">我的最近30次</option>
           </select>
         </div>
 
@@ -836,8 +840,8 @@
     </div>
 
     <div class="version-info">
-      <div><span data-text="version">版本</span>: 0.5</div>
-      <div><span data-text="updateTime">更新时间</span>: 2025-10-17</div>
+      <div><span data-text="version">版本</span>: 0.6</div>
+      <div><span data-text="updateTime">更新时间</span>: 2025-10-19</div>
       <div>
         <a href="https://github.com/zfkdiyi/bangdream" target="_blank" id="github-button" class="github-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -919,11 +923,15 @@
         scoreOrder: '积分顺序',
         rankOrder: '级别顺序',
         leaderboard: '排行榜',
-        'leaderboard-desc': '3分钟更新一次，游戏时长15秒以下不收录',
+        'leaderboard-desc': '2分钟更新一次，游戏时长15秒以下不收录',
         noData: '暂无排行数据',
         loadError: '加载失败，请稍后重试',
-        myPosition: '我的位置',
-        top30: '前30名'
+        show_top: '前30名',
+        show_best: '最好30次',
+        show_recent: '最近30次',
+        show_myRank: '我的排名',
+        show_myBest: '我的最好30次',
+        show_myRecent: '我的最近30次',
       },
       en: {
         title: 'GANSO! BanG Dream Chan<br>Note Shooter',
@@ -960,11 +968,15 @@
         scoreOrder: 'By Score',
         rankOrder: 'By Level',
         leaderboard: 'Score Ranking',
-        'leaderboard-desc': 'Updated every 3 minutes, games under 15 seconds not recorded',
+        'leaderboard-desc': 'Updated every 2 minutes, games under 15 seconds not recorded',
         noData: 'No leaderboard data',
         loadError: 'Failed to load, please try again later',
-        myPosition: 'My Rank',
-        top30: 'Top 30'
+        show_top: 'Top 30',
+        show_best: 'Best 30',
+        show_recent: 'Recent 30',
+        show_myRank: 'My Rank',
+        show_myBest: 'My Best 30',
+        show_myRecent: 'My Recent 30',
       },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
@@ -1001,11 +1013,15 @@
         scoreOrder: 'スコア順',
         rankOrder: 'レベル順',
         leaderboard: 'ランキング',
-        'leaderboard-desc': '3分毎に更新 (15秒未満の記録は除外)',
+        'leaderboard-desc': '2分毎に更新 (15秒未満の記録は除外)',
         noData: 'ランキングデータがありません',
         loadError: '読み込みに失敗しました。しばらくしてからもう一度お試しください',
-        myPosition: '自分の順位',
-        top30: 'Top 30'
+        show_top: 'トップ 30',
+        show_best: 'ベスト 30',
+        show_recent: '最近30回',
+        show_myRank: '自分の順位',
+        show_myBest: '自分のベスト30',
+        show_myRecent: '自分の最近30回',
       }
     };
 
@@ -1306,14 +1322,15 @@
     // 排行榜数据缓存
     let leaderboardData = null;
     // 排行榜功能
-    async function loadLeaderboard(level, difficulty, playerId) {
+    async function loadLeaderboard(levels, difficulty, type, playerId) {
       const listEl = document.getElementById('leaderboard-list');
       listEl.innerHTML = '<div class="loading-spinner"></div>';
       try {
-        let url = `${API_PATH}getRanking?levels=${level}&difficulty=${difficulty}`;
-        if(playerId) {
-          url = `${API_PATH}getMyRanking?levels=${level}&difficulty=${difficulty}&playerId=${playerId}`;
+        let prefix = API_PATH + 'getRanking';
+        if(type === 'myRank') {
+          prefix = API_PATH + 'getMyRanking';
         }
+        let url = `${prefix}?levels=${levels}&difficulty=${difficulty}&type=${type}&playerId=${playerId}`;
         const response = await fetch(url);
         const data = await response.json();
         leaderboardData = data.data;
@@ -1408,13 +1425,13 @@
 
       // 打开排行榜
       btn.onclick = async () => {
-        await getPlayerId();
+        getPlayerId();
         // 设置下拉框默认值为当前选择的等级和难度
         levelSelect.value = document.getElementById('level-selector').value;
         difficultySelect.value = currentDifficulty;
-        showSelect.value = 'top30';
+        showSelect.value = 'top';
         leaderboard.style.display = 'flex';
-        loadLeaderboard(levelSelect.value, difficultySelect.value, null);
+        await loadLeaderboard(levelSelect.value, difficultySelect.value, showSelect.value, getPlayerId());
       };
 
       // 关闭排行榜
@@ -1424,13 +1441,12 @@
 
       // 筛选变化时重新加载
       levelSelect.onchange = difficultySelect.onchange = showSelect.onchange = () => {
-        loadLeaderboard(levelSelect.value, difficultySelect.value,
-          showSelect.value === 'myPosition' ? getPlayerId() : null);
+        loadLeaderboard(levelSelect.value, difficultySelect.value, showSelect.value, getPlayerId());
       };
 
       // 排序方式变化时只重新渲染
       orderSelect.onchange = () => {
-        renderLeaderboard(levelSelect.value, difficultySelect.value, null);
+        renderLeaderboard();
       };
 
       // 点击模态框外部关闭
