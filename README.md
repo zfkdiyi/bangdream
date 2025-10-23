@@ -29,16 +29,18 @@ The game ends in failure when all lives are lost, and in victory when Tsurumaki 
 - Language selector (CHN/ENG/JPN)
 - Multiple player character (Minato Yukina/Maruyama Aya/Kurata Mashiro)
 - Difficulty selector (Easy/Normal/Hard/Endless)
-- Game results stat
-- Scoring system
+- Game results stat (Boss HP, Player HP, Defeated/Missed Michelles etc.)
+- Scoring system (Player's final score calculated by multiple stats from game)
+- Ranking system (You can view the top 30 score rankings for each stage and difficulty, as well as your own best record and ranking)
 - All character movements, defeat poses, note colors, and Makimaki Kokoro’s actions and attack animations are traced from anime screenshots to match the original exactly.
 - 3 game background music (Start menu/In-game/Game-end)
 
 - 语言选择（中/英/日）
 - 三种玩家角色（凑友希那/丸山彩/仓田真白）
 - 难度选择（简单/普通/困难/无尽模式）
-- 游戏数据统计 
-- 积分结算
+- 游戏数据统计 (BOSS血量、玩家血量、击败/幸存的米歇尔数量等等)
+- 积分结算（玩家每局的最终分数根据游戏里多项表现指标计算得出）
+- 玩家排名（可以查看各个关卡各个难度的前30名积分排行，以及自己的最好成绩所在的位次）
 - 不同角色移动、被击败的形态、各自发射音符的颜色、弦卷心的移动、攻击的造型，均来自动画截图的PS抠图，与动画里的造型保持一致
 - 三首游戏背景音乐（开始画面音乐、游戏中音乐、游戏结束音乐）
 
@@ -56,7 +58,7 @@ If anyone skilled in illustration could help create new character images (boss m
 
 -  更多背景音乐
 -  游戏效果音
--  多个关卡
+-  更多关卡
 -  更多BOSS角色（户山香澄、3D麻里奈）
 -  更多小兵角色（哈卡奈机器人、珍妮弗）
 -  更多队友角色（今井莉莎、市谷有咲）
