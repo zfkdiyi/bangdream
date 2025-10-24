@@ -2628,7 +2628,7 @@
         if (bullet.markedForDeletion) return; // 跳过已标记的子弹
         bears.forEach(bear => {
           if (bear.markedForDeletion) return; // 跳过已标记的小熊
-          if (isColliding(bullet, bear)) {
+          if (isColliding(bullet, bear, 0)) {
             flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
             bullet.markedForDeletion = true; // 标记子弹待删除
             bear.health -= (bullet.bearDamage > bear.health ? bear.health : bullet.bearDamage); // 使用子弹的伤害值
@@ -2654,7 +2654,7 @@
       if (boss) {
         bullets.forEach(bullet => {
           if (bullet.markedForDeletion) return; // 跳过已标记的子弹
-          if (isColliding(bullet, boss)) {
+          if (isColliding(bullet, boss, 0)) {
             flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
             bullet.markedForDeletion = true; // 标记子弹待删除
             // player3形态子弹击中敌人时应用减速效果
@@ -2683,7 +2683,7 @@
           if (playerBullet.markedForDeletion || playerBullet.bulletType !== 3) return;
           bossBullets.forEach(bossBullet => {
             if (bossBullet.markedForDeletion) return;
-            if (isColliding(playerBullet, bossBullet)) {
+            if (isColliding(playerBullet, bossBullet, 0)) {
               // 两者一起消失并触发闪光特效
               playerBullet.markedForDeletion = true;
               bossBullet.markedForDeletion = true;
@@ -2801,7 +2801,7 @@
         // 道具碰撞
         powerUps.forEach(powerUp => {
           if (powerUp.markedForDeletion) return;
-          if (isColliding(powerUp, playerHitbox)) {
+          if (isColliding(powerUp, playerHitbox, 2)) {
             powerUp.markedForDeletion = true;
             collectedItemCount++; // 玩家吃掉道具
              if (playerBulletStreams < maxPlayerBulletStreams ) {
@@ -2818,7 +2818,7 @@
         // 血包碰撞
         healthPacks.forEach(healthPack => {
           if (healthPack.markedForDeletion) return;
-          if (isColliding(healthPack, playerHitbox)) {
+          if (isColliding(healthPack, playerHitbox, 2)) {
             healthPack.markedForDeletion = true;
             collectedItemCount++; // 玩家吃掉血包
             playerHealth++;
@@ -2867,12 +2867,13 @@
       }
     }
 
-    // 碰撞检测函数（矩形碰撞）
-    function isColliding(rect1, rect2) {
-      return rect1.x < rect2.x + rect2.width &&
-        rect1.x + rect1.width > rect2.x &&
-        rect1.y < rect2.y + rect2.height &&
-        rect1.y + rect1.height > rect2.y;
+    // 碰撞检测函数（矩形碰撞） margin表示留出的安全空间（单位是像素）
+    // margin 越大 → 判定越“宽松”
+    function isColliding(rect1, rect2, margin = 7) {
+      return rect1.x + margin < rect2.x + rect2.width - margin &&
+        rect1.x + rect1.width - margin > rect2.x + margin &&
+        rect1.y + margin < rect2.y + rect2.height - margin &&
+        rect1.y + rect1.height - margin > rect2.y + margin;
     }
 
     // 绘制道路中间线
