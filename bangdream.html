@@ -4015,11 +4015,12 @@
       const timeScore = ((currentDifficulty === 'endless' && gameSeconds > 60) ? (gameSeconds - 60) * 50 : gameSeconds);
       let level3Score = 0;
       if(currentLevel === 3){
-        level3Score = buffItemCount * 100 + playerHealth * 10
-        - stunCount * 50 - stoneCount * 50
-        + bossScore * 1 + comboScore * 0.8 + fullComboScore * 1.5
+        level3Score = (isWin ? buffItemCount * 150 : buffItemCount * 20) + (isWin ? playerHealth * 20 : playerHealth)
+        - stunCount * 120 - stoneCount * 160 - deathPenalty * 3
+        + bossScore * 0.75 + comboScore * 0.5 + fullComboScore * 1.5
         + shieldBearKillCount * 200 + bearKillCount * 5
-        + (maxPlayerAttack > 6 ? maxPlayerAttack * 25 : 0) + playerAttackPower * 25;
+        + (isWin ? maxPlayerAttack * 20 : (maxPlayerAttack > 6 ? maxPlayerAttack * 2 : 0))
+        + (isWin ? playerAttackPower * 20 : (playerAttackPower > 6 ? playerAttackPower * 2 : 0));
       }
       const resultRank = getResultRank(bearRatio, bossRatio, deathCount, gameSeconds);
       const finalScore = Math.floor(Math.max(0, killScore + bossScore + comboScore - deathPenalty + fullComboScore
