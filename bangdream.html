@@ -263,8 +263,8 @@
 
     #fps-display {
       position: absolute;
-      bottom: 5px;
-      left: 5px;
+      bottom: 10px;
+      left: 45px;
       color: #0f0;
       font-size: 15px;
       font-weight: bold;
@@ -632,10 +632,10 @@
     /* 游戏中的音乐控制按钮 */
     .game-music-control {
       position: absolute;
-      bottom: 15px;
-      right: 15px;
-      width: 32px;
-      height: 32px;
+      bottom: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
       background: rgba(255, 105, 180, 0.8);
       border: 2px solid rgba(255, 255, 255, 0.8);
       border-radius: 50%;
@@ -648,39 +648,43 @@
       z-index: 15;
     }
 
+    .pause-button {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 105, 180, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+      z-index: 15;
+    }
+
+    .pause-button:hover {
+      background: rgba(255, 105, 180, 1);
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
+    }
+
     .game-music-control:hover {
       background: rgba(255, 105, 180, 1);
       box-shadow: 0 6px 20px rgba(255, 105, 180, 0.6);
     }
 
-    .game-music-control svg {
-      width: 16px;
-      height: 16px;
-      fill: white;
-      transition: all 0.2s ease;
-    }
 
     @media (max-width: 400px) {
       .music-control {
         width: 36px;
         height: 36px;
       }
-
       .music-control svg {
         width: 18px;
         height: 18px;
-      }
-
-      .game-music-control {
-        width: 28px;
-        height: 28px;
-        bottom: 10px;
-        right: 10px;
-      }
-
-      .game-music-control svg {
-        width: 14px;
-        height: 14px;
       }
     }
 
@@ -719,20 +723,37 @@
 
 <div id="game-container">
   <canvas id="game-canvas"></canvas>
-  <div id="fps-display">
+  <div id="fps-display" style="display: none;">
     <div>FPS: 0</div>
   </div>
 
   <!-- 游戏中的音乐控制按钮 -->
   <div id="game-music-control" class="game-music-control" style="display: none;">
-    <svg id="game-music-icon-play" viewBox="0 0 24 24">
+    <svg id="game-music-icon-play" viewBox="0 0 24 24" fill="white">
       <path
         d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
     </svg>
-    <svg id="game-music-icon-mute" viewBox="0 0 24 24" style="display: none;">
+    <svg id="game-music-icon-mute" viewBox="0 0 24 24" style="display: none;" fill="white">
       <path
         d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
     </svg>
+  </div>
+
+  <!-- 暂停按钮 -->
+  <div id="pause-button" class="pause-button" style="display: none;">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
+      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+    </svg>
+  </div>
+
+  <!-- 暂停菜单 -->
+  <div id="pause-menu" class="game-overlay hidden">
+    <div style="display: flex; flex-direction: column; align-items: center; transform: translateY(-15%);">
+      <h1 class="overlay-title" data-text="pauseTitle">游戏暂停</h1>
+      <button id="resume-button" class="end-button" data-text="resumeGame">继续游戏</button>
+      <button id="submit-score-button" class="end-button" data-text="submitScore">提交分数</button>
+      <button id="pause-home-button" class="end-button" data-text="backToHome">回到首页</button>
+    </div>
   </div>
 
   <!-- 背景音乐 -->
@@ -935,6 +956,9 @@
         show_myRank: '我的排名',
         show_myBest: '我的最好30次',
         show_myRecent: '我的最近30次',
+        pauseTitle: '游戏暂停',
+        resumeGame: '继续游戏',
+        submitScore: '提交分数',
       },
       en: {
         title: 'GANSO! BanG Dream Chan<br>Note Shooter',
@@ -981,6 +1005,9 @@
         show_myRank: 'My Rank',
         show_myBest: 'My Best 30',
         show_myRecent: 'My Recent 30',
+        pauseTitle: 'Game Paused',
+        resumeGame: 'Game Continue',
+        submitScore: 'Submit Score',
       },
       ja: {
         title: '「元祖！バンドリちゃん」<br>ノートシューター',
@@ -1027,6 +1054,9 @@
         show_myRank: '自分の順位',
         show_myBest: '自分のベスト30',
         show_myRecent: '自分の最近30回',
+        pauseTitle: 'ゲーム一時停止',
+        resumeGame: 'ゲームを再開',
+        submitScore: 'スコアを送信',
       }
     };
 
@@ -1497,9 +1527,19 @@
     const startButton = document.getElementById('start-button');
     const restartButton = document.getElementById('restart-button');
     const homeButton = document.getElementById('home-button');
+    const pauseButton = document.getElementById('pause-button');
+    const pauseMenu = document.getElementById('pause-menu');
+    const resumeButton = document.getElementById('resume-button');
+    const submitScoreButton = document.getElementById('submit-score-button');
+    const pauseHomeButton = document.getElementById('pause-home-button');
+
     startButton.addEventListener('click', startGame);// 开始游戏按钮
     restartButton.addEventListener('click', startGame);// 重试按钮
     homeButton.addEventListener('click', backToHome);// 回到首页按钮
+    pauseButton.addEventListener('click', pauseGame);// 暂停按钮
+    resumeButton.addEventListener('click', resumeGame);// 继续游戏按钮
+    submitScoreButton.addEventListener('click', submitScore);// 提交分数按钮
+    pauseHomeButton.addEventListener('click', backToHome);// 暂停菜单回到首页按钮
 
 
     // 游戏基础变量
@@ -1524,6 +1564,11 @@
     let escapedItemCount = 0;  // 幸存道具血包数
     let destroyedBulletCount = 0;  // 玩家消灭的BOSS子弹数
     let collectedItemCount = 0;  // 玩家吃掉的道具血包数
+    let buffItemCount = 0; //玩家吃掉的增益物品数
+    let stunCount = 0; //玩家眩晕次数
+    let stoneCount = 0; //玩家摔倒次数
+    let shieldBearKillCount = 0; //击杀护盾小熊数
+    let maxPlayerAttack = 0; //玩家达到的最大攻击力
     let deathCount = 0;  // 阵亡次数
     let bossSpawned = false;  // BOSS是否已生成
     let gameLoopId;  // 游戏循环ID
@@ -2067,7 +2112,7 @@
           }else if (currentDifficulty === 'normal') {
             this.health = 160;
             this.defence = 12;
-          }else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
+          }else if (currentDifficulty === 'hard' || currentDifficulty === 'endless') {
             this.health = 200;
             this.defence = 16;
           }
@@ -2408,9 +2453,9 @@
             if(currentDifficulty === 'easy'){
               this.defence = 8;
             }else if (currentDifficulty === 'normal') {
-              this.defence = 16;
-            }else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
-              this.defence = 24;
+              this.defence = 14;
+            }else if (currentDifficulty === 'hard' || currentDifficulty === 'endless') {
+              this.defence = 20;
             }
           }
         }
@@ -2421,9 +2466,9 @@
             this.bulletRows = 2;
           }
         } else if (currentDifficulty === 'hard') {
-          if(this.health <= this.maxHealth * 0.15) {
+          if(this.health <= this.maxHealth * 0.2) {
             this.bulletRows = 3;
-          }else if(this.health <= this.maxHealth * 0.35) {
+          }else if(this.health <= this.maxHealth * 0.4) {
             this.bulletRows = 2;
           }
         }
@@ -2966,6 +3011,11 @@
       escapedItemCount = 0;  // 重置幸存道具血包数
       destroyedBulletCount = 0;  // 重置玩家消灭的BOSS子弹数
       collectedItemCount = 0;  // 重置玩家吃掉的道具血包数
+      buffItemCount = 0; //玩家吃掉的增益物品数
+      stunCount = 0; //玩家眩晕次数
+      stoneCount = 0; //玩家摔倒次数
+      shieldBearKillCount = 0; //击杀护盾小熊数
+      maxPlayerAttack = 5; //玩家达到的最大攻击力
       deathCount = 0;  // 重置阵亡次数
       bearSpawnTimer = 0;  // 重置小熊生成计时器
       bossSpawned = false;  // 重置BOSS生成标志
@@ -3185,6 +3235,9 @@
             if (bear.health <= 0) {
               bear.markedForDeletion = true; // 标记小熊待删除
               bearKillCount++;
+              if(bear.hasShield){
+                shieldBearKillCount++;
+              }
               killsSinceLastLife++;
               comboCount++;
               if (comboCount > maxComboCount) maxComboCount = comboCount;
@@ -3383,12 +3436,14 @@
               if (player.currentCharacterType === powerUp.type) {
                 // 吃到相同头像：攻击力+1
                 playerAttackPower += 1;
+                if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
                 attackPowerFloatTexts.push(new AttackPowerFloatText(1));
                 // 触发同类头像特效
                 sameCharaEffects.push(new SameCharaEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
               } else {
                 // 吃到不同头像：攻击力+0.1
                 playerAttackPower += 0.1;
+                if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
                 attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
                 if (playerBuffed) {
                   playerBuffed = false;
@@ -3444,6 +3499,7 @@
               if (player.currentCharacterType === 6) {
                 // 角色6撞到石头：攻击力+0.1
                 playerAttackPower += 0.1;
+                if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
                 attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
                 // 触发增益特效
                 sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
@@ -3457,6 +3513,7 @@
                   playerStunned = false;
                   stunTimer = 0;
                 }
+                stoneCount++;
                 playerStoned = true;
                 playerBulletStreams = Math.ceil(playerBulletStreams / 2);
                 stoneTimer = 1500;
@@ -3471,6 +3528,7 @@
              if (player.currentCharacterType === 3) {
                 // 角色3（仓田真白）撞到item3：攻击力+0.1
                 playerAttackPower += 0.1;
+               if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
                 attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
                 // 触发增益特效
                 sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
@@ -3480,11 +3538,12 @@
                   playerBuffed = false;
                   playerBuffTimer = 0;
                 }
+                stunCount++;
                 playerStunned = true;
                 stunTimer = 3000;
-                // 角色6（高松灯）撞到石头：额外掉血
+                // 角色6（高松灯）撞到蘑菇：额外掉血
                 if (player.currentCharacterType === 6) {
-                    checkDead(0);
+                  checkDead(0);
                 }else {
                   playerAttackPower = Math.max(1, playerAttackPower - 2);
                   attackPowerFloatTexts.push(new AttackPowerFloatText(-2));
@@ -3495,6 +3554,7 @@
             }
             // 正常增益效果：匹配角色编号 (特例：item9-2对角色9和角色6都有增益效果）
             else if (player.currentCharacterType === charNum || (item.itemNum === 9 && item.variant === 2 && player.currentCharacterType === 6)) {
+              buffItemCount++;
               if (!playerStunned) {
                 playerBuffed = true;
                 playerBuffTimer = 5000;
@@ -3502,13 +3562,16 @@
                 if (playerBulletStreams < maxPlayerBulletStreams) {
                   playerBulletStreams++;
                   playerAttackPower += 2;
+                  if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
                   attackPowerFloatTexts.push(new AttackPowerFloatText(2));
                 }
                 // 触发增益特效
                 sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
               }
             }else{
+              buffItemCount++;
               playerAttackPower += 0.2;
+              if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
               attackPowerFloatTexts.push(new AttackPowerFloatText(0.2));
             }
           }
@@ -3699,12 +3762,14 @@
       }
 
       // 更新并过滤特效 (特效的生命周期独立于游戏状态)
-      flashEffects.forEach(flash => flash.update(deltaTime));
-      explosions.forEach(exp => exp.update(deltaTime));
-      flashEffects = flashEffects.filter(f => !f.isFinished());
-      explosions = explosions.filter(e => !e.isFinished());
-      sameCharaEffects = sameCharaEffects.filter(e => !e.isFinished());
-      attackPowerFloatTexts = attackPowerFloatTexts.filter(t => !t.isFinished());
+      if (gameState !== 'paused') {
+        flashEffects.forEach(flash => flash.update(deltaTime));
+        explosions.forEach(exp => exp.update(deltaTime));
+        flashEffects = flashEffects.filter(f => !f.isFinished());
+        explosions = explosions.filter(e => !e.isFinished());
+        sameCharaEffects = sameCharaEffects.filter(e => !e.isFinished());
+        attackPowerFloatTexts = attackPowerFloatTexts.filter(t => !t.isFinished());
+      }
 
       // 绘制所有游戏对象 (绘制逻辑永远在主干上，确保所有状态都能正确显示)
       bullets.forEach(b => b.draw());
@@ -3726,8 +3791,8 @@
       flashEffects.forEach(f => f.draw());
       // 绘制UI信息
       drawGameUI();
-      // 继续下一帧（如果游戏未结束）
-      if (gameState !== 'over') gameLoopId = requestAnimationFrame(gameLoop);
+      // 继续下一帧（如果游戏未结束且未暂停）
+      if (gameState !== 'over' && gameState !== 'paused') gameLoopId = requestAnimationFrame(gameLoop);
     }
 
     // 开始游戏
@@ -3735,9 +3800,12 @@
       init();  // 初始化游戏
       startScreen.classList.add('hidden');  // 隐藏开始界面
       resultScreen.classList.add('hidden');  // 隐藏结算界面
+      pauseMenu.classList.add('hidden');  // 隐藏暂停菜单
 
-      // 显示游戏中的音乐控制按钮
+      // 显示游戏中的音乐控制按钮、暂停按钮
       document.getElementById('game-music-control').style.display = 'flex';
+      document.getElementById('pause-button').style.display = 'flex';
+
 
       // 切换到战斗音乐（重新开始游戏时重置播放位置）
       if (battleMusic) {
@@ -3750,6 +3818,33 @@
       gameLoop(lastTime);  // 开始游戏循环
     }
 
+    // 暂停游戏
+    function pauseGame() {
+      gameState = 'paused';
+      pauseMenu.classList.remove('hidden');
+      document.getElementById('pause-button').style.display = 'none';
+      // 暂停音乐
+      if (battleMusic) battleMusic.pause();
+    }
+
+    // 继续游戏
+    function resumeGame() {
+      gameState = 'playing';
+      pauseMenu.classList.add('hidden');
+      document.getElementById('pause-button').style.display = 'flex';
+      lastTime = performance.now();
+      // 继续音乐
+      if (battleMusic && isMusicEnabled) battleMusic.play();
+      gameLoopId = requestAnimationFrame(gameLoop);
+    }
+
+    // 提交分数
+    function submitScore() {
+      pauseMenu.classList.add('hidden');
+      // 结束游戏并显示结算界面
+      gameOver(false);
+    }
+
     // 回到首页
     function backToHome() {
       init();
@@ -3758,10 +3853,12 @@
 
       // 隐藏游戏中的音乐控制按钮
       document.getElementById('game-music-control').style.display = 'none';
+      document.getElementById('pause-button').style.display = 'none';
       // 切换到菜单音乐
       playMusic('menu');
       startScreen.classList.remove('hidden');  // 显示开始界面
       resultScreen.classList.add('hidden');  // 隐藏结算界面
+      pauseMenu.classList.add('hidden');
     }
 
     // 绘制游戏UI
@@ -3916,9 +4013,17 @@
       const itemRatioScore = isWin ? itemRatio * 1000 : itemRatio * 5;
       const gameSeconds = Math.floor(gameTime / 1000);
       const timeScore = ((currentDifficulty === 'endless' && gameSeconds > 60) ? (gameSeconds - 60) * 50 : gameSeconds);
+      let level3Score = 0;
+      if(currentLevel === 3){
+        level3Score = buffItemCount * 100 + playerHealth * 10
+        - stunCount * 50 - stoneCount * 50
+        + bossScore * 1 + comboScore * 0.8 + fullComboScore * 1.5
+        + shieldBearKillCount * 200 + bearKillCount * 5
+        + (maxPlayerAttack > 6 ? maxPlayerAttack * 25 : 0) + playerAttackPower * 25;
+      }
       const resultRank = getResultRank(bearRatio, bossRatio, deathCount, gameSeconds);
       const finalScore = Math.floor(Math.max(0, killScore + bossScore + comboScore - deathPenalty + fullComboScore
-        + playerRatioScore + bulletRatioScore + itemRatioScore + timeScore));
+        + playerRatioScore + bulletRatioScore + itemRatioScore + timeScore + level3Score));
       //发送游戏统计
       try {
         gameStat(getPlayerId(), currentLevel, currentDifficulty, fps, isWin ? 1 : 0, resultRank, gameSeconds, bearKillCount, escapedBearCount, maxComboCount, (currentLevel > 1 ? playerHealth : player.characterCount),
@@ -3992,7 +4097,7 @@
         animateLine(killScore, texts.killScore, killEl, () => {
           animateLine(maxComboCount, texts.maxCombo, comboTextEl, () => {
             // maxCombo数值显示完毕后，根据fullComboScore决定是否显示fullcombo图片
-            if (bearRatio === 1) {
+            if (bearRatio === 1 && bearKillCount > 15) {
               document.getElementById('result-fullcombo').style.display = 'block';
             }
             animateLine(finalScore, texts.totalScore, totalEl, () => {
@@ -4120,21 +4225,28 @@
 
     // 鼠标按下或触摸开始 开始射击
     function handleInputStart(x, y) {
-      isShooting = true;
-      shootTimer = shootInterval; // 立即射击第一发
-
+      if (gameState === 'playing') {
+        isShooting = true;
+        shootTimer = shootInterval; // 立即射击第一发
+        targetPos.x = x;
+        targetPos.y = y;
+      }
     }
 
     // 鼠标移动或触摸滑动 角色目标位置更新
     function handleInputMove(x, y) {
-      targetPos.x = x;
-      targetPos.y = y;
+      if (gameState === 'playing') {
+        targetPos.x = x;
+        targetPos.y = y;
+      }
     }
 
     // 鼠标松开/离开或触摸结束 停止射击
     function handleInputEnd() {
-      isShooting = false;
-      shootTimer = 0;
+      if (gameState === 'playing') {
+        isShooting = false;
+        shootTimer = 0;
+      }
     }
 
     // 玩家位置更新函数
