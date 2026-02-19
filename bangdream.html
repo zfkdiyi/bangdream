@@ -4016,7 +4016,7 @@
       let level3Score = 0;
       if(currentLevel === 3){
         level3Score = (isWin ? buffItemCount * 150 : buffItemCount * 20) + (isWin ? playerHealth * 20 : playerHealth)
-        - stunCount * 120 - stoneCount * 160 - deathPenalty * 3
+        - stunCount * 200 - stoneCount * 250 - deathPenalty * 7 - timeScore
         + bossScore * 0.75 + comboScore * 0.5 + fullComboScore * 1.5
         + shieldBearKillCount * 200 + bearKillCount * 5
         + (isWin ? maxPlayerAttack * 20 : (maxPlayerAttack > 6 ? maxPlayerAttack * 2 : 0))
