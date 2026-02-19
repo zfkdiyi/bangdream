@@ -26,7 +26,7 @@ The game ends in failure when all lives are lost, and in victory when Tsurumaki 
 
 ## Features 功能
 
-- Langeuage selector (CHN/ENG/JPN)
+- Language selector (CHN/ENG/JPN)
 - Multiple player character (Minato Yukina/Maruyama Aya/Kurata Mashiro)
 - Difficulty selector (Easy/Normal/Hard/Endless)
 - Game results stat (Boss HP, Player HP, Defeated/Missed Michelles etc.)
