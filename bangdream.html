@@ -754,6 +754,7 @@
           <select id="level-selector" class="level-selector">
             <option value="1" data-text="level1">第1关</option>
             <option value="2" data-text="level2">第2关</option>
+            <option value="3" data-text="level3">第3关</option>
           </select>
         </div>
         <div class="button-row">
@@ -811,6 +812,7 @@
           <select id="lb-level">
             <option value="1" data-text="level1">第1关</option>
             <option value="2" data-text="level2">第2关</option>
+            <option value="3" data-text="level2">第3关</option>
           </select>
           <select id="lb-difficulty">
             <option value="easy" data-text="easy">简单</option>
@@ -840,8 +842,8 @@
     </div>
 
     <div class="version-info">
-      <div><span data-text="version">版本</span>: 0.6</div>
-      <div><span data-text="updateTime">更新时间</span>: 2025-10-19</div>
+      <div><span data-text="version">版本</span>: 0.7</div>
+      <div><span data-text="updateTime">更新时间</span>: 2026-02-18</div>
       <div>
         <a href="https://github.com/zfkdiyi/bangdream" target="_blank" id="github-button" class="github-btn">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -920,6 +922,7 @@
         totalScore: '总得分',
         level1: '第1关',
         level2: '第2关',
+        level3: '第3关',
         scoreOrder: '积分顺序',
         rankOrder: '级别顺序',
         leaderboard: '排行榜',
@@ -965,6 +968,7 @@
         totalScore: 'Total Score',
         level1: 'Level 1',
         level2: 'Level 2',
+        level3: 'Level 3',
         scoreOrder: 'By Score',
         rankOrder: 'By Level',
         leaderboard: 'Score Ranking',
@@ -1010,6 +1014,7 @@
         totalScore: '合計スコア',
         level1: 'ステージ 1',
         level2: 'ステージ 2',
+        level3: 'ステージ 3',
         scoreOrder: 'スコア順',
         rankOrder: 'レベル順',
         leaderboard: 'ランキング',
@@ -1065,6 +1070,7 @@
       if (levelSelector) {
         levelSelector.options[0].text = texts.level1;
         levelSelector.options[1].text = texts.level2;
+        levelSelector.options[2].text = texts.level3;
       }
       // 更新排行榜下拉框
       const leaderboardSelects = ['level-selector', 'lb-level', 'lb-difficulty', 'lb-order', 'lb-show'];
@@ -1524,7 +1530,6 @@
     let roadLineY = -100;  // 道路线条Y坐标
     let gameState;  // 游戏状态
     let bossDeathPosition;  // BOSS死亡位置
-    let screenFlashAlpha = 0;  // 屏幕闪光透明度
     let playerInvulnerable = false;  // 玩家无敌状态
     let invulnerabilityTimer = 0;  // 无敌时间计时器
     let flashEffects = [];  // 闪光效果数组
@@ -1537,6 +1542,21 @@
     let maxPlayerBulletStreams = 10; // 玩家子弹束最大数量
     let itemProbability = 1; //道具出现概率
     let healthProbability = 1; //血包出现概率
+    let charaItems = []; // 第三关特殊道具
+    let playerBuffed = false; // 玩家是否有增益
+    let playerBuffTimer = 0; // 增益计时器
+    let playerStunned = false; // 玩家是否眩晕
+    let playerStoned = false; // 玩家是否被石头摔倒
+    let stunTimer = 0; // 眩晕计时器
+    let stoneTimer = 0; // 眩晕计时器
+    let playerAttackPower = 5; // 玩家攻击力（第三关）
+    let sameCharaEffects = []; // 同类头像碰撞特效数组
+    let attackPowerFloatTexts = []; // 攻击力增量浮动文字数组
+    let playerShield = false; // 玩家是否有保护罩
+    let shieldTimer = 0; // 保护罩计时器
+    let damageProbability = 0; //item3（蘑菇）、item6-3（石头）的出现概率
+    let protectProbability = 0; //item6-2（创可贴）的出现概率
+
 
     // 游戏资源定义
     const assets = {
@@ -1546,6 +1566,16 @@
       player4: 'player4.png',
       player5: 'player5.png',
       player6: 'player6.png',
+      player7: 'player7.png',
+      player8: 'player8.png',
+      player9: 'player9.png',
+      player10: 'player10.png',
+      player11: 'player11.png',
+      player12: 'player12.png',
+      player13: 'player13.png',
+      player14: 'player14.png',
+      player15: 'player15.png',
+      player16: 'player16.png',
       bear1: 'kuma1.png',
       bear2: 'kuma2.png',
       boss1: 'kkr1.png',
@@ -1563,6 +1593,16 @@
       defeat1: 'defeat1.png',
       defeat2: 'defeat2.png',
       defeat3: 'defeat3.png',
+      defeat4: 'defeat4.png',
+      defeat5: 'defeat5.png',
+      defeat6: 'defeat6.png',
+      defeat7: 'defeat7.png',
+      defeat8: 'defeat8.png',
+      defeat9: 'defeat9.png',
+      defeat10: 'defeat10.png',
+      defeat11: 'defeat11.png',
+      defeat12: 'defeat12.png',
+      defeat13: 'defeat13.png',
       scoreIcon: 'kuma_icon.png',
       comboIcon: 'combo.png',
       win: 'win.png',
@@ -1570,7 +1610,43 @@
       chara1: 'chara1.png',
       chara2: 'chara2.png',
       chara3: 'chara3.png',
+      chara4: 'chara4.png',
+      chara5: 'chara5.png',
+      chara6: 'chara6.png',
+      chara7: 'chara7.png',
+      chara8: 'chara8.png',
+      chara9: 'chara9.png',
+      chara10: 'chara10.png',
+      chara11: 'chara11.png',
+      chara12: 'chara12.png',
+      chara13: 'chara13.png',
+      item1: 'item1.png',
+      item2: 'item2.png',
+      item3: 'item3.png',
+      item4: 'item4.png',
+      item5_1: 'item5-1.png',
+      item5_2: 'item5-2.png',
+      item5_3: 'item5-3.png',
+      item6_1: 'item6-1.png',
+      item6_2: 'item6-2.png',
+      item6_3: 'item6-3.png',
+      item7: 'item7.png',
+      item8: 'item8.png',
+      item9_1: 'item9-1.png',
+      item9_2: 'item9-2.png',
+      item10: 'item10.png',
+      item11_1: 'item11-1.png',
+      item11_2: 'item11-2.png',
+      item12: 'item12.png',
+      item13: 'item13.png',
+      star1: 'star1.png',
+      star2: 'star2.png',
+      star3: 'star3.png',
+      star4: 'star4.png',
+      star5: 'star5.png',
+      star6: 'star6.png',
       blood: 'blood.png',
+      dizzy: 'dizzy.png',
       fullcombo: 'full_combo.png',
       rank_sss: 'rank_sss.png',
       rank_ssp: 'rank_ssp.png',
@@ -1681,14 +1757,17 @@
         this.characters = [1];  // 存储每个角色的类型编号
         this.deadCharacterType = 1;  // 最后一个死亡角色的类型
         this.currentCharacterType = 1;  // 第2关当前角色类型
+        this.bulletType = 1;  // 子弹类型
         this.flashTimer = 0; // 受击闪光计时器（毫秒）
       }
       // 绘制玩家角色
       draw(deltaTime) {
         this.animTimer += deltaTime;
         if (this.flashTimer > 0) this.flashTimer -= deltaTime;
-        if (this.isDead) {
-          // 如果是死亡状态，按defeat图片的真实宽高比进行绘制
+        if (this.isDead || playerStoned) {
+          if(playerStoned){
+            this.deadCharacterType = this.currentCharacterType;
+          }
           const currentImage = assetImages[`defeat${this.deadCharacterType}`];
           const aspectRatio = currentImage.naturalWidth / currentImage.naturalHeight;
           const defeatWidth = this.height * 1.2;
@@ -1696,26 +1775,100 @@
           const drawX = this.x - defeatWidth / 2;
           const drawY = this.y + this.height - defeatHeight;
           ctx.drawImage(currentImage, drawX, drawY, defeatWidth, defeatHeight);
-        } else if (currentLevel === 2) {
+        } else if (currentLevel > 1) {
           // 第2关：绘制单个角色
           ctx.fillStyle = 'rgba(0,0,0,0.3)';
           ctx.beginPath();
           ctx.ellipse(this.x, this.y + this.height, this.width * 0.3, this.width * 0.15, 0, 0, Math.PI * 2);
           ctx.fill();
           let characterImage;
-          const isFrame2 = Math.floor(this.animTimer / 400) % 2 === 1;
-          if (this.currentCharacterType === 2) {
-            characterImage = isFrame2 ? assetImages.player4 : assetImages.player3;
-          } else if (this.currentCharacterType === 3) {
-            characterImage = isFrame2 ? assetImages.player6 : assetImages.player5;
-          } else {
-            characterImage = isFrame2 ? assetImages.player2 : assetImages.player1;
+          // 第3关每个角色只用一个图片
+          if(currentLevel === 3) {
+            if (this.currentCharacterType === 1) {
+              characterImage = assetImages.player2;
+            } else if (this.currentCharacterType === 2) {
+              characterImage = assetImages.player4;
+            } else if (this.currentCharacterType === 3) {
+              characterImage = assetImages.player6;
+            } else if (this.currentCharacterType >= 4 && this.currentCharacterType <= 13) {
+              // 第4-13个角色对应player7-player16
+              characterImage = assetImages['player' + (this.currentCharacterType + 3)];
+            }
+          } else if(currentLevel === 2) {
+            // 第2关每个角色有两个跑动形态图片来回切换
+            const isFrame2 = Math.floor(this.animTimer / 400) % 2 === 1;
+            if (this.currentCharacterType === 2) {
+              characterImage = isFrame2 ? assetImages.player4 : assetImages.player3;
+            } else if (this.currentCharacterType === 3) {
+              characterImage = isFrame2 ? assetImages.player6 : assetImages.player5;
+            } else {
+              characterImage = isFrame2 ? assetImages.player2 : assetImages.player1;
+            }
           }
           if (this.flashTimer > 0) {
             ctx.filter = 'brightness(200%) saturate(0%)';
           }
           ctx.drawImage(characterImage, this.x - this.width / 2, this.y, this.width, this.height);
           ctx.filter = 'none';
+          // 第3关有增益时绘制闪烁星星
+          if (currentLevel === 3 && playerBuffed) {
+            // const time = performance.now();
+            // const alpha = (Math.sin(time / 300) + 1) / 2 * 0.5 + 0.5;
+            // ctx.globalAlpha = alpha;
+            // const starSize = this.width * 0.4;
+            // // 只保留左上位置的星星
+            // ctx.drawImage(assetImages.star1, this.x - this.width * 0.5, this.y + this.height * 0.1, starSize, starSize);
+            // ctx.globalAlpha = 1;
+            // 绘制增益倒计时
+            // const seconds = Math.ceil(playerBuffTimer / 1000);
+            // ctx.font = 'bold 20px Arial';
+            // ctx.fillStyle = '#FFD700';
+            // ctx.strokeStyle = '#000';
+            // ctx.lineWidth = 3;
+            // ctx.textAlign = 'center';
+            // ctx.strokeText(seconds, this.x, this.y - 15);
+            // ctx.fillText(seconds, this.x, this.y - 15);
+          }
+          // 保护罩效果
+          if (playerShield) {
+            const time = performance.now();
+            const radius = this.width * 0.7;
+            const alpha = (Math.sin(time / 200) + 1) / 2 * 0.3 + 0.5;
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            const gradient = ctx.createRadialGradient(this.x, this.y + this.height / 2, radius * 0.5, this.x, this.y + this.height / 2, radius);
+            gradient.addColorStop(0, 'rgba(150, 220, 255, 0.3)');
+            gradient.addColorStop(0.7, 'rgba(180, 230, 255, 0.2)');
+            gradient.addColorStop(1, 'rgba(200, 240, 255, 0)');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y + this.height / 2, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(200, 240, 255, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y + this.height / 2, radius * 0.85, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+          // 眩晕时效果
+          if (playerStunned) {
+            const time = performance.now();
+            const alpha = (Math.sin(time / 300) + 1) / 2 * 0.3 + 0.7;
+            ctx.globalAlpha = alpha;
+            const starSize = this.width * 0.4;
+            // 只保留左上位置的星星
+            ctx.drawImage(assetImages.dizzy, this.x - this.width * 0.55, this.y + this.height * 0.1, starSize, starSize);
+            ctx.globalAlpha = 1;
+            // const seconds = Math.ceil(stunTimer / 1000);
+            // ctx.font = 'bold 20px Arial';
+            // ctx.fillStyle = '#FF4444';
+            // ctx.strokeStyle = '#000';
+            // ctx.lineWidth = 3;
+            // ctx.textAlign = 'center';
+            // ctx.strokeText(seconds, this.x, this.y - 15);
+            // ctx.fillText(seconds, this.x, this.y - 15);
+          }
         } else {
           // 第1关：绘制多个角色
           const totalWidth = this.width * this.characterCount;
@@ -1767,33 +1920,42 @@
           const startX = this.x - totalWidth / 2;
           for (let i = 0; i < this.characterCount; i++) {
             const bulletX = startX + i * this.width + this.width / 2;
-            const bulletType = this.characters[i]; // 根据角色类型选择子弹
-            bullets.push(new Bullet(bulletX, this.y, bulletType));
+            this.bulletType = this.characters[i]; // 根据角色类型选择子弹
+            bullets.push(new Bullet(bulletX, this.y, this.bulletType));
           }
         } else {
+          // 第三关：根据攻击力调整子弹伤害
+          if (currentLevel === 3) {
+            this.damage = playerAttackPower;
+            this.bearDamage = playerAttackPower;
+          }
           // 第2关：根据子弹束数量发射多束子弹
           const spacing = this.width / (playerBulletStreams + 1) * 1.5; // 调大子弹束间距
-
+          var types = this.currentCharacterType;
+          if(types > 3){
+            types = (types - 4) % 3 + 1;
+          }
+          this.bulletType = types;
           // player2形态且子弹束达到4时产生溅射效果
-          if (this.currentCharacterType === 2 && playerBulletStreams >= 4) {
+          if (this.bulletType === 2 && playerBulletStreams >= 4) {
             const halfStreams = Math.floor(playerBulletStreams / 2);
             // 一半直射
             for (let i = 0; i < halfStreams; i++) {
               const bulletX = this.x - this.width / 2 + spacing * (i + 1);
-              bullets.push(new Bullet(bulletX, this.y, this.currentCharacterType));
+              bullets.push(new Bullet(bulletX, this.y, this.bulletType));
             }
             // 一半左右对称斜射（以直射为对称轴）
             const remainingStreams = playerBulletStreams - halfStreams;
             for (let i = 0; i < remainingStreams; i++) {
               const angle = (i+1) * (Math.PI / 2) / (remainingStreams + 1); // 最大90度斜射
               // - angle代表左斜， + angle 代表右斜
-              bullets.push(new Bullet(this.x, this.y, this.currentCharacterType, true,  i % 2 == 0 ? (-Math.PI / 2 - angle) : (-Math.PI / 2 + angle) )); // 左斜
+              bullets.push(new Bullet(this.x, this.y, this.bulletType, true,  i % 2 == 0 ? (-Math.PI / 2 - angle) : (-Math.PI / 2 + angle) )); // 左斜
             }
           } else {
             // 普通直射子弹
             for (let i = 0; i < playerBulletStreams; i++) {
               const bulletX = this.x - this.width / 2 + spacing * (i + 1);
-              bullets.push(new Bullet(bulletX, this.y, this.currentCharacterType));
+              bullets.push(new Bullet(bulletX, this.y, this.bulletType));
             }
           }
         }
@@ -1830,13 +1992,20 @@
         this.x = x - this.width / 2; // X坐标（中心对齐）
         this.y = y; // Y坐标
         this.speed = canvasHeight * 1.5; // 每秒移动1.5倍画布高度
+        if(bulletType > 3){
+          bulletType = (bulletType - 4) % 3 + 1;
+        }
         this.image = assetImages[`bullet${bulletType}`]; // 根据类型选择子弹图像
         this.markedForDeletion = false; // 【新增】用于标记待删除的对象，替代splice
         this.bulletType = bulletType; // 子弹类型
         this.isSplash = isSplash; // 是否为溅射子弹
         this.angle = angle; // 溅射子弹的角度
-        // 根据子弹类型设置伤害值（第2关）
-        if (currentLevel === 2) {
+        this.buffed = playerBuffed; // 子弹是否有增益// 第三关：使用玩家攻击力
+        // 根据子弹类型设置伤害值（第3关）
+        if (currentLevel === 3) {
+          this.damage = playerAttackPower;
+          this.bearDamage = playerAttackPower;
+        }else if (currentLevel === 2) {
           if (bulletType === 1) {
             this.damage = 5; // player1形态伤害值为5
             this.bearDamage = 5;
@@ -1875,19 +2044,37 @@
 
     // 粉色小熊类
     class Bear {
-      constructor(x, y) {
+      constructor(x, y, hasShield = false) {
         this.width = canvasWidth / 6; // 小熊宽度
         this.height = this.width; // 小熊高度
         this.x = x; // X坐标
         this.y = y; // Y坐标
         this.baseSpeed = canvasHeight * 0.3; // 基础移动速度
         this.speed = this.baseSpeed; // 当前移动速度
-        this.health = currentLevel === 2 ? 15 : 5; // 第2关小熊血量为15，第1关为5
+        this.health = currentLevel > 1 ? 15 : 5; // 第2关小熊血量为15，第1关为5
         this.animTimer = 0; // 动画计时器（毫秒）
         this.flashTimer = 0; // 受击闪光计时器（毫秒）
         this.markedForDeletion = false; // 用于标记待删除的对象
         this.slowEffect = false; // 是否被减速
         this.slowTimer = 0; // 减速效果计时器
+        this.defence = 0;
+        this.hasShield = hasShield; // 是否有防护罩
+        // 防护罩小熊特殊属性
+        if (hasShield) {
+          if(currentDifficulty === 'easy'){
+            this.health = 120;
+            this.defence = 8;
+          }else if (currentDifficulty === 'normal') {
+            this.health = 160;
+            this.defence = 12;
+          }else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
+            this.health = 200;
+            this.defence = 16;
+          }
+          this.speed = canvasHeight * 0.15; // 游走速度
+          this.directionX = Math.random() < 0.5 ? 1 : -1; // 随机初始横向方向
+          this.directionY = Math.random() < 0.5 ? 1 : -1; // 随机初始纵向方向
+        }
       }
       // 应用减速效果
       applySlow() {
@@ -1907,15 +2094,44 @@
             this.speed = this.baseSpeed; // 恢复原速度
           }
         }
-        // 移动距离 = 速度 * 时间（秒）
-        this.y += this.speed * (deltaTime / 1000);
+
         this.animTimer += deltaTime;
         if (this.flashTimer > 0) this.flashTimer -= deltaTime;
-        // 如果小熊出界，标记它为待删除并重置combo
-        if (this.y > canvasHeight) {
-          this.markedForDeletion = true;
-          comboCount = 0; // 小熊逃走时重置combo
-          escapedBearCount++; // 增加逃走小熊数
+
+        // 防护罩小熊的特殊移动逻辑
+        if (this.hasShield) {
+          const deltaSeconds = deltaTime / 1000;
+
+          // 随机上下左右游走
+          this.x += this.speed * this.directionX * deltaSeconds;
+          this.y += this.speed * this.directionY * deltaSeconds;
+
+          // 碰到边界反向
+          if (this.x <= 0) {
+            this.x = 0;
+            this.directionX = 1;
+          }
+          if (this.x + this.width >= canvasWidth) {
+            this.x = canvasWidth - this.width;
+            this.directionX = -1;
+          }
+          if (this.y <= 0) {
+            this.y = 0;
+            this.directionY = 1;
+          }
+          if (this.y + this.height >= canvasHeight * 0.6) {
+            this.y = canvasHeight * 0.6 - this.height;
+            this.directionY = -1;
+          }
+        } else {
+          // 普通小熊：直接向下移动
+          this.y += this.speed * (deltaTime / 1000);
+          // 如果小熊出界，标记它为待删除并重置combo
+          if (this.y > canvasHeight) {
+            this.markedForDeletion = true;
+            comboCount = 0; // 小熊逃走时重置combo
+            escapedBearCount++; // 增加逃走小熊数
+          }
         }
       }
       // 绘制小熊
@@ -1932,17 +2148,40 @@
         const currentImage = Math.floor(this.animTimer / 400) % 2 === 0 ? assetImages.bear1 : assetImages.bear2;
         ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
         ctx.filter = 'none';
+
+        // 绘制防护罩
+        if (this.hasShield) {
+          const time = performance.now();
+          const radius = this.width * 0.6;
+          const alpha = (Math.sin(time / 200) + 1) / 2 * 0.3 + 0.5;
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          const gradient = ctx.createRadialGradient(this.x + this.width/2, this.y + this.height/2, radius * 0.5, this.x + this.width/2, this.y + this.height/2, radius);
+          gradient.addColorStop(0, 'rgba(255, 182, 193, 0.3)');
+          gradient.addColorStop(0.7, 'rgba(255, 192, 203, 0.2)');
+          gradient.addColorStop(1, 'rgba(255, 200, 210, 0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(this.x + this.width/2, this.y + this.height/2, radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255, 192, 203, 0.5)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(this.x + this.width/2, this.y + this.height/2, radius * 0.85, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
       }
     }
 
-    // 道具类
+    // 头像道具类
     class PowerUp {
       constructor(x, y, type) {
         this.width = canvasWidth / 8;
         this.height = this.width;
         this.x = x;
         this.y = y;
-        this.speed = canvasHeight * 0.2; // 每秒移动0.2倍画布高度
+        this.speed = canvasHeight * 0.17; // 每秒移动0.16倍画布高度
         this.type = type;
         this.markedForDeletion = false;
       }
@@ -1961,6 +2200,47 @@
       }
     }
 
+    // 第三关特殊道具类
+    class CharaItem {
+      constructor(x, y, itemNum, variant = 0) {
+        this.width = canvasWidth / 8;
+        this.height = this.width;
+        this.x = x;
+        this.y = y;
+        this.speed = canvasHeight * 0.17;
+        this.itemNum = itemNum; // 1-13
+        this.variant = variant; // 变体编号
+        this.markedForDeletion = false;
+      }
+
+      update(deltaTime) {
+        this.y += this.speed * (deltaTime / 1000);
+        if (this.y > canvasHeight) {
+          this.markedForDeletion = true;
+          //item6-3和item3属于阻碍物，不计入
+          if(!(this.itemNum === 6 && this.variant === 3) && !(this.itemNum === 3)){
+            escapedItemCount++;
+          }
+        }
+      }
+
+      draw() {
+        let imgKey = `item${this.itemNum}`;
+        if (this.variant > 0) {
+          imgKey = `item${this.itemNum}_${this.variant}`;
+        }
+        const image = assetImages[imgKey];
+        if (image) {
+          ctx.drawImage(image, this.x, this.y, this.width, this.height);
+        }
+      }
+
+      // 获取对应的角色编号
+      getCharacterNum() {
+        return this.itemNum;
+      }
+    }
+
     // 血包类
     class HealthPack {
       constructor(x, y) {
@@ -1968,7 +2248,7 @@
         this.height = canvasWidth / 8;
         this.x = x;
         this.y = y;
-        this.speed = canvasHeight * 0.2;
+        this.speed = canvasHeight * 0.17;
         this.markedForDeletion = false;
       }
 
@@ -2047,10 +2327,14 @@
         this.bounceFactor = 0; // 反弹高度因子（难度越大反弹高度越低）
         this.bulletFactor = 0; // BOSS子弹数因子
         this.bloodFactor = 0; // BOSS血量因子
+        this.hasShield = false; // BOSS是否有防护罩（第三关）
+        this.defence = 0;
         // 根据难度设置参数
         let bossHealth = 0;
         if (currentDifficulty === 'easy') {
-          if (currentLevel === 2) {
+          if (currentLevel === 3) {
+            bossHealth = 6000;
+          }else if (currentLevel === 2) {
             bossHealth = 4500;
           }else{
             bossHealth = 800;
@@ -2061,7 +2345,9 @@
           this.bloodFactor = 0.3;
           this.bulletRows = 1;
         } else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
-          if (currentLevel === 2) {
+          if (currentLevel === 3) {
+            bossHealth = 9500;
+          }else if (currentLevel === 2) {
             bossHealth = 9000;
           }else{
             bossHealth = 1400;
@@ -2072,7 +2358,9 @@
           this.bloodFactor = 0.5;
           this.bulletRows = 1;
         } else if (currentDifficulty === 'hard') {
-          if (currentLevel === 2) {
+          if (currentLevel === 3) {
+            bossHealth = 14000;
+          }else if (currentLevel === 2) {
             bossHealth = 13500;
           }else{
             bossHealth = 2800;
@@ -2109,6 +2397,25 @@
         const deltaSeconds = deltaTime / 1000;
         this.animTimer += deltaTime;
         if (this.flashTimer > 0) this.flashTimer -= deltaTime;
+
+        // 第三关BOSS防护罩逻辑（BOSS血量20%以下时出现）
+        if (currentLevel === 3) {
+          const healthPercent = this.health / this.maxHealth;
+          if (healthPercent <= 0.2 && !this.hasShield) {
+            this.hasShield = true;
+            // 增加创可贴出现概率
+            protectProbability *= 2;
+            if(currentDifficulty === 'easy'){
+              this.defence = 8;
+            }else if (currentDifficulty === 'normal') {
+              this.defence = 16;
+            }else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
+              this.defence = 24;
+            }
+          }
+        }
+
+        // 第2、3关子弹束调整逻辑相同
         if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
           if(this.health <= this.maxHealth * 0.2) {
             this.bulletRows = 2;
@@ -2141,7 +2448,7 @@
             this.attackState = 'normal';
           }
         }
-        if (currentLevel === 2) {
+        if (currentLevel > 1) {
           // 第2关BOSS达到一定血量以下,或无限模式下游戏时间超过15秒  进入阶段2
           if ((this.health <= this.maxHealth * this.bloodFactor || (currentDifficulty === 'endless' && gameTime > 20000))
             && this.phase === 1) {
@@ -2297,7 +2604,7 @@
         ctx.fill();
         // BOSS受击时的闪光效果（暂时去掉）
         if (this.flashTimer > 0 && this.health > 0) {
-          //ctx.filter = 'brightness(200%) saturate(0%)';
+          ctx.filter = 'brightness(200%) saturate(0%)';
         }
         // 根据攻击状态选择图片
         let currentImage;
@@ -2312,6 +2619,29 @@
 
         ctx.drawImage(currentImage, this.x, this.y, this.width, this.height);
         ctx.filter = 'none';
+
+        // 绘制BOSS防护罩（第三关）
+        if (currentLevel === 3 && this.hasShield) {
+          const time = performance.now();
+          const radius = this.width * 0.6;
+          const alpha = (Math.sin(time / 200) + 1) / 2 * 0.3 + 0.5;
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          const gradient = ctx.createRadialGradient(this.x + this.width/2, this.y + this.height/2, radius * 0.5, this.x + this.width/2, this.y + this.height/2, radius);
+          gradient.addColorStop(0, 'rgba(255, 100, 100, 0.3)');
+          gradient.addColorStop(0.7, 'rgba(255, 120, 120, 0.2)');
+          gradient.addColorStop(1, 'rgba(255, 140, 140, 0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(this.x + this.width/2, this.y + this.height/2, radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(255, 100, 100, 0.6)';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(this.x + this.width/2, this.y + this.height/2, radius * 0.85, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
 
         // 绘制BOSS血量条（无尽模式下不显示）
         if (currentDifficulty === 'endless') {
@@ -2340,7 +2670,7 @@
         // ctx.shadowOffsetY = 1;
         // ctx.shadowBlur = 4;
 
-        const healthText = `${this.health} / ${this.maxHealth}`;
+        const healthText = `${Math.round(this.health)} / ${this.maxHealth}`;
         ctx.strokeText(healthText, canvasWidth / 2, barY + 15);
         ctx.fillText(healthText, canvasWidth / 2, barY + 15);
         // 清除阴影效果
@@ -2404,6 +2734,146 @@
       // 检查爆炸是否结束
       isFinished() {
         return this.particles.length === 0;
+      }
+    }
+
+    // 同类头像碰撞特效类（金色光芒向外扩散）
+    class SameCharaEffect {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.life = 60; // 1秒（60帧）
+        this.maxLife = 60;
+        this.particles = [];
+        // 创建多个金色粒子
+        for (let i = 0; i < 12; i++) {
+          const angle = (Math.PI * 2 * i) / 12;
+          this.particles.push({
+            angle: angle,
+            distance: 0,
+            speed: 2
+          });
+        }
+      }
+
+      update(deltaTime) {
+        this.life -= deltaTime / 16.67;
+        this.particles.forEach(p => {
+          p.distance += p.speed;
+        });
+      }
+
+      draw() {
+        const alpha = this.life / this.maxLife;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        this.particles.forEach(p => {
+          const x = this.x + Math.cos(p.angle) * p.distance;
+          const y = this.y + Math.sin(p.angle) * p.distance;
+
+          // 绘制金色光芒
+          ctx.fillStyle = '#FFD700';
+          ctx.beginPath();
+          ctx.arc(x, y, 6, 0, Math.PI * 2);
+          ctx.fill();
+
+          // 绘制外圈光晕
+          const gradient = ctx.createRadialGradient(x, y, 0, x, y, 10);
+          gradient.addColorStop(0, 'rgba(255, 215, 0, 0.8)');
+          gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(x, y, 10, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        ctx.restore();
+      }
+
+      isFinished() {
+        return this.life <= 0;
+      }
+    }
+
+    // 增益物品特效类（彩色光环扩散）
+    class PowerUpEffect {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.life = 60; // 1秒
+        this.maxLife = 60;
+        this.radius = 0;
+      }
+
+      update(deltaTime) {
+        this.life -= deltaTime / 16.67;
+        this.radius += 3;
+      }
+
+      draw() {
+        const alpha = this.life / this.maxLife;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        // 绘制彩色光环
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+        gradient.addColorStop(0, 'rgba(255, 105, 180, 0.8)');
+        gradient.addColorStop(0.5, 'rgba(147, 112, 219, 0.6)');
+        gradient.addColorStop(1, 'rgba(255, 105, 180, 0)');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 绘制内圈闪光
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      isFinished() {
+        return this.life <= 0;
+      }
+    }
+
+    // 攻击力增量浮动文字类
+    class AttackPowerFloatText {
+      constructor(value) {
+        this.value = value;
+        this.x = 45 - uiAdjust + Math.trunc(playerAttackPower).toString().length * (uiFont * 0.6);
+        this.y = 122;
+        this.life = 1300; // 1.3秒
+        this.maxLife = 1300;
+      }
+
+      update(deltaTime) {
+        this.life -= deltaTime;
+        this.y -= 0.1 * (deltaTime / 16.67); // 向上移动
+      }
+
+      draw() {
+        const alpha = this.life / this.maxLife;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.font = 'bold ' + (uiFont - 2) + 'px "Arial Black", "Helvetica", sans-serif';
+        const isNegative = this.value < 0;
+        ctx.fillStyle = isNegative ? '#FFFFFF' : '#FFD700';
+        ctx.strokeStyle = isNegative ? '#FF0000' : '#000000';
+        ctx.lineWidth = 2;
+        ctx.textAlign = 'left';
+        const absValue = Math.abs(this.value);
+        const text = absValue >= 1 ? `${this.value > 0 ? '+' : ''}${Math.floor(this.value)}` : `${this.value > 0 ? '+' : ''}${this.value.toFixed(1)}`;
+        ctx.strokeText(text, this.x, this.y);
+        ctx.fillText(text, this.x, this.y);
+        ctx.restore();
+      }
+
+      isFinished() {
+        return this.life <= 0;
       }
     }
 
@@ -2474,6 +2944,16 @@
       powerUps = [];  // 清空道具数组
       healthPacks = [];  // 清空血包数组
       bossBullets = [];  // 清空BOSS子弹数组
+      charaItems = []; // 清空第三关道具
+      playerBuffed = false;
+      playerStunned = false;
+      stunTimer = 0;
+      stoneTimer = 0;
+      playerAttackPower = 5; // 重置攻击力
+      sameCharaEffects = []; // 清空同类头像特效
+      attackPowerFloatTexts = []; // 清空攻击力增量文字
+      playerShield = false; // 重置保护罩
+      shieldTimer = 0;
       explosions = [];  // 清空爆炸数组
       flashEffects = [];  // 清空闪光效果数组
       boss = null;  // 重置BOSS
@@ -2505,9 +2985,7 @@
       fullcombo.style.display = 'none';
       fullcombo.src = IMG_PATH + assets.fullcombo;
       document.getElementById('result-rank').style.display = 'none';
-
-
-      if (currentLevel === 2) {
+      if (currentLevel > 1) {
         playerHealth = 3;
         playerBulletStreams = 1; // 重置子弹束数量
       }
@@ -2515,25 +2993,31 @@
         // 小熊每800毫秒出现一次
         bearInterval = 800;
         // 小熊每列生成概率，中等难度64%概率生成，也就是每行6*0.6=3.6个熊
-        bearProbability = 0.5;
+        bearProbability = currentLevel < 3 ? 0.5 : 0.48;
         maxPlayerBulletStreams = 10;
-        itemProbability = 0.3;
-        healthProbability = 0.3;
+        itemProbability = currentLevel < 3 ? 0.3 : 0.5;
+        healthProbability = currentLevel < 3 ? 0.3 : 0.15;
+        damageProbability = 0.1;
+        protectProbability = 0.04
         // 游戏开始多少秒后生成BOSS
         bossBegan = 1000;
       } else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
-        bearInterval = 750;
-        bearProbability = 0.6;
+        bearInterval = currentLevel < 3 ? 750 : 790;
+        bearProbability = currentLevel < 3 ? 0.6 : 0.5;
         maxPlayerBulletStreams = 14;
-        itemProbability = 0.24;
-        healthProbability = 0.22;
+        itemProbability = currentLevel < 3 ? 0.24 : 0.49;
+        healthProbability = currentLevel < 3 ? 0.22 : 0.13;
+        damageProbability = 0.15;
+        protectProbability = 0.03
         bossBegan = 2000;
       } else if (currentDifficulty === 'hard') {
-        bearInterval = 700;
-        bearProbability = 0.65;
+        bearInterval = currentLevel < 3 ? 700 : 780;
+        bearProbability = currentLevel < 3 ? 0.65 : 0.52;
         maxPlayerBulletStreams = 18;
-        itemProbability = 0.18;
-        healthProbability = 0.18;
+        itemProbability = currentLevel < 3 ? 0.18 : 0.48;
+        healthProbability = currentLevel < 3 ? 0.18 : 0.11;
+        damageProbability = 0.2;
+        protectProbability = 0.02
         bossBegan = 3000;
       }
 
@@ -2541,7 +3025,7 @@
         player.defeatCharacters = []; // 清空defeat角色
         player.characters = [1]; // 重置角色类型数组
         player.deadCharacterType = 1; // 重置死亡角色类型
-        if (currentLevel === 2) {
+        if (currentLevel > 1) {
           player.currentCharacterType = 1;
         }
       }
@@ -2568,22 +3052,78 @@
           }
 
           if (canSpawn) {
-            bears.push(new Bear(x, y));
+            // 第三关BOSS血量判断是否生成带防护罩的小熊
+            let hasShield = false;
+            if (currentLevel === 3 && boss) {
+              // 根据难度设置防护罩小熊最大数量
+              let maxShieldBears = 2; // 默认中等难度
+              if (currentDifficulty === 'easy') {
+                maxShieldBears = 1;
+              } else if (currentDifficulty === 'hard') {
+                maxShieldBears = 3;
+              }
+              // 统计当前存在的防护罩小熊数量
+              const shieldBearCount = bears.filter(b => b.hasShield && !b.markedForDeletion).length;
+              if (shieldBearCount < maxShieldBears) {
+                const bossHealthPercent = boss.health / boss.maxHealth;
+                if (bossHealthPercent <= 0.2) {
+                  hasShield = Math.random() < 0.4; // 20%以下，40%概率生成防护罩小熊
+                } else if (bossHealthPercent <= 0.5) {
+                  hasShield = Math.random() < 0.2; // 50%以下，20%概率生成防护罩小熊
+                }
+              }
+            }
+            bears.push(new Bear(x, y, hasShield));
           }
         }
       }
     }
 
-    // 生成道具和血包（仅第2关）
+    // 生成道具和血包
     function spawnPowerUps() {
-      if (currentLevel !== 2) return;
+      // 第1关不生成
+      if (currentLevel === 1) return;
 
       const minDistance = canvasWidth / 10; // 最小间距
       const newItems = [];
 
-      // 道具生成概率
+      if (currentLevel === 3) {
+        // 第3关：生成特殊道具
+        if (Math.random() < itemProbability) {
+          let itemNum = Math.floor(Math.random() * 13) + 1;
+          let variant = 0;
+          if (Math.random() < damageProbability) {
+            itemNum = Math.random() < 0.5 ? 3 : 6;
+            variant = itemNum === 6 ? 3 : 0;
+          } else if(Math.random() < protectProbability){
+              itemNum = 6; variant = 2;
+          } else {
+            // 处理特殊变体
+            if (itemNum === 5 && Math.random() < 0.5) {
+              variant = Math.floor(Math.random() * 3) + 1; // 1,2,3
+            } else if (itemNum === 6 && Math.random() < 0.5) {
+              variant = Math.floor(Math.random() * 3) + 1;
+            } else if (itemNum === 9 && Math.random() < 0.5) {
+              variant = Math.floor(Math.random() * 2) + 1; // 1,2
+            } else if (itemNum === 11 && Math.random() < 0.5) {
+              variant = Math.floor(Math.random() * 2) + 1;
+            }
+          }
+          const x = findValidPosition(canvasWidth / 8, newItems, minDistance);
+          if (x !== -1) {
+            charaItems.push(new CharaItem(x, -canvasWidth / 12, itemNum, variant));
+            newItems.push({x, width: canvasWidth / 8});
+          }
+        }
+      }
+      // 角色图标
       if (Math.random() < itemProbability) {
-        const type = Math.floor(Math.random() * 3) + 1;
+        let type = null;
+        if (currentLevel === 3) {
+          type = Math.floor(Math.random() * 13) + 1;
+        }else {
+          type = Math.floor(Math.random() * 3) + 1;
+        }
         const x = findValidPosition(canvasWidth / 8, newItems, minDistance);
         if (x !== -1) {
           powerUps.push(new PowerUp(x, -canvasWidth / 12, type));
@@ -2628,14 +3168,18 @@
         if (bullet.markedForDeletion) return; // 跳过已标记的子弹
         bears.forEach(bear => {
           if (bear.markedForDeletion) return; // 跳过已标记的小熊
-          if (isColliding(bullet, bear)) {
-            flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
+          if (isColliding(bullet, bear, 0)) {
+            // 第三关小熊防护罩逻辑：子弹伤害值小于等于defence时不造成伤害
+            let actualDamage = Math.max(0, bullet.bearDamage - bear.defence);
+            if (actualDamage > 0) {
+              flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
+              bear.health -= (actualDamage > bear.health ? bear.health : actualDamage);
+              bear.flashTimer = 50; //小熊闪白50毫秒
+            }
             bullet.markedForDeletion = true; // 标记子弹待删除
-            bear.health -= (bullet.bearDamage > bear.health ? bear.health : bullet.bearDamage); // 使用子弹的伤害值
-            bear.flashTimer = 50; //小熊闪白50毫秒
 
             // player3形态子弹击中敌人时应用减速效果
-            if (currentLevel === 2 && bullet.bulletType === 3) {
+            if (currentLevel > 1 && bullet.bulletType === 3) {
               bear.applySlow();
             }
             if (bear.health <= 0) {
@@ -2654,22 +3198,27 @@
       if (boss) {
         bullets.forEach(bullet => {
           if (bullet.markedForDeletion) return; // 跳过已标记的子弹
-          if (isColliding(bullet, boss)) {
-            flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
+          if (isColliding(bullet, boss, 0)) {
+            // 第三关BOSS防护罩逻辑：子弹伤害值小于等于defence时不造成伤害
+            let actualDamage = 0;
+            if (currentDifficulty !== 'endless') {
+              actualDamage = Math.max(0, bullet.damage - boss.defence);
+            }
+            if (actualDamage > 0) {
+              flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
+              boss.health -= (actualDamage > boss.health ? boss.health : actualDamage);
+              if(boss.hasShield) {
+                boss.flashTimer = 50; //BOSS闪白50毫秒
+              }
+            }
             bullet.markedForDeletion = true; // 标记子弹待删除
             // player3形态子弹击中敌人时应用减速效果
-            if (currentLevel === 2 && bullet.bulletType === 3) {
+            if (currentLevel > 1 && bullet.bulletType === 3) {
               boss.applySlow();
             }
-            //无尽模式下BOSS不掉血 不能掉成负数
-            if (currentDifficulty !== 'endless') {
-              boss.health -= (bullet.damage > boss.health ? boss.health : bullet.damage); // 使用子弹的伤害值
-            }
-            boss.flashTimer = 50; //BOSS闪白50毫秒
             if (boss.health <= 0 && gameState === 'playing') {
               gameState = 'bossDying';
               bossDeathPosition = {x: boss.x, y: boss.y, width: boss.width, height: boss.height};
-              screenFlashAlpha = 0.7;
               triggerScreenShake(15);
               setTimeout(() => gameOver(true), 400); // BOSS死亡400毫秒后游戏结束
             }
@@ -2678,12 +3227,12 @@
       }
 
       // 第2关：player3子弹与BOSS子弹的碰撞（抵消效果）
-      if (currentLevel === 2) {
+      if (currentLevel > 1) {
         bullets.forEach(playerBullet => {
           if (playerBullet.markedForDeletion || playerBullet.bulletType !== 3) return;
           bossBullets.forEach(bossBullet => {
             if (bossBullet.markedForDeletion) return;
-            if (isColliding(playerBullet, bossBullet)) {
+            if (isColliding(playerBullet, bossBullet, 0)) {
               // 两者一起消失并触发闪光特效
               playerBullet.markedForDeletion = true;
               bossBullet.markedForDeletion = true;
@@ -2700,6 +3249,21 @@
       // 小熊与玩家的碰撞
       bears.forEach(bear => {
         if (bear.markedForDeletion) return;
+        // 第三关有保护罩时免疫小熊
+        if (currentLevel === 3 && playerShield) {
+          const playerHitbox = {
+            x: player.x - player.width / 2,
+            y: player.y,
+            width: player.width,
+            height: player.height
+          };
+          if (isColliding(bear, playerHitbox)) {
+            // bear.markedForDeletion = true;
+            // escapedBearCount++;
+            // comboCount = 0;
+            return;
+          }
+        }
         const totalWidth = player.width * player.characterCount;
         const startX = player.x - totalWidth / 2;
 
@@ -2726,9 +3290,9 @@
         }
       });
 
-      // BOSS与玩家的碰撞（在无敌时间外）
-      if (boss && !playerInvulnerable) {
-        if (currentLevel === 2) {
+      // BOSS与玩家的碰撞（在无敌时间外且无保护罩）
+      if (boss && !playerInvulnerable && !(currentLevel === 3 && playerShield)) {
+        if (currentLevel > 1) {
           // 第2关：单个角色碰撞检测
           const playerHitbox = {
             x: player.x - player.width / 2,
@@ -2774,7 +3338,7 @@
       }
 
       // 第2关的道具碰撞检测
-      if (currentLevel === 2) {
+      if (currentLevel > 1) {
         const playerHitbox = {
           x: player.x - player.width / 2,
           y: player.y,
@@ -2785,6 +3349,12 @@
         // BOSS的子弹与玩家碰撞
         bossBullets.forEach(bullet => {
           if (bullet.markedForDeletion) return;
+          // 第三关有保护罩时免疫BOSS子弹
+          if (currentLevel === 3 && playerShield && isColliding(bullet, playerHitbox)) {
+            bullet.markedForDeletion = true;
+            escapedBulletCount++;
+            return;
+          }
           if (isColliding(bullet, playerHitbox) && !playerInvulnerable) {
             bullet.markedForDeletion = true;
             escapedBulletCount++;
@@ -2798,27 +3368,156 @@
           }
         });
 
-        // 道具碰撞
+        // 头像道具碰撞
         powerUps.forEach(powerUp => {
           if (powerUp.markedForDeletion) return;
-          if (isColliding(powerUp, playerHitbox)) {
+          if (isColliding(powerUp, playerHitbox, 2)) {
+            // 第三关眩晕状态下无法切换角色
+            if (currentLevel === 3 && playerStunned) {
+              return;
+            }
             powerUp.markedForDeletion = true;
             collectedItemCount++; // 玩家吃掉道具
-             if (playerBulletStreams < maxPlayerBulletStreams ) {
-               // 困难模式下，碰到的头像必须和自身形象相同，才增加子弹束数量
-               if(currentDifficulty !== 'hard' || player.currentCharacterType !== powerUp.type){
-                 playerBulletStreams++;
-               }
+            if (currentLevel === 3) {
+              // 第三关逻辑
+              if (player.currentCharacterType === powerUp.type) {
+                // 吃到相同头像：攻击力+1
+                playerAttackPower += 1;
+                attackPowerFloatTexts.push(new AttackPowerFloatText(1));
+                // 触发同类头像特效
+                sameCharaEffects.push(new SameCharaEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
+              } else {
+                // 吃到不同头像：攻击力+0.1
+                playerAttackPower += 0.1;
+                attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
+                if (playerBuffed) {
+                  playerBuffed = false;
+                  playerBuffTimer = 0;
+                }
+                player.currentCharacterType = powerUp.type;
+              }
+            }else {
+              if (playerBulletStreams < maxPlayerBulletStreams) {
+                playerBulletStreams++;
+              }
+            }
+            // 切换到非5/6/7角色时取消保护罩
+            if (currentLevel === 3 && playerShield && powerUp.type !== 5 && powerUp.type !== 6 && powerUp.type !== 7) {
+              playerShield = false;
+              shieldTimer = 0;
             }
             player.currentCharacterType = powerUp.type;
-
+          }
+        });
+        // 第三关特殊道具碰撞
+        charaItems.forEach(item => {
+          if (item.markedForDeletion) return;
+          if (isColliding(item, playerHitbox, 2)) {
+            const charNum = item.getCharacterNum();
+            // item3和item6-3在有保护罩时直接无视
+            if (playerShield && ((item.itemNum === 3) || (item.itemNum === 6 && item.variant === 3))) {
+              return;
+            }
+            item.markedForDeletion = true;
+            //item6-3和item3属于阻碍物，不计入
+            if(!(item.itemNum === 6 && item.variant === 3) && !(item.itemNum === 3)){
+              collectedItemCount++;
+            }
+            // item6-2（创可贴）特殊效果
+            if (item.itemNum === 6 && item.variant === 2) {
+              // 加一血
+              playerHealth++;
+              // 根据角色类型生成不同时长的保护罩
+              if (player.currentCharacterType === 6) {
+                playerShield = true;
+                shieldTimer = 10000; // 10秒
+              } else if (player.currentCharacterType === 5 || player.currentCharacterType === 7) {
+                playerShield = true;
+                shieldTimer = 5000; // 5秒
+              }
+              // 触发增益特效
+              sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
+              return;
+            }
+            // item6-3（石头）特殊效果
+            if (item.itemNum === 6 && item.variant === 3) {
+              if (player.currentCharacterType === 6) {
+                // 角色6撞到石头：攻击力+0.1
+                playerAttackPower += 0.1;
+                attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
+                // 触发增益特效
+                sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
+              } else {
+                // 非角色6：切换到defeat状态1.5秒，无法射击，扣1生命值，子弹束减半，攻击力-3
+                if (playerBuffed) {
+                  playerBuffed = false;
+                  playerBuffTimer = 0;
+                }
+                if(playerStunned){
+                  playerStunned = false;
+                  stunTimer = 0;
+                }
+                playerStoned = true;
+                playerBulletStreams = Math.ceil(playerBulletStreams / 2);
+                stoneTimer = 1500;
+                triggerScreenShake(5);
+                flashEffects.push(new FlashEffect(playerHitbox.x, playerHitbox.y, true));
+                player.flashTimer = 200;
+                checkDead(0);
+              }
+            }
+            // item3（蘑菇）特殊效果
+            else if (item.itemNum === 3) {
+             if (player.currentCharacterType === 3) {
+                // 角色3（仓田真白）撞到item3：攻击力+0.1
+                playerAttackPower += 0.1;
+                attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
+                // 触发增益特效
+                sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
+              } else {
+                // 非角色3：眩晕3秒，攻击力-2
+                if (playerBuffed) {
+                  playerBuffed = false;
+                  playerBuffTimer = 0;
+                }
+                playerStunned = true;
+                stunTimer = 3000;
+                // 角色6（高松灯）撞到石头：额外掉血
+                if (player.currentCharacterType === 6) {
+                    checkDead(0);
+                }else {
+                  playerAttackPower = Math.max(1, playerAttackPower - 2);
+                  attackPowerFloatTexts.push(new AttackPowerFloatText(-2));
+                }
+                flashEffects.push(new FlashEffect(playerHitbox.x, playerHitbox.y, true));
+                player.flashTimer = 200;
+              }
+            }
+            // 正常增益效果：匹配角色编号 (特例：item9-2对角色9和角色6都有增益效果）
+            else if (player.currentCharacterType === charNum || (item.itemNum === 9 && item.variant === 2 && player.currentCharacterType === 6)) {
+              if (!playerStunned) {
+                playerBuffed = true;
+                playerBuffTimer = 5000;
+                // 第三关：增加1条弹道，攻击力+2
+                if (playerBulletStreams < maxPlayerBulletStreams) {
+                  playerBulletStreams++;
+                  playerAttackPower += 2;
+                  attackPowerFloatTexts.push(new AttackPowerFloatText(2));
+                }
+                // 触发增益特效
+                sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
+              }
+            }else{
+              playerAttackPower += 0.2;
+              attackPowerFloatTexts.push(new AttackPowerFloatText(0.2));
+            }
           }
         });
 
         // 血包碰撞
         healthPacks.forEach(healthPack => {
           if (healthPack.markedForDeletion) return;
-          if (isColliding(healthPack, playerHitbox)) {
+          if (isColliding(healthPack, playerHitbox, 2)) {
             healthPack.markedForDeletion = true;
             collectedItemCount++; // 玩家吃掉血包
             playerHealth++;
@@ -2829,11 +3528,13 @@
     }
 
     function checkDead(hitCharacterIndex) {
-      if (currentLevel === 2) {
+      if (currentLevel > 1) {
         // 第2关：减少血量
         if(playerHealth > 0) {
           playerHealth--;
           deathCount++;
+          playerAttackPower = Math.max(1, playerAttackPower - 3);
+          attackPowerFloatTexts.push(new AttackPowerFloatText(-3));
         }
         if (playerHealth <= 0) {
           player.deadCharacterType = player.currentCharacterType;
@@ -2912,6 +3613,37 @@
         powerUps.forEach(powerUp => powerUp.update(deltaTime));
         healthPacks.forEach(healthPack => healthPack.update(deltaTime));
         bossBullets.forEach(bullet => bullet.update(deltaTime));
+        charaItems.forEach(item => item.update(deltaTime));
+        sameCharaEffects.forEach(effect => effect.update(deltaTime));
+        attackPowerFloatTexts.forEach(text => text.update(deltaTime));
+        // 更新眩晕状态
+        if (playerStunned) {
+          stunTimer -= deltaTime;
+          if (stunTimer <= 0) {
+            playerStunned = false;
+          }
+        }
+        // 更新增益状态
+        if (playerBuffed) {
+          playerBuffTimer -= deltaTime;
+          if (playerBuffTimer <= 0) {
+            playerBuffed = false;
+          }
+        }
+        // 更新摔倒状态
+        if (playerStoned) {
+          stoneTimer -= deltaTime;
+          if (stoneTimer <= 0) {
+            playerStoned = false;
+          }
+        }
+        // 更新保护罩状态
+        if (playerShield) {
+          shieldTimer -= deltaTime;
+          if (shieldTimer <= 0) {
+            playerShield = false;
+          }
+        }
         if (boss) {
           boss.update(deltaTime, gameTime);
         }
@@ -2920,8 +3652,8 @@
           updatePlayerPosition(deltaTime);
           player.updateDefeatCharacters(deltaTime);
         }
-        // 持续射击逻辑
-        if (isShooting) {
+        // 持续射击逻辑（眩晕时、被石头摔倒无法射击）
+        if (isShooting && !playerStunned && !playerStoned) {
           shootTimer += deltaTime;
           if (shootTimer >= shootInterval) {
             player.shoot();
@@ -2955,6 +3687,7 @@
         powerUps = powerUps.filter(p => !p.markedForDeletion);
         healthPacks = healthPacks.filter(h => !h.markedForDeletion);
         bossBullets = bossBullets.filter(b => !b.markedForDeletion);
+        charaItems = charaItems.filter(i => !i.markedForDeletion);
       }
 
       // BOSS死亡时的连续爆炸效果 (这个逻辑保持在外，因为它在 'bossDying' 状态下运行)
@@ -2970,6 +3703,8 @@
       explosions.forEach(exp => exp.update(deltaTime));
       flashEffects = flashEffects.filter(f => !f.isFinished());
       explosions = explosions.filter(e => !e.isFinished());
+      sameCharaEffects = sameCharaEffects.filter(e => !e.isFinished());
+      attackPowerFloatTexts = attackPowerFloatTexts.filter(t => !t.isFinished());
 
       // 绘制所有游戏对象 (绘制逻辑永远在主干上，确保所有状态都能正确显示)
       bullets.forEach(b => b.draw());
@@ -2977,7 +3712,10 @@
       powerUps.forEach(p => p.draw());
       healthPacks.forEach(h => h.draw());
       bossBullets.forEach(b => b.draw());
+      charaItems.forEach(i => i.draw());
+      sameCharaEffects.forEach(e => e.draw());
       if (boss) boss.draw();
+      attackPowerFloatTexts.forEach(t => t.draw());
 
       // 无敌状态下（被BOSS击中时）玩家角色闪烁，注释掉下面这一行就代表不闪烁
       //if (gameState == 'playing' && (!playerInvulnerable || Math.floor(invulnerabilityTimer / 100) % 2 === 0)) {
@@ -2986,13 +3724,6 @@
 
       explosions.forEach(e => e.draw());
       flashEffects.forEach(f => f.draw());
-
-      // 屏幕闪光效果
-      if (screenFlashAlpha > 0) {
-        ctx.fillStyle = `rgba(255, 255, 255, ${screenFlashAlpha})`;
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        screenFlashAlpha -= 0.05;  // 逐渐淡化
-      }
       // 绘制UI信息
       drawGameUI();
       // 继续下一帧（如果游戏未结束）
@@ -3057,7 +3788,7 @@
       ctx.fillText('❤️', 10, 62);
       ctx.fillStyle = '#ffffff';// 恢复白色
 
-      const currentHealthValue = currentLevel === 2 ? playerHealth : player.characterCount;
+      const currentHealthValue = currentLevel > 1 ? playerHealth : player.characterCount;
       let healthText = currentHealthValue.toString();
       // 只有失去生命后才显示横杠和失去生命值
       if (deathCount > 0) {
@@ -3067,9 +3798,9 @@
       ctx.fillText(healthText, 36 - uiAdjust, 62);
 
       // 第二行：音符和子弹束数量
-      if (currentLevel === 2) {
+      if (currentLevel > 1) {
         // 显示当前角色对应的音符图标
-        const bulletImage = assetImages[`bullet${player.currentCharacterType}`];
+        const bulletImage = assetImages[`bullet${player.bulletType}`];
         if (bulletImage) {
           ctx.drawImage(bulletImage, 10, 75, noteSize, noteSize * 1.5);
         }
@@ -3079,6 +3810,24 @@
         }
         ctx.strokeText(bulletStr, 36 - uiAdjust, 92);
         ctx.fillText(bulletStr, 36 - uiAdjust, 92);
+      }
+      // 第三行：攻击力显示（仅第三关）
+      if (currentLevel === 3) {
+        // 根据攻击力选择星星图标
+        let starIcon = 'star1';
+        if (playerAttackPower >= 50) starIcon = 'star6';
+        else if (playerAttackPower >= 40) starIcon = 'star5';
+        else if (playerAttackPower >= 30) starIcon = 'star4';
+        else if (playerAttackPower >= 20) starIcon = 'star3';
+        else if (playerAttackPower >= 10) starIcon = 'star2';
+
+        const starImage = assetImages[starIcon];
+        if (starImage) {
+          ctx.drawImage(starImage, 6, 105, iconSize, iconSize);
+        }
+        var attackStr = Math.trunc(playerAttackPower).toString();
+        ctx.strokeText(attackStr, 36 - uiAdjust, 122);
+        ctx.fillText(attackStr, 36 - uiAdjust, 122);
       }
 
       // 绘制右上角积分图标和数字
@@ -3172,7 +3921,7 @@
         + playerRatioScore + bulletRatioScore + itemRatioScore + timeScore));
       //发送游戏统计
       try {
-        gameStat(getPlayerId(), currentLevel, currentDifficulty, fps, isWin ? 1 : 0, resultRank, gameSeconds, bearKillCount, escapedBearCount, maxComboCount, (currentLevel === 2 ? playerHealth : player.characterCount),
+        gameStat(getPlayerId(), currentLevel, currentDifficulty, fps, isWin ? 1 : 0, resultRank, gameSeconds, bearKillCount, escapedBearCount, maxComboCount, (currentLevel > 1 ? playerHealth : player.characterCount),
           deathCount, roundTo2(bossRatio), roundTo2(bulletRatio), roundTo2(itemRatio), finalScore);
       } catch (e) {
         //忽略报错
