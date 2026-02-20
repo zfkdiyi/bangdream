@@ -1601,6 +1601,8 @@
     let shieldTimer = 0; // 保护罩计时器
     let damageProbability = 0; //item3（蘑菇）、item6-3（石头）的出现概率
     let protectProbability = 0; //item6-2（创可贴）的出现概率
+    let maxShieldBears = 0;
+    let shieldBearsProbability = 0;
 
 
     // 游戏资源定义
@@ -1973,6 +1975,11 @@
           if (currentLevel === 3) {
             this.damage = playerAttackPower;
             this.bearDamage = playerAttackPower;
+            // 仓田真白和高松灯的攻击力减弱
+            if(this.currentCharacterType === 3 || this.currentCharacterType === 6){
+              this.damage *= 0.8;
+              this.bearDamage *= 0.8;
+            }
           }
           // 第2关：根据子弹束数量发射多束子弹
           const spacing = this.width / (playerBulletStreams + 1) * 1.5; // 调大子弹束间距
@@ -2116,7 +2123,7 @@
             this.health = 200;
             this.defence = 16;
           }
-          this.speed = canvasHeight * 0.15; // 游走速度
+          this.speed = canvasHeight * 0.12; // 游走速度（大幅降低）
           this.directionX = Math.random() < 0.5 ? 1 : -1; // 随机初始横向方向
           this.directionY = Math.random() < 0.5 ? 1 : -1; // 随机初始纵向方向
         }
@@ -2139,18 +2146,22 @@
             this.speed = this.baseSpeed; // 恢复原速度
           }
         }
-
         this.animTimer += deltaTime;
         if (this.flashTimer > 0) this.flashTimer -= deltaTime;
 
         // 防护罩小熊的特殊移动逻辑
         if (this.hasShield) {
           const deltaSeconds = deltaTime / 1000;
-
-          // 随机上下左右游走
-          this.x += this.speed * this.directionX * deltaSeconds;
-          this.y += this.speed * this.directionY * deltaSeconds;
-
+          // 计算移动距离，确保实际移动速度等于设置的speed
+          // 由于同时在X和Y方向移动，需要调整每个方向的速度分量
+          const moveDistance = this.speed * deltaSeconds;
+          // 计算单位向量
+          const magnitude = Math.sqrt(this.directionX * this.directionX + this.directionY * this.directionY);
+          const normalizedX = this.directionX / magnitude;
+          const normalizedY = this.directionY / magnitude;
+          // 应用移动
+          this.x += moveDistance * normalizedX;
+          this.y += moveDistance * normalizedY;
           // 碰到边界反向
           if (this.x <= 0) {
             this.x = 0;
@@ -2449,7 +2460,7 @@
           if (healthPercent <= 0.2 && !this.hasShield) {
             this.hasShield = true;
             // 增加创可贴出现概率
-            protectProbability *= 2;
+            protectProbability *= 2.5;
             if(currentDifficulty === 'easy'){
               this.defence = 8;
             }else if (currentDifficulty === 'normal') {
@@ -3045,30 +3056,40 @@
         // 小熊每列生成概率，中等难度64%概率生成，也就是每行6*0.6=3.6个熊
         bearProbability = currentLevel < 3 ? 0.5 : 0.48;
         maxPlayerBulletStreams = 10;
-        itemProbability = currentLevel < 3 ? 0.3 : 0.5;
+        itemProbability = 0.3;
         healthProbability = currentLevel < 3 ? 0.3 : 0.15;
         damageProbability = 0.1;
         protectProbability = 0.04
+        maxShieldBears = 1;
+        shieldBearsProbability = 0.15;
         // 游戏开始多少秒后生成BOSS
         bossBegan = 1000;
       } else if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
         bearInterval = currentLevel < 3 ? 750 : 790;
-        bearProbability = currentLevel < 3 ? 0.6 : 0.5;
+        bearProbability = currentLevel < 3 ? 0.6 : 0.49;
         maxPlayerBulletStreams = 14;
-        itemProbability = currentLevel < 3 ? 0.24 : 0.49;
+        itemProbability =  0.24;
         healthProbability = currentLevel < 3 ? 0.22 : 0.13;
-        damageProbability = 0.15;
-        protectProbability = 0.03
+        damageProbability = 0.13;
+        protectProbability = 0.035
+        maxShieldBears = 2;
+        shieldBearsProbability = 0.1;
         bossBegan = 2000;
       } else if (currentDifficulty === 'hard') {
         bearInterval = currentLevel < 3 ? 700 : 780;
-        bearProbability = currentLevel < 3 ? 0.65 : 0.52;
+        bearProbability = currentLevel < 3 ? 0.65 : 0.5;
         maxPlayerBulletStreams = 18;
-        itemProbability = currentLevel < 3 ? 0.18 : 0.48;
+        itemProbability =  0.18;
         healthProbability = currentLevel < 3 ? 0.18 : 0.11;
-        damageProbability = 0.2;
-        protectProbability = 0.02
+        damageProbability = 0.17;
+        protectProbability = 0.03
+        maxShieldBears = 3;
+        shieldBearsProbability = 0.05;
         bossBegan = 3000;
+      }
+      //第三关固定物品出现概率
+      if(currentLevel >= 3) {
+        itemProbability = 0.5;
       }
 
       if (player) {
@@ -3100,26 +3121,16 @@
               canSpawn = false;  // 与BOSS重叠，不生成
             }
           }
-
           if (canSpawn) {
-            // 第三关BOSS血量判断是否生成带防护罩的小熊
             let hasShield = false;
+            // BOSS血量小于0.5时，按概率生成带防护罩的小熊
             if (currentLevel === 3 && boss) {
-              // 根据难度设置防护罩小熊最大数量
-              let maxShieldBears = 2; // 默认中等难度
-              if (currentDifficulty === 'easy') {
-                maxShieldBears = 1;
-              } else if (currentDifficulty === 'hard') {
-                maxShieldBears = 3;
-              }
-              // 统计当前存在的防护罩小熊数量
-              const shieldBearCount = bears.filter(b => b.hasShield && !b.markedForDeletion).length;
-              if (shieldBearCount < maxShieldBears) {
-                const bossHealthPercent = boss.health / boss.maxHealth;
-                if (bossHealthPercent <= 0.2) {
-                  hasShield = Math.random() < 0.4; // 20%以下，40%概率生成防护罩小熊
-                } else if (bossHealthPercent <= 0.5) {
-                  hasShield = Math.random() < 0.2; // 50%以下，20%概率生成防护罩小熊
+              const bossHealthPercent = boss.health / boss.maxHealth;
+              if (bossHealthPercent <= 0.5) {
+                // 统计当前存在的防护罩小熊数量
+                const shieldBearCount = bears.filter(b => b.hasShield && !b.markedForDeletion).length;
+                if (shieldBearCount < maxShieldBears) {
+                  hasShield = Math.random() < shieldBearsProbability;
                 }
               }
             }
@@ -3456,10 +3467,12 @@
                 playerBulletStreams++;
               }
             }
-            // 切换到非5/6/7角色时取消保护罩
+            // 切换到非5/6/7角色时取消保护罩。BOSS斩杀阶段不取消
             if (currentLevel === 3 && playerShield && powerUp.type !== 5 && powerUp.type !== 6 && powerUp.type !== 7) {
-              playerShield = false;
-              shieldTimer = 0;
+              if(boss && !boss.hasShield) {
+                playerShield = false;
+                shieldTimer = 0;
+              }
             }
             player.currentCharacterType = powerUp.type;
           }
@@ -3488,7 +3501,17 @@
                 shieldTimer = 10000; // 10秒
               } else if (player.currentCharacterType === 5 || player.currentCharacterType === 7) {
                 playerShield = true;
-                shieldTimer = 5000; // 5秒
+                shieldTimer = 5500; // 5.5秒
+              }
+              if (boss.hasShield) {
+                // BOSS进入防护罩期间，创可贴可以给所有5、6、7以外的角色提供3.6秒防护罩+2点攻击力
+                if (player.currentCharacterType !== 5 && player.currentCharacterType !== 6 && player.currentCharacterType !== 7) {
+                  playerShield = true;
+                  shieldTimer = 3600;
+                }
+                playerAttackPower += 2;
+                if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
+                attackPowerFloatTexts.push(new AttackPowerFloatText(2));
               }
               // 触发增益特效
               sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
@@ -4001,7 +4024,7 @@
       const killScore = Math.max(0, (bearKillCount - escapedBearCount) * 20);
       const comboScore = maxComboCount * 20;
       const deathPenalty = currentDifficulty === 'endless' ? deathCount * 10 : deathCount * 50;
-      const fullComboScore = (isWin && (maxComboCount == bearKillCount)) ? maxComboCount * 10 : 1;
+      const fullComboScore = (isWin && (maxComboCount == bearKillCount)) ? maxComboCount * 10 : 0;
       const bossScore = boss ? (boss.maxHealth - boss.health) * 5 : 0;
       const bearRatio = bearKillCount > 0 ? bearKillCount / (bearKillCount + escapedBearCount) : 0;
       const bossRatio = boss ? (boss.maxHealth - boss.health) / boss.maxHealth : 0;
@@ -4016,13 +4039,13 @@
       const timeScore = ((currentDifficulty === 'endless' && gameSeconds > 60) ? (gameSeconds - 60) * 50 : gameSeconds);
       let level3Score = 0;
       if(currentLevel === 3){
-        level3Score = (isWin ? buffItemCount * 240 : buffItemCount * 16) + (isWin ? playerHealth * 20 : playerHealth)
-        - stunCount * 240 - stoneCount * 320 - deathPenalty * 9 - timeScore * 75
-        + bossScore * 2 + comboScore * 0.5 + fullComboScore * 4
-        + shieldBearKillCount * 200 + bearKillCount * 3
-        + itemRatioScore * 4 + bulletRatioScore * 9 + bearRatioScore
-        + (isWin ? maxPlayerAttack * 25 : (maxPlayerAttack > 6 ? maxPlayerAttack * 1 : 0))
-        + (isWin ? playerAttackPower * 50 : (playerAttackPower > 6 ? playerAttackPower * 2 : 0));
+        level3Score = (isWin ? buffItemCount * 160 : buffItemCount * 12) + (isWin ? playerHealth * 20 : playerHealth)
+        - stunCount * 240 - stoneCount * 320 - (isWin ? deathCount * 1500 : deathCount * 50) - (isWin ? timeScore * 85 : 0)
+        + bossScore * 0.6 + comboScore * 1 + fullComboScore * 5
+        + shieldBearKillCount * 360 + bearKillCount * 10 - escapedBearCount * 270
+        + itemRatioScore * 2 + bulletRatioScore * 4 + bearRatioScore
+        + (isWin ? maxPlayerAttack * 50 : (maxPlayerAttack > 6 ? maxPlayerAttack * 1 : 0))
+        + (isWin ? playerAttackPower * 100 : (playerAttackPower > 6 ? playerAttackPower * 2 : 0));
       }
       const resultRank = getResultRank(bearRatio, bossRatio, deathCount, gameSeconds);
       const finalScore = Math.floor(Math.max(0, killScore + bossScore + comboScore - deathPenalty + fullComboScore
