@@ -1565,6 +1565,7 @@
     let destroyedBulletCount = 0;  // 玩家消灭的BOSS子弹数
     let collectedItemCount = 0;  // 玩家吃掉的道具血包数
     let buffItemCount = 0; //玩家吃掉的增益物品数
+    let normalItemCount = 0; //玩家吃掉的普通物品数
     let stunCount = 0; //玩家眩晕次数
     let stoneCount = 0; //玩家摔倒次数
     let shieldBearKillCount = 0; //击杀护盾小熊数
@@ -2460,7 +2461,7 @@
           if (healthPercent <= 0.2 && !this.hasShield) {
             this.hasShield = true;
             // 增加创可贴出现概率
-            protectProbability *= 2.5;
+            protectProbability *= 2.4 + 0.25 * currentLevel;
             if(currentDifficulty === 'easy'){
               this.defence = 8;
             }else if (currentDifficulty === 'normal') {
@@ -2470,7 +2471,6 @@
             }
           }
         }
-
         // 第2、3关子弹束调整逻辑相同
         if (currentDifficulty === 'normal' || currentDifficulty === 'endless') {
           if(this.health <= this.maxHealth * 0.2) {
@@ -3023,6 +3023,7 @@
       destroyedBulletCount = 0;  // 重置玩家消灭的BOSS子弹数
       collectedItemCount = 0;  // 重置玩家吃掉的道具血包数
       buffItemCount = 0; //玩家吃掉的增益物品数
+      normalItemCount = 0; //玩家吃掉的普通物品数
       stunCount = 0; //玩家眩晕次数
       stoneCount = 0; //玩家摔倒次数
       shieldBearKillCount = 0; //击杀护盾小熊数
@@ -3071,7 +3072,7 @@
         itemProbability =  0.24;
         healthProbability = currentLevel < 3 ? 0.22 : 0.13;
         damageProbability = 0.13;
-        protectProbability = 0.035
+        protectProbability = 0.045;
         maxShieldBears = 2;
         shieldBearsProbability = 0.1;
         bossBegan = 2000;
@@ -3082,7 +3083,7 @@
         itemProbability =  0.18;
         healthProbability = currentLevel < 3 ? 0.18 : 0.11;
         damageProbability = 0.17;
-        protectProbability = 0.03
+        protectProbability = 0.05
         maxShieldBears = 3;
         shieldBearsProbability = 0.05;
         bossBegan = 3000;
@@ -3125,11 +3126,12 @@
             let hasShield = false;
             // BOSS血量小于0.5时，按概率生成带防护罩的小熊
             if (currentLevel === 3 && boss) {
-              const bossHealthPercent = boss.health / boss.maxHealth;
-              if (bossHealthPercent <= 0.5) {
+              const percent = boss.health / boss.maxHealth;
+              const maxBears = calculateMaxBears(percent, maxShieldBears);
+              if (maxBears > 0) {
                 // 统计当前存在的防护罩小熊数量
                 const shieldBearCount = bears.filter(b => b.hasShield && !b.markedForDeletion).length;
-                if (shieldBearCount < maxShieldBears) {
+                if (shieldBearCount < maxBears) {
                   hasShield = Math.random() < shieldBearsProbability;
                 }
               }
@@ -3138,6 +3140,13 @@
           }
         }
       }
+    }
+
+    function calculateMaxBears(percent, baseMax) {
+      if (percent > 0.5) return 0;
+      if (percent > 0.35) return Math.max(1, baseMax - 2);
+      if (percent > 0.2) return Math.max(1, baseMax - 1);
+      return baseMax;
     }
 
     // 生成道具和血包
@@ -3230,8 +3239,8 @@
         bears.forEach(bear => {
           if (bear.markedForDeletion) return; // 跳过已标记的小熊
           if (isColliding(bullet, bear, 0)) {
-            // 第三关小熊防护罩逻辑：子弹伤害值小于等于defence时不造成伤害
-            let actualDamage = Math.max(0, bullet.bearDamage - bear.defence);
+            // 第三关小熊防护罩逻辑：子弹伤害值小于等于defence时不造成伤害。如果子弹束超过1，则取子弹束的1/2
+            let actualDamage = Math.max(0, bullet.bearDamage * Math.max(1, playerBulletStreams/2) - bear.defence);
             if (actualDamage > 0) {
               flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
               bear.health -= (actualDamage > bear.health ? bear.health : actualDamage);
@@ -3266,7 +3275,7 @@
             // 第三关BOSS防护罩逻辑：子弹伤害值小于等于defence时不造成伤害
             let actualDamage = 0;
             if (currentDifficulty !== 'endless') {
-              actualDamage = Math.max(0, bullet.damage - boss.defence);
+              actualDamage = Math.max(0, bullet.damage * Math.max(1, playerBulletStreams/2) - boss.defence);
             }
             if (actualDamage > 0) {
               flashEffects.push(new FlashEffect(bullet.x + bullet.width / 2, bullet.y + bullet.height / 2, false));
@@ -3446,16 +3455,12 @@
               // 第三关逻辑
               if (player.currentCharacterType === powerUp.type) {
                 // 吃到相同头像：攻击力+1
-                playerAttackPower += 1;
-                if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
-                attackPowerFloatTexts.push(new AttackPowerFloatText(1));
+                changePlayerAttack(1);
                 // 触发同类头像特效
                 sameCharaEffects.push(new SameCharaEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
               } else {
                 // 吃到不同头像：攻击力+0.1
-                playerAttackPower += 0.1;
-                if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
-                attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
+                changePlayerAttack(0.1);
                 if (playerBuffed) {
                   playerBuffed = false;
                   playerBuffTimer = 0;
@@ -3493,6 +3498,7 @@
             }
             // item6-2（创可贴）特殊效果
             if (item.itemNum === 6 && item.variant === 2) {
+              normalItemCount++;
               // 加一血
               playerHealth++;
               // 根据角色类型生成不同时长的保护罩
@@ -3501,17 +3507,21 @@
                 shieldTimer = 10000; // 10秒
               } else if (player.currentCharacterType === 5 || player.currentCharacterType === 7) {
                 playerShield = true;
-                shieldTimer = 5500; // 5.5秒
+                shieldTimer = 7000; // 7秒
               }
-              if (boss.hasShield) {
-                // BOSS进入防护罩期间，创可贴可以给所有5、6、7以外的角色提供3.6秒防护罩+2点攻击力
+              const percent = boss.health / boss.maxHealth;
+              if (percent <= 0.5) {
+                let factor = 1;
+                if(percent <= 0.25){
+                  factor = 2;
+                }
+                // BOSS血量在0.5以下，创可贴给所有5、6、7以外的角色提供3.6秒防护罩。所有角色加2点攻击力
                 if (player.currentCharacterType !== 5 && player.currentCharacterType !== 6 && player.currentCharacterType !== 7) {
                   playerShield = true;
-                  shieldTimer = 3600;
+                  shieldTimer = (1800 + 250 * currentLevel) * factor;
                 }
-                playerAttackPower += 2;
-                if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
-                attackPowerFloatTexts.push(new AttackPowerFloatText(2));
+                let addPower = (1 + 0.25 * currentLevel) * factor;
+                changePlayerAttack(addPower);
               }
               // 触发增益特效
               sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
@@ -3520,10 +3530,9 @@
             // item6-3（石头）特殊效果
             if (item.itemNum === 6 && item.variant === 3) {
               if (player.currentCharacterType === 6) {
-                // 角色6撞到石头：攻击力+0.1
-                playerAttackPower += 0.1;
-                if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
-                attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
+                normalItemCount++;
+                // 角色6（高松灯）撞到石头：攻击力+0.1
+                changePlayerAttack(0.1);
                 // 触发增益特效
                 sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
               } else {
@@ -3549,10 +3558,9 @@
             // item3（蘑菇）特殊效果
             else if (item.itemNum === 3) {
              if (player.currentCharacterType === 3) {
+                normalItemCount++;
                 // 角色3（仓田真白）撞到item3：攻击力+0.1
-                playerAttackPower += 0.1;
-               if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
-                attackPowerFloatTexts.push(new AttackPowerFloatText(0.1));
+                changePlayerAttack(0.1);
                 // 触发增益特效
                 sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
               } else {
@@ -3568,8 +3576,8 @@
                 if (player.currentCharacterType === 6) {
                   checkDead(0);
                 }else {
-                  playerAttackPower = Math.max(1, playerAttackPower - 2);
-                  attackPowerFloatTexts.push(new AttackPowerFloatText(-2));
+                  // 其他角色撞到蘑菇：攻击力-2
+                  changePlayerAttack(-2);
                 }
                 flashEffects.push(new FlashEffect(playerHitbox.x, playerHitbox.y, true));
                 player.flashTimer = 200;
@@ -3584,18 +3592,15 @@
                 // 第三关：增加1条弹道，攻击力+2
                 if (playerBulletStreams < maxPlayerBulletStreams) {
                   playerBulletStreams++;
-                  playerAttackPower += 2;
-                  if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
-                  attackPowerFloatTexts.push(new AttackPowerFloatText(2));
+                  changePlayerAttack(2);
                 }
                 // 触发增益特效
                 sameCharaEffects.push(new PowerUpEffect(playerHitbox.x + playerHitbox.width / 2, playerHitbox.y + playerHitbox.height / 2));
               }
             }else{
-              buffItemCount++;
-              playerAttackPower += 0.2;
-              if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
-              attackPowerFloatTexts.push(new AttackPowerFloatText(0.2));
+              //没有增益的物品，攻击力+0.2
+              changePlayerAttack(0.2);
+              normalItemCount++;
             }
           }
         });
@@ -3615,12 +3620,11 @@
 
     function checkDead(hitCharacterIndex) {
       if (currentLevel > 1) {
-        // 第2关：减少血量
+        // 第2关死亡一次：减少血量、攻击力减3
         if(playerHealth > 0) {
           playerHealth--;
           deathCount++;
-          playerAttackPower = Math.max(1, playerAttackPower - 3);
-          attackPowerFloatTexts.push(new AttackPowerFloatText(-3));
+          changePlayerAttack(-3)
         }
         if (playerHealth <= 0) {
           player.deadCharacterType = player.currentCharacterType;
@@ -3652,6 +3656,14 @@
           setTimeout(() => gameOver(false), 400);// 玩家死亡400毫秒后游戏结束
         }
       }
+    }
+
+    function changePlayerAttack(change){
+      playerAttackPower = Math.max(1, playerAttackPower + change);
+      if(change > 0){
+        if(playerAttackPower > maxPlayerAttack) maxPlayerAttack = playerAttackPower;
+      }
+      attackPowerFloatTexts.push(new AttackPowerFloatText(change));
     }
 
     // 碰撞检测函数（矩形碰撞） margin表示留出的安全空间（单位是像素）
@@ -4041,7 +4053,7 @@
       let finalScore = Math.floor(Math.max(0, killScore + bossScore + comboScore - deathPenalty + fullComboScore
         + playerRatioScore + bulletRatioScore + itemRatioScore + timeScore));
       if(currentLevel >= 3){
-        let level3Score = (isWin ? buffItemCount * 160 : buffItemCount * 12) + (isWin ? playerHealth * 20 : playerHealth)
+        let level3Score = (isWin ? buffItemCount * 160 : buffItemCount * 12) + normalItemCount * 30 + (isWin ? playerHealth * 20 : playerHealth)
           + (isWin ? bossScore * 0.75 : bossScore * 0.1) + (isWin ? comboScore * 2 : 0) + fullComboScore * 5
           + shieldBearKillCount * 360 + bearKillCount * 12
           + itemRatioScore * 4 + bulletRatioScore * 4 + bearRatioScore * 4
